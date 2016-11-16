@@ -1,0 +1,45 @@
+\section*{Introducción}
+\label{sec:intro}
+\addcontentsline{toc}{section}{\nameref{sec:intro}}
+
+\textbf{Este es un libro sobre el proyecto en el que he estado trabajando durante años, ya que básicamente nunca empecé a tratar de leer \textit{Design Patterns (Patrones de Diseño) }  (Gamma,Helm,Johnson y Vlissides, Addison-Wesley, 1995), comúnmente conocida como \textit{Gang of Four} \footnote{Esta es una referencia irónica para un evento en China después de la muerte de Mao Tze Tung, cuando cuatro personas incluyendo la viuda de Mao hicieron un juego de poder, y fueron estigmatizadas por el Partido Comunista de China bajo ese nombre.} o solo GoF)}.  \newline
+% EXPLICACIÓN DEL TÉRMINO GOF
+
+Hay un capítulo sobre los patrones de diseño en la primera edición de \textit{Thinking in C++}, que ha evolucionado en el Volumen 2 de la segunda edición de \textit{Thinking in C++} y usted también encontrará un capítulo sobre los patrones en la primera edición de \textit{Thinking in Java}. Tomé ese capítulo de la segunda edición de \textit{Thinking in Java} porque ese libro fue creciendo demasiado, y también porque yo había decidido escribir \textit{Thinking in Patterns}. Ese libro,  aún no se ha terminado, se ha convertido en éste. La facilidad de expresar estas ideas más complejas en Python, creo que, finalmente, me permitirá decirlo todo. \newline
+
+Este no es un libro introductorio. Estoy asumiendo que su forma de trabajo ha pasado a través de por lo menos \textit{Learning Python} (por Mark Lutz y David Ascher; OReilly, 1999) o un texto equivalente antes de empezar este libro. \newline
+
+Además, supongo que tiene algo más que una comprensión de la sintaxis de Python. Usted debe tener una buena comprensión de los objetos y de lo que ellos son, incluyendo el polimorfismo. \newline
+
+Por otro lado, al pasar por este libro va a aprender mucho acerca de la programación orientada a objetos al ver objetos utilizados en muchas situaciones diferentes. Si su conocimiento de objetos es elemental, con este libro obtendrá más experiencia en el proceso de comprensión en el diseño de los objetos.
+
+\newpage
+
+\subsection*{El síndrome Y2K}
+\label{sec:y2k}
+\addcontentsline{toc}{subsection}{\nameref{sec:y2k}}
+
+En un libro que tiene "técnicas de resolución de problemas" en su subtítulo, vale la pena mencionar una de las mayores dificultades encontradas en la programación: la optimización prematura. Cada vez traigo este concepto a colación, casi todo el mundo está de acuerdo con ello. Además, todo el mundo parece reservar en su propia mente un caso especial "a excepción de esto que, me he enterado, es un problema particular". \newline
+
+La razón por la que llamo a esto el síndrome Y2K debo hacerlo con ese especial conocimiento. Los computadores son un misterio para la mayoría de la gente, así que cuando alguien anunció que los tontos programadores de computadoras  habían olvidado poner suficientes dígitos para mantener las fechas más allá del año 1999, de repente todo el mundo se convirtió en un experto en informática \- "estas cosas no son tan difíciles después de todo, si puedo ver un problema tan obvio". Por ejemplo, mi experiencia fue originalmente en ingeniería informática, y empecé a cabo mediante la programación de sistemas embebidos. Como resultado, sé que muchos sistemas embebidos no tienen idea que fecha u hora es, e incluso si lo hacen esos datos a menudo no se utilizan en los cálculos importantes. Y sin embargo, me dijeron en términos muy claros que todos los sistemas embebidos iban a bloquearse el 01 de enero del 2000 \footnote{Estas mismas personas también estaban convencidos de que todos los ordenadores iban a bloquearse también a continuación. Pero como casi todo el mundo tenía la experiencia de su máquina Windows estrellándose todo el tiempo sin resultados particularmente graves, esto no parece llevar el mismo drama de la catástrofe inminente.} % PIE DE PAGINA.
+.En lo que puedo decir el único recuerdo que se perdió en esa fecha en particular fue el de las personas que estaban prediciendo la pérdida –  que es como si nunca hubieran dicho nada de eso.
+\newline
+
+El punto es que es muy fácil caer en el hábito de pensar que el algoritmo particular o la pieza de código que usted por casualidad entiende en parte o cree entender totalmente, %--- PREGUNTAR!
+
+% the particular algorithm or piece of code that you happen to partly or thoroughly understand is naturally going to be the bottleneck in your system,
+
+
+naturalmente, será el estancamiento en su sistema, simplemente porque puede imaginar lo que está pasando en esa pieza de código y así, que usted piensa, que debe ser de alguna manera mucho menos eficiente que el resto de piezas de código que usted no conoce. Pero a menos que haya ejecutado las pruebas reales, típicamente con un perfilador, realmente no se puede saber lo que está pasando. E incluso si usted tiene razón, que una pieza de código es muy ineficiente, recuerde que la mayoría de los programas gastan algo así como 90\% de su tiempo en menos de 10\% del código en el programa, así que a menos que el trozo de código que usted está pensando sobre lo que sucede al caer en ese 10\% no va a ser importante. \newline
+
+"La optimización prematura es la raíz de todo mal." se refiere a veces como "La ley de Knuth" (de Donald E. Knuth).
+ 
+\subsection*{Contexto y composición}
+\label{sec:concom}
+\addcontentsline{toc}{subsection}{\nameref{sec:concom}}
+
+Uno de los términos que se verá utilizado una y otra vez en la literatura de patrones de diseño es \textit{context}. De hecho, una definición común de un patrón de diseño es: "Una solución a un problema en un contexto." Los patrones GoF a menudo tienen un "objeto de contexto" donde el programador interactúa con el cliente. En cierto momento se me ocurrió que dichos objetos parecían dominar el paisaje de muchos patrones, y así comencé preguntando de qué se trataban. \newline
+
+El objeto de contexto a menudo actúa como una pequeña fachada para ocultar la complejidad del resto del patrón, y además, a menudo será el controlador que gestiona el funcionamiento del patrón. Inicialmente, me parecía que no era realmente esencial para la implementación, uso y comprensión del patrón. Sin embargo, Recordé una de las declaraciones más espectaculares realizadas en el GoF: 
+ "Preferiría la composición a la herencia." El objeto de contexto le permite utilizar el patrón en una composición, y eso puede ser su valor principal.
+\newpage

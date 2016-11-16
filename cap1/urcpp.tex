@@ -1,0 +1,258 @@
+\section*{Un rápido curso para programadores}
+\label{sec:urcpp}
+\addcontentsline{toc}{section}{\nameref{sec:urcpp}}
+
+
+\textbf{Este libro asume que usted es un programador experimentado, y es mejor si usted ha aprendido Python a través de otro libro. Para todos los demás, este capitulo da una rápida introducción al lenguaje.}
+
+\subsection*{Visión General de Python}
+\label{subsec:vgpy}
+\addcontentsline{toc}{subsection}{\nameref{subsec:vgpy}}
+
+Esta breve introducción es para el programador experimentado (que es lo que usted debería ser si esta leyendo este libro). Usted puede consultar la documentación completa de \textit{www.Python.org} (especialmente la página HTML increíblemente útil \textit{A Python Quick Reference}), y también numerosos libros como \textit{Learning Python} por Mark Lutz y David Ascher(O'Reilly, 1999). \newline
+
+Python se conoce a menudo como un lenguaje de script, pero los lenguajes de script tienden a estar limitando, especialmente en el ámbito de los problemas que ellos resuelven. Python, por otro lado, es un lenguaje de  programación que también soporta scripting. Es maravilloso para scripting, y puede encontrar usted mismo la sustitución de todos sus archivos por lotes, scripts de shell, y programas sencillos con scripts de Python. Pero es mucho más que un lenguaje de script.  \newline
+
+Python está diseñado para ser muy limpio para escribir y especialmente para leer. Usted encontrará que es muy fácil leer su propio código mucho después de que lo ha escrito, y también para leer el código de otras personas. Esto se logra parcialmente a través de la sintaxis limpia, al punto, pero un factor mayor en la legibilidad del código es la identación – la determinación del alcance en Python viene determinada por la identación. Por ejemplo: \newline
+
+\begin{lstlisting} 
+#: c01:if.py
+response = "yes" 
+if response == "yes": 
+  print "affirmative" 
+  val = 1 
+print "continuing..." 
+#:~ 
+\end{lstlisting}
+
+El '\#' denota un comentario que va hasta el final de la linea, al igual que C++ y Java ‘//’ comenta. \newline
+
+La primera noticia es que la sintaxis básica de Python es C-ish como se puede ver en la declaración \textbf{if}. Pero en C un \textbf{if}, se verá obligado a utilizar paréntesis alrededor del condicional,  mientras que no son necesarios en Python (no reclamará si los usa de todas formas).\newline
+
+La cláusula condicional termina con dos puntos, y esto indica que lo que sigue será un grupo de sentencias identadas, que son la parte  "entonces" de la sentencia \textbf{if}. En este caso hay una declaración de "imprimir" el cual envía el resultado a la salida estándar, seguido de una asignación a una variable llamada \textbf{val}. La declaración posterior no esta identada así que ya no es parte del \textbf{if}. Identando puede anidar a cualquier nivel, al igual que los corchetes en C ++ o Java, pero a diferencia de esos lenguajes no hay ninguna opción (y ningún argumento) acerca de dónde se colocan los corchetes – el compilador obliga al código de cada uno para ser formateado de la misma manera, lo cual es una de las principales razones de legibilidad consistente de Python.     \newline
+
+Python normalmente tiene sólo una declaración por línea (se puede poner más separándolos con punto y coma), por lo que el punto y coma de terminación no es necesario. Incluso desde el breve ejemplo anterior se puede ver que el lenguaje está diseñado para ser tan simple como sea posible, y sin embargo sigue siendo muy legible.
+
+%acknowledged : admitido, reconocido
+
+
+\subsubsection*{Construido en contenedores}
+\label{subsubsec:cec}
+\addcontentsline{toc}{subsubsection}{\nameref{subsubsec:cec}}
+
+Con lenguajes como C++ y Java, los contenedores son añadidos en las librerías y no integros al lenguaje. En Python, la naturaleza esencial de los contenedores para la programación es reconocido por su construcción en el núcleo del lenguaje: ambas, (arrays:) las listas y las matrices asociativas (mapas alias, diccionarios, tablas hash) son tipos de datos fundamentales. Esto añade mucho a la elegancia del lenguaje. \newline
+
+%   also known as. == a.k.a. == alias
+
+Además, la declaración \textbf{for} itera automáticamente a través de las listas y no sólo contando a través de una secuencia de números. Tiene mucho sentido cuando se piensa en esto, ya que casi siempre se está utilizando un bucle \textbf{for} para recorrer una matriz o un contenedor. Python formaliza esto automáticamente haciendo uso de \textbf{for}, que es un iterador el cual funciona a través de una secuencia.
+Aquí esta un ejemplo:
+\newline
+ 
+\begin{lstlisting} 
+#: c01:list.py 
+list = [ 1, 3, 5, 7, 9, 11 ] 
+print list 
+list.append(13) 
+for x in list: 
+  print x 
+#:~ 
+\end{lstlisting}
+
+La primera linea crea una lista. Puede imprimir la lista y esto mostrará exactamente como usted la colocó (en contraste, recuerde que yo tuve que crear una clase especial \textbf{Arrays2} en \textit{Thinking in Java, 2da Edición} en orden para imprimir arrays en Java).
+Las listas son como contenedores de Java  – usted puede añadir elementos nuevos a estas (aquí, es usado \textbf{append()}) y van a cambiar automáticamente el tamaño de sí mismos.  La sentencia \textbf{for} crea un iterador \textbf{x} que toma cada valor de la lista.
+\newline
+
+Usted puede crear una lista de números con la función \textbf{range( )}, así que si usted realmente necesita imitar el \textbf{for} de C, lo puede hacer.\newline
+
+Nótece que no hay declaración para el tipo de función –los nombres de los objetos aparecen simplemente, y Python infiere el tipo de dato por la forma en que se usan. Es como si Python estuviera diseñado para que usted sólo necesite pulsar las teclas que sean absolutamente necesarias. Usted encontrará, después de haber trabajado con Python por un corto tiempo, que ha estado utilizando una gran cantidad de ciclos cerebrales analizando punto y coma, corchetes y todo tipo de palabras adicionales, exigidos por lenguajes alternos a Python, pero no describen en realidad lo que se suponía que hiciera su programa. 
+
+\subsubsection*{Funciones}
+\label{subsubsec:function}
+\addcontentsline{toc}{subsubsection}{\nameref{subsubsec:function}}
+
+Para crear una función en Python, use la palabra clave \textbf{def}, seguido por el nombre de la función y la lista de argumentos, y dos puntos para empezar el cuerpo de la función. Aquí esta el primer ejemplo convertido en una función: \newline
+ 
+\begin{lstlisting} 
+#: c01:myFunction.py 
+def myFunction(response): 
+  val = 0 
+  if response == "yes": 
+    print "affirmative" 
+    val = 1 
+  print "continuing..." 
+  return val 
+print myFunction("no") 
+print myFunction("yes") 
+#:~ 
+\end{lstlisting}
+
+Nótece que no hay información de tipo que identifique a la función %% SIGNATURE==FIRMA
+– todo lo que se especifica es el nombre de la función y los identificadores de argumentos, pero no los tipos de argumentos o el tipo de dato que devuelve. Python es un lenguaje \textit{debilmente tipado},
+% Pensar ¿cambiar DEBILMENTE TIPADO?
+lo que significa que pone los requisitos mínimos posibles en la introducción de caracteres. Por ejemplo, usted podría pasar y devolver diferentes tipos de datos dentro de la misma función:
+\newpage
+
+\begin{lstlisting}
+#: c01:differentReturns.py 
+def differentReturns(arg): 
+  if arg == 1: 
+    return "one" 
+  if arg == "one": 
+    return 1 
+print differentReturns(1) 
+print differentReturns("one") 
+#:~ 
+\end{lstlisting}
+
+Las únicas limitaciones sobre un objeto que se pasa a la función, son que la función puede aplicar sus operaciones a ese objeto, pero aparte de eso, nada importa. Aquí, la misma función aplica el operador '+'para enteros y cadenas: \newline
+
+\begin{lstlisting}
+#: c01:sum.py 
+def sum(arg1, arg2): 
+  return arg1 + arg2 
+print sum(42, 47) 
+print sum('spam ', "eggs") 
+#:~ 
+ \end{lstlisting}
+
+Cuando el operador ‘+’ es usado con cadenas, esto significa concatenación, (si, Python soporta la sobrecarga de operadores, y esto hace un buen trabajo del mismo).\newline
+
+\subsubsection*{Cadenas}
+\label{subsubsec:strings}
+\addcontentsline{toc}{subsubsection}{\nameref{subsubsec:strings}}
+
+
+El ejemplo anterior también muestra un poco sobre manejo de cadenas de Python, que es el mejor lenguaje que he visto. Usted puede usar comillas simples o dobles para representar cadenas, lo cual es muy agradable porque si usted rodea una cadena con comillas dobles puede incluir comillas simples y viceversa:
+\newline
+
+\begin{lstlisting}
+#: c01:strings.py 
+print "That isn't a horse" 
+print 'You are not a "Viking"' 
+print """You're just pounding two 
+coconut halves together.""" 
+print '''"Oh no!" He exclaimed. 
+"It's the blemange!"''' 
+print r'c:\python\lib\utils' 
+#:~ 
+\end{lstlisting}
+
+Tenga en cuenta que Python no fue nombrado por la serpiente, sino por la comedia que lleva por nombre Monty Python, y así los ejemplos están prácticamente obligados a incluir el estilo de Pythonesque.\newline
+
+La sintaxis de comillas triples engloba todo, incluyendo saltos de línea. Esto hace que sea especialmente útil y facilita las cosas como la generación de páginas web (Python es un lenguaje CGI (computer-generated imagery) especialmente bueno), ya que usted puede con solo comillas triples, seleccionar la página completa que desee sin ninguna otra edición. \newline
+
+La \textbf{‘r’} justo antes significa una cadena "raw", que toma las barras invertidas : \textbackslash \textbackslash ,  literalmente, así que usted no tiene que poner en una barra inversa extra a fin de insertar una barra invertida literal.  \newline
+
+La sustitución en cadenas es excepcionalmente fácil, ya que Python usa de C la sintaxis de sustitución \textbf{printf( )}, pero es para todas las cadenas. Usted simplemente sigue la cadena con un ‘\%’ y los valores para sustituir:
+\newline
+
+\begin{lstlisting}
+#: c01:stringFormatting.py 
+val = 47 
+print "The number is %d" % val 
+val2 = 63.4 
+s = "val: %d, val2: %f" % (val, val2) 
+print s 
+#:~ 
+\end{lstlisting}
+
+Como se puede ver en el segundo caso, si usted tiene más de un argumento entre paréntesis (esto forma una \textit{tupla}, que es una lista que no puede ser modificado – también puede utilizar las listas regulares para múltiples argumentos, pero las tuplas son típicas).\newline
+
+Todo el formato de \textbf{printf()} está disponible, incluyendo el control sobre el lugar y alineación de números decimales. Python también tiene expresiones regulares muy sofisticadas.
+
+\newpage
+
+\subsubsection*{Clases}
+\label{subsubsec:class}
+\addcontentsline{toc}{subsubsection}{\nameref{subsubsec:class}}
+
+Como todo lo demás en Python, la definición de una clase utiliza una mínima sintaxis adicional. Usted utiliza la palabra clave \textbf{class}, y dentro del cuerpo se utiliza \textbf{def} para crear métodos. Aquí está una clase simple: \newline
+
+\begin{lstlisting}
+#: c01:SimpleClass.py
+class Simple: 
+  def __init__(self, str): 
+    print "Inside the Simple constructor" 
+    self.s = str 
+  # Two methods: 
+  def show(self): 
+    print self.s 
+  def showMsg(self, msg): 
+    print msg + ':', 
+    self.show() # Calling another method 
+if __name__ == "__main__": 
+  # Create an object: 
+  x = Simple("constructor argument") 
+  x.show() 
+  x.showMsg("A message") 
+#:~ 
+\end{lstlisting}
+
+Ambos métodos tienen \textbf{"self"} como su primer argumento. C++ y Java, ambos tienen un primer argumento oculto en sus métodos de clase, el cual apunta al objeto para el método que fue llamado y se puede acceder usando la palabra clave \textbf{this}. Los métodos de Python también utilizan una referencia al objeto actual, pero cuando usted está \textit{definiendo} un método debe especificar explícitamente la referencia como el primer argumento. Tradicionalmente, la referencia se llama \textbf{self} pero usted podría utilizar cualquier identificador que desee (sin embargo, si usted no utiliza \textbf{self} probablemente confundirá a mucha gente). Si necesita hacer referencia a campos en el objeto u otros métodos en el objeto, debe utilizar \textbf{self} en la expresión. Sin embargo, cuando usted llama a un método para un objeto como en \textbf{x.show( )}, no le da la referencia al objeto – que esta hecho para usted.\newline
+
+Aquí, el primer método es especial, como lo es cualquier identificador que comienza y termina con doble guión bajo. En este caso, define el constructor, el cual es llamado automáticamente cuando se crea el objeto, al igual que en C ++ y en Java. Sin embargo, en la parte inferior del ejemplo se puede ver que la creación de un objeto se parece a una llamada a la función utilizando el nombre de la clase. La sintaxis disponible de Python, le hace notar que la palabra clave \textbf{new} no es realmente necesaria en C ++, tampoco en Java. \newline
+
+Todo el código inferior se ejecuta por la sentencia \textbf{if}, la cual hace un chequeo para verificar si algún llamado a \textbf{\_\_name\_\_} es equivalente a \textbf{\_\_main\_\_}. De nuevo, los dobles guiones bajos indican nombres especiales. La razón de \textbf{if} es que cualquier archivo también puede ser utilizado como un módulo de librería dentro de otro programa (módulos se describen en breve). En ese caso, usted sólo quiere las clases definidas, pero usted no quiere el código en la parte inferior del archivo a ejecutar. Esta sentencia \textbf{if} en particular, sólo es verdadera cuando se está ejecutando este archivo directamente; eso es, si usted lo especifica en la línea de comandos: \newline
+
+\begin{lstlisting}
+Python SimpleClass.py  \newline 
+\end{lstlisting}
+
+Sin embargo, si este archivo se importa como un módulo en otro programa, no se ejecuta el código \textbf{\_\_main\_\_}. \newline
+
+Algo que es un poco sorprendente en principio es que se definen campos dentro de los métodos, y no fuera de los métodos como C ++ o Java (si crea campos utilizando el estilo de C ++ / Java, implícitamente se convierten en campos estáticos). Para crear un campo de objeto, sólo lo nombra – usando \textbf{self} – dentro de uno de los métodos (usualmente en el constructor, pero no siempre), y se crea el espacio cuando se ejecuta ese método. %seem: parecer
+Esto parece un poco extraño viniendo de C++ o Java donde debe decidir de antemano cuánto espacio su objeto va a ocupar, pero resulta ser una manera muy flexible para programar.  \newline
+
+\textbf{Herencia} \newline
+
+Porque Python es débilmente tipado, esto realmente no tiene importancia para las interfaces – lo único que importa es la aplicación de las operaciones a los objetos (de hecho, la palabra reservada \textbf{interface} de Java podría ser descartada en Python). Esto significa que la herencia en Python es diferente de la herencia en C++ o Java, donde a menudo se hereda simplemente para establecer una interfaz común. En Python, la única razón por la que hereda es para heredar una implementación – reutilizar el código de la clase base. \newline
+
+Si usted va a heredar de una clase, usted debe decirle a Python que incluya esa clase en el nuevo archivo. Python controla sus espacios de nombre tan audazmente como lo hace Java, y de manera similar (aunque con la predilección de Python por su sencillez). Cada vez que se crea un archivo, se crea implícitamente un módulo (que es como un paquete en Java) con el mismo nombre que el archivo. Por lo tanto, no se necesitó la palabra clave \textbf{package} en Python. Cuando se desea utilizar un módulo, sólo dice \textbf{import} y da el nombre del módulo. Python busca el PYTHONPATH del mismo modo que Java busca el CLASSPATH (pero por alguna razón, Python no tiene el mismo tipo de dificultades, como si las tiene Java) y lee en el archivo. Para referirse a cualquiera de las funciones o clases dentro de un módulo, usted le da el nombre del módulo, un período, y el nombre de la función o clase. Si usted no quiere preocuparse por la calificación del nombre, puede decir: \newline
+
+\textbf{from} \textit{module} \textbf{import} \textit{name(s)} \newline
+
+Donde "name(s)" puede ser una lista de nombres separada por comas. \newline
+
+Usted hereda una clase (o clases – Python soporta herencia multiple) enumerando el nombre(s) : name(s)  de la clase dentro de paréntesis después del nombre de la clase heredera. Tenga en cuenta que la clase \textbf{Simple}, la cual reside en el archivo (y por lo tanto, el módulo) llamado \textbf{SimpleClass} y se pone en este nuevo espacio de nombres utilizando una sentencia \textbf{import}:  \newline
+
+\begin{lstlisting} 
+#: c01:Simple2.py 
+from SimpleClass import Simple 
+class Simple2(Simple): 
+  def __init__(self, str): 
+    print "Inside Simple2 constructor" 
+    # You must explicitly call  
+    # the base-class constructor: 
+    Simple.__init__(self, str) 
+  def display(self): 
+    self.showMsg("Called from display()") 
+  # Overriding a base-class method 
+  def show(self): 
+    print "Overridden show() method" 
+    # Calling a base-class method from inside 
+    # the overridden method: 
+    Simple.show(self) 
+class Different: 
+  def show(self): 
+    print "Not derived from Simple" 
+if __name__ == "__main__": 
+  x = Simple2("Simple2 constructor argument") 
+  x.display() 
+  x.show() 
+  x.showMsg("Inside main") 
+  def f(obj): obj.show() # One-line definition 
+  f(x) 
+  f(Different()) 
+#:~ 
+\end{lstlisting}
+
+\textbf{Simple2} se hereda de \textbf{Simple}, y el constructor de la clase base es llamado en el constructor. En \textbf{display( ), showMsg( )} puede ser llamado como un método de \textbf{self}, pero al llamar a la versión de la clase base del método usted está modificando, se debe calificar por completo el nombre y pasar \textbf{self} como el primer argumento, como se muestra en la llamada al constructor de la clase base. Esto también puede verse en la versión modificada de \textbf{show( )}. \newline
+
+En \textbf{\_\_main\_\_}, usted puede ver (cuando corre el programa) que el constructor de la clase base es llamado. También puede ver que el método \textbf{showMsg()} es válido en las clases derivadas, del mismo modo que se puede esperar con la herencia.\newline
+
+La clase \textbf{Different} también tiene un método llamado \textbf{show()}, pero esta clase no es derivada de \textbf{Simple}. El método \textbf{f( )} definido en \textbf{\_\_main\_\_} demuestra tipificación débil:  lo único que %le 
+importa es que \textbf{show( )} se puede aplicar a \textbf{obj}, y no tiene ningún otro tipo de requisito. Usted puede ver que \textbf{f( )} se puede aplicar igualmente a un objeto de una clase derivada de \textbf{Simple} y a uno que no lo es, sin discriminación.
+Si usted es un programador de C++, debería ver que el objetivo de la función \textbf{template} de C ++ es esto exactamente: proporcionar tipificación débil en un lenguaje fuertemente tipado. 
+Por lo tanto, en Python automáticamente obtendrá el equivalente de plantillas –  sin tener que aprender esa sintaxis y esa semántica particularmente difícil.  
+
+\newpage

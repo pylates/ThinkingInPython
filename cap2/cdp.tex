@@ -1,0 +1,358 @@
+\section*{El concepto de Patrón}
+\label{sec:ecp}
+\addcontentsline{toc}{section}{\nameref{sec:ecp}}
+
+\textbf{"Los patrones de diseño ayudan a aprender de los éxitos de los demás en lugar de sus propios fracasos"} \footnote{De Mark Johnson}
+\newline
+Probablemente el avance más importante en el diseño orientado a objetos es el movimiento "patrones de diseño", descrito en \textit{Design Patterns : Diseño de patrones (ibid)}\footnote{Pero cuidado: los ejemplos están en C ++.} Ese libro muestra 23 soluciones diferentes a las clases particulares de problemas. En este libro, los conceptos básicos de los patrones de diseño se introducirán junto con ejemplos. 
+Esto debería abrir su apetito para leer el libro \textit{Design Patterns : Diseño de patrones} por Gamma, et. al., una fuente de lo que ahora se ha convertido en un elemento esencial, casi obligatorio, vocabulario para los usuarios de la programación orientada a objetos.\newline
+
+La última parte de este libro contiene un ejemplo del proceso de evolución del diseño, comenzando con una solución inicial y moviéndose a través de la lógica y el proceso de la evolución de la solución a los diseños más apropiados. El programa mostrado (una simulación de clasificación de basura) ha evolucionado con el tiempo, puede mirar en dicha evolución como un prototipo de la forma en que su propio diseño puede comenzar como una solución adecuada a un problema particular  y evolucionar hacia un enfoque flexible para una clase de problemas.
+
+\subsection*{¿Qué es un Patrón?}
+\label{subsec:qeup}
+\addcontentsline{toc}{subsection}{\nameref{subsec:qeup}}
+
+% ------- 18 de Octubre ----------
+Inicialmente, usted puede pensar en un patrón como una forma especialmente inteligente y perspicaz de la solución de una determinada clase de problemas. Es decir, parece que muchas personas han trabajado todos los ángulos de un problema y han llegado a la solución más general y flexible para ello. El problema podría ser uno que usted ha visto y ha resuelto antes, pero su solución probablemente no tenía el conjunto de complementos que usted vería incorporados en un patrón.    \newline
+
+Aunque se les llama "patrones de diseño", ellos realmente no están atados al ámbito del diseño. Un patrón parece estar al margen de la forma tradicional de pensar en el análisis, diseño, e implementación. En lugar, un patrón encarna una idea completa dentro de un programa, y por lo tanto a veces puede aparecer en la fase de análisis o de la fase de diseño de alto nivel. Esto es interesante porque un patrón tiene una aplicación directa en el código y por lo que podría no esperar que aparezca antes del diseño o implementación de bajo nivel (de hecho, es posible que no se dé cuenta de que se necesita un patrón particular hasta llegar a esas fases).      \newline
+
+El concepto básico de un patrón también puede ser visto como el concepto básico de diseño del programa; es decir, la adición de una capa de abstracción. Cuando usted abstrae algo, usted está aislando detalles particulares, y una de las motivaciones más convincentes detrás de esto es \textit{separar cosas que cambian de las cosas que al final quedan igual}. Otra manera de poner esto es que una vez usted encuentra alguna parte de su programa que es probable que cambie por una razón u otra, usted querrá mantener esos cambios con respecto a la propagación de otros cambios a través de su código. Esto no sólo hace el código mucho más económico de mantener, pero también resulta que por lo general es más fácil de entender (lo cual resulta en menores costes).    \newline
+
+A menudo, la parte más difícil de desarrollar un diseño elegante y sencillo de mantener, es en el descubrimiento de lo que yo llamo "el vector del cambio." (Aquí, "vector" se refiere al gradiente máximo y no una clase contenedora.) Esto significa encontrar la cosa más importante que cambia en su sistema, o dicho de otra manera, descubrir donde esta su mayor valor. Una vez que descubra el vector del cambio, usted tiene el punto focal alrededor del cual estructurar su diseño.      \newline
+
+Así que el objetivo de los patrones de diseño es identificar los cambios en su código. Si se mira de esta manera, usted ha estado viendo algunos patrones de diseño que ya están en este libro. Por ejemplo, la herencia puede ser pensada como un patrón de diseño (aunque uno puesto en ejecución por el compilador). Esto le permite expresar diferencias del comportamiento (esto cambia) de los objetos que todos tienen la misma interfaz (permaneciendo igual). La composición también puede ser considerada un patrón, ya que le permite cambiar — dinámica o estáticamente — los objetos que implementan la clase, y por lo tanto la forma en que funciona la clase. \\
+
+Otro patrón que aparece en \textit{Design Patterns} es el \textit{iterador}, el cual ha sido implícitamente dispuesto en el bucle \textbf{for} desde el comienzo del lenguaje, y fue introducido como una característica explícita en Python 2.2. Un iterador le permite ocultar la implementación particular del contenedor como  usted está pasando a través de los elementos y seleccionando uno por uno. Así, puede escribir código genérico que realiza una operación en todos los elementos en una secuencia sin tener en cuenta la forma en que se construye la secuencia. Así, su código genérico se puede utilizar con cualquier objeto que pueda producir un iterador. \newline
+
+
+\subsection*{Taxonomía Patrón}
+\label{subsec:txp}
+\addcontentsline{toc}{subsection}{\nameref{subsec:txp}}
+
+Uno de los acontecimientos que se produjeron con el aumento de patrones de diseño es lo que podría ser considerado como la ``contaminación" del término – la gente ha empezado a utilizar el término para definir 
+casi cualquier cosa en sinónimo de "bueno". Después de alguna ponderación, yo he llegado con una especie de jerarquía que describe una sucesión de diferentes tipos de categorías:      
+\begin{enumerate}
+    
+    \item{Idioma:} Cómo escribimos código en un lenguaje particular, para hacer este tipo particular de cosas. Esto podría ser algo tan común como la forma en que codifica el proceso de paso a paso a través de una matriz en C (y no se corre al final).
+    
+    \item{Diseño Especifico:} la solución que se nos ocurrió para resolver este problema en particular. Esto podría ser un diseño inteligente, pero no intenta ser general.
+    
+    \item{Diseño Estándar:} una manera de resolver este \textit{tipo} de problema. Un diseño que se ha vuelto más general, típicamente a través de la reutilización.
+    
+    \item{Patrón de Diseño:} como resolver problemas similares. Esto normalmente sólo aparece después de la aplicación de un diseño estándar un número de veces, y después de ver un patrón común a través de estas aplicaciones.
+    
+\end{enumerate}
+
+Siento que esto ayuda a poner las cosas en perspectiva, y para mostrar donde algo podría encajar. Sin embargo, esto no dice que uno es mejor que otro. No tiene sentido tratar de tomar todas las soluciones de problemas y generalizarlas a un patrón de diseño – no es un buen uso de su tiempo, y no se puede forzar el descubrimiento de patrones de esa manera; ellos tienden a ser sutiles y aparecen con el tiempo.     \newline
+
+También se podría argumentar a favor de la inclusión del \textit{Analysis Pattern : Patrón Análisis} y \textit{Architectural Pattern : Patrón arquitectónico} en esta taxonomía.
+
+\newpage
+
+\subsection*{Estructuras Diseño}
+\label{subsec:estd}
+\addcontentsline{toc}{subsection}{\nameref{subsec:estd}}
+
+Una de las luchas que he tenido con los patrones de diseño es su clasificación - A menudo he encontrado el enfoque GoF (Gang of Four, mencionado en la introducción) a ser demasiado oscuro, y no siempre muy servicial. Ciertamente, los patrones \textit{creacionales} son bastante sencillos: ¿cómo se van a crear sus objetos? Esta es una pregunta que normalmente necesita hacerse, y el nombre que lleva directamente a ese grupo de patrones. Pero encuentro \textit{Structural and Behavioral : Estructurales y de comportamiento} a ser distinciones mucho menos útiles. No he sido capaz de mirar un problema y decir "Claramente, se necesita un patrón estructural aquí", por lo que la clasificación no me lleva a una solución.  \newline
+
+He trabajado por un tiempo con este problema, primero señalando que la estructura subyacente de algunos de los patrones GoF son similares entre sí, y tratando de desarrollar relaciones basadas en esa semejanza. 
+Si bien este fue un experimento interesante, no creo que produjo gran parte de su uso en el final, porque el punto es resolver problemas, por lo que un enfoque útil se verá en el problema a resolver y tratar de encontrar relaciones entre el problema y las posibles soluciones. \newline
+
+Con ese fin, he empezado a intentar reunir las estructuras básicas de diseño, y tratar de ver si hay una manera de relacionar aquellas estructuras a los diversos patrones de diseño que aparecen en sistemas bien pensados. Corrientemente, sólo estoy tratando de hacer una lista, pero eventualmente espero hacer pasos hacia la conexión de estas estructuras con los patrones (o Puedo llegar con un enfoque totalmente diferente – esta se encuentra todavía en su etapa de formación)  \newline
+
+Aquí \footnote{Esta lista incluye sugerencias de Kevlin Henney, David Scott, y otros.} está la lista actual de candidatos, solo algunos de los cuales llegarán al final de la lista. Siéntase libre de sugerir otros, o posiblemente, las relaciones con los patrones. \newline
+
+\begin{itemize} %[$*$]
+    \item \textbf{Encapsulación:} auto contención y que incorpora un modelo de uso.
+    \item \textbf{Concurrencia} %  = GATHERING = REUNION
+    \item \textbf{Localización}
+    \item \textbf{Separación}  %= CLASIFICACION
+    \item \textbf{Ocultación}
+    \item \textbf{Custodiando}
+    \item \textbf{Conector}
+    \item \textbf{Obstáculo/valla}
+    \item \textbf{Variación en el Comportamiento}
+    \item \textbf{Notificación}
+    \item \textbf{Transacción}
+    \item \textbf{Espejo: }``Capacidad para mantener un universo paralelo(s) en el paso con el mundo dorado"
+    \item \textbf{Sombra:} ``Sigue su movimiento y hace algo diferente en un medio diferente" (Puede ser una variación de Proxy).
+\end{itemize}
+
+\subsection*{Criterios de Diseño}
+\label{subsec:cdd}
+\addcontentsline{toc}{subsection}{\nameref{subsec:cdd}}
+
+Cuando puse un concurso de ideas en mi boletín de noticias\footnote{Una publicación de correo electrónico gratuito. Ver www.BruceEckel.com para suscribirse.}, una serie de sugerencias regresaron, lo cual resultó ser muy útil, pero diferente a la clasificación anterior, y me di cuenta de que una lista de principios de diseño es al menos tan importante como estructuras de diseño, pero por una razón diferente: estos permiten hacer preguntas sobre su diseño propuesto, para aplicar las pruebas de calidad.   \newline
+
+\begin{itemize} %[$*$] 
+    \item \textbf{Principio de menor asombro:}    (no se sorprenda).
+    
+    \item \textbf{Hacer común las cosas fáciles, y raras las cosas posibles}
+    
+    \item \textbf{Consistencia:} Debido a Python, ha sido muy claro para mí especialmente: las normas más al azar que se acumulan sobre el programador, las reglas que no tienen nada que ver con la solución del problema en cuestión, el programador más lento puede producir. Y esto no parece ser un factor lineal, sino una exponencial.
+    
+    \item \textbf{Ley de Demeter:} también denominado "No hables con extraños". Un objeto sólo debe hacer referencia a sí mismo, sus atributos, y los argumentos de sus métodos.
+    
+    \item \textbf{Sustracción:} un diseño se termina cuando no puede llevar nada más lejos\footnote{Esta idea se atribuye generalmente a Antoine de St. Exupery de \textit{The Little Prince : El principito}  "La perfection est atteinte non quand il ne reste rien à ajouter, mais quand il ne reste rien à enlever," o "La perfección se alcanza no cuando no hay nada más que añadir, sino cuando no hay nada más que eliminar".}.
+    
+    \item \textbf{Simplicidad antes de generalidad:}\footnote{A partir de un correo electrónico de Kevlin Henney.} (Una variación de \textit{Occam’s Razor}, que dice que "la solución más simple es el mejor"). Un problema común que encontramos en la estructura es que están diseñados para ser de uso general sin hacer referencia a los sistemas reales. Esto lleva a una increíble variedad de opciones que están a menudo sin uso, mal uso o simplemente no es útil. Sin embargo, la mayoría de los desarrolladores trabajan en sistemas específicos, y la búsqueda de la generalidad no siempre sirve bien. La mejor ruta para la generalidad es a través de la comprensión de ejemplos específicos bien definidos. Por lo tanto, este principio actúa como el punto decisivo entre alternativas de diseño de otro modo igualmente viables. Por supuesto, es totalmente posible que la solución más simple es la más general. % ------------- Marcador página 25------------------
+    %----Preguntar cual es el error en la oración--------------
+    
+    \item \textbf{La reflexividad:} (mi término sugerido). Una abstracción por clase, una clase por la abstracción. También podría ser llamado \textbf{Isomorfismo}.
+    
+    \item \textbf{Independencia o Ortogonalidad.} Expresar ideas independientes de forma independiente. Esto complementa Separación, Encapsulación y Variación, y es parte del Bajo-Acoplamiento-Alta-Cohesión.
+    
+    \item \textbf{Una vez y sólo una vez:} Evitar la duplicación de la lógica y de la estructura donde la duplicación no es accidental, es decir, donde ambas piezas de código expresan la misma intención por la misma razón.
+
+\end{itemize}
+
+En el proceso de lluvia de ideas para una idea, espero llegar con un pequeño puñado de ideas fundamentales que se puede mantener en su cabeza mientras usted analiza un problema. Ahora bien, otras ideas que vienen de esta lista puede terminar siendo útiles como una lista de verificación mientras recorre y analiza su diseño.  \newline
+
+\subsection{Singleton}
+
+Posiblemente el patrón de diseño más simple es el \textit{Singleton}, 
+el cual es una manera de proporcionar un y sólo un objeto de un tipo particular. Para lograr esto, usted debe tomar el control de la creación de objetos fuera de las manos del programador. Una forma cómoda de hacerlo es delegar una sola instancia de una clase interna privada anidada:    \newline %nest= anidar
+
+ \begin{lstlisting}
+#: c01:SingletonPattern.py 
+
+class OnlyOne: 
+  class __OnlyOne: 
+    def __init__(self, arg): 
+      self.val = arg 
+    def __str__(self): 
+      return `self` + self.val 
+  instance = None 
+  def __init__(self, arg): 
+    if not OnlyOne.instance: 
+      OnlyOne.instance = OnlyOne.__OnlyOne(arg) 
+    else: 
+      OnlyOne.instance.val = arg 
+  def __getattr__(self, name): 
+    return getattr(self.instance, name) 
+    
+x = OnlyOne('sausage') 
+print x 
+y = OnlyOne('eggs') 
+print y 
+z = OnlyOne('spam') 
+print z 
+print x 
+print y 
+print `x` 
+print `y` 
+print `z` 
+output = ''' 
+<__main__.__OnlyOne instance at 0076B7AC>sausage 
+<__main__.__OnlyOne instance at 0076B7AC>eggs 
+<__main__.__OnlyOne instance at 0076B7AC>spam 
+<__main__.__OnlyOne instance at 0076B7AC>spam 
+<__main__.__OnlyOne instance at 0076B7AC>spam 
+<__main__.OnlyOne instance at 0076C54C> 
+<__main__.OnlyOne instance at 0076DAAC> 
+<__main__.OnlyOne instance at 0076AA3C> 
+''' 
+#:~ 
+ \end{lstlisting}
+
+Debido a que la clase interna se llama con una doble raya al piso, esta es privada por lo que el usuario no puede acceder directamente a ella.  La clase interna contiene todos los métodos que normalmente se ponen en la clase si no se va a ser un singleton, y luego se envuelve en la clase externa la cual controla la creación mediante el uso de su constructor. La primera vez que usted crea un \textbf{OnlyOne}, inicializa \textbf{instance}, pero después de eso sólo la ignora.  \newline
+
+El acceso viene a través de la delegación, usando el método \textbf{\_\_getattr\_\_( )} para redireccionar las llamadas a la instancia única. Se puede ver en la salida que a pesar de que parece que se han creado múltiples objetos, el mismo objeto \textbf{\_\_OnlyOne} se utiliza para ambos. Las instancias de \textbf{OnlyOne} son distintas pero todas ellas representan al mismo objeto \textbf{\_\_OnlyOne}.     \newline
+
+Tenga en cuenta que el enfoque anterior no le restringe a la creación de un solo objeto. Esta es también una técnica para crear un grupo limitado de objetos. En esa situación, sin embargo, usted puede encontrarse con el problema de compartir objetos en el grupo. Si esto es un problema, puede crear una solución involucrando una comprobación y un registro de los objetos compartidos.     \newline
+
+Una variación en esta técnica utiliza el método de la clase \textbf{\_\_new\_\_} añadido en Python 2.2:     \newline
+
+ \begin{lstlisting}
+#: c01:NewSingleton.py 
+
+class OnlyOne(object): 
+  class __OnlyOne: 
+    def __init__(self): 
+      self.val = None 
+    def __str__(self): 
+      return `self` + self.val 
+  instance = None 
+  def __new__(cls): # __new__ always a classmethod 
+    if not OnlyOne.instance: 
+      OnlyOne.instance = OnlyOne.__OnlyOne() 
+    return OnlyOne.instance 
+  def __getattr__(self, name): 
+    return getattr(self.instance, name) 
+  def __setattr__(self, name): 
+    return setattr(self.instance, name)
+    
+x = OnlyOne() 
+x.val = 'sausage' 
+print x 
+y = OnlyOne() 
+y.val = 'eggs' 
+print y 
+z = OnlyOne() 
+z.val = 'spam' 
+print z 
+print x 
+print y 
+#<hr> 
+output = ''' 
+<__main__.__OnlyOne instance at 0x00798900>sausage 
+<__main__.__OnlyOne instance at 0x00798900>eggs 
+<__main__.__OnlyOne instance at 0x00798900>spam 
+<__main__.__OnlyOne instance at 0x00798900>spam 
+<__main__.__OnlyOne instance at 0x00798900>spam 
+''' 
+#:~     
+ \end{lstlisting}
+ 
+Alex Martelli hace la observación de que lo que realmente queremos con un Singleton es tener un único conjunto de datos de estado de todos los objetos. Es decir, puede crear tantos objetos como desee y, siempre y cuando todos se refieren a la misma información de estado y luego lograr el efecto de Singleton. Él logra esto con lo que él llama \textit{Borg}\footnote{Del programa de televisión \textit{Star Trek: The Next Generation}. Los Borg son un colectivo colmena-mente: "todos somos uno."}, lo cual se logra configurando todas las \textbf{ \_\_dict\_\_ }s a la misma pieza estática de almacenamiento:     \newline
+
+ \begin{lstlisting}
+#: c01:BorgSingleton.py 
+# Alex Martelli's 'Borg' 
+
+class Borg: 
+  _shared_state = {} 
+  def __init__(self): 
+    self.__dict__ = self._shared_state 
+    
+class Singleton(Borg): 
+  def __init__(self, arg): 
+    Borg.__init__(self) 
+    self.val = arg 
+  def __str__(self): return self.val 
+  
+x = Singleton('sausage') 
+print x 
+y = Singleton('eggs') 
+print y 
+z = Singleton('spam') 
+print z 
+print x 
+print y 
+print `x` 
+print `y` 
+print `z` 
+output = ''' 
+sausage 
+eggs 
+spam 
+spam 
+spam 
+<__main__.Singleton instance at 0079EF2C> 
+<__main__.Singleton instance at 0079E10C> 
+<__main__.Singleton instance at 00798F9C> 
+''' 
+#:~     
+    \end{lstlisting}
+
+    Esto tiene un efecto idéntico como \textbf{SingletonPattern.py}, pero este es más elegante. En el primer caso, deben conectarse en el comportamiento \textit{Singleton} a cada una de sus clases, pero \textit{Borg} está diseñado para ser reutilizado fácilmente a través de la herencia.     \newline
+    
+    Otras dos formas interesantes para definir singleton\footnote{Sugerido por Chih Chung Chang.} incluyen envolviendo una clase y utilizando metaclases. 
+El primer enfoque podría ser pensado como un \textit{decorador de clase} 
+(decoradores se definirán más adelante en el libro), porque lleva la clase de interés y añade funcionalidad a ella envolviéndola en otra clase:   \newline
+
+     \begin{lstlisting}
+#: c01:SingletonDecorator.py
+
+class SingletonDecorator: 
+  def __init__(self,klass): 
+    self.klass = klass 
+    self.instance = None 
+  def __call__(self,*args,**kwds): 
+    if self.instance == None: 
+      self.instance = self.klass(*args,**kwds) 
+    return self.instance 
+    
+class foo: pass 
+foo = SingletonDecorator(foo) 
+
+x=foo() 
+y=foo() 
+z=foo() 
+x.val = 'sausage' 
+y.val = 'eggs' 
+z.val = 'spam' 
+print x.val 
+print y.val 
+print z.val 
+print x is y is z 
+#:~ 
+\end{lstlisting}
+
+[[ Descripción ]] \newline
+
+El segundo enfoque utiliza metaclases, un tema que aún no entiendo pero el cual se ve muy interesante y poderoso ciertamente (tenga en cuenta que Python 2.2 ha mejorado / simplificado la sintaxis metaclase, y por lo que este ejemplo puede cambiar): \newline
+
+\begin{lstlisting}
+#: c01:SingletonMetaClass.py 
+class SingletonMetaClass(type): 
+  def __init__(cls,name,bases,dict): 
+    super(SingletonMetaClass,cls)\ 
+      .__init__(name,bases,dict) 
+    original_new = cls.__new__ 
+    def my_new(cls,*args,**kwds): 
+      if cls.instance == None: 
+        cls.instance = \ 
+          original_new(cls,*args,**kwds) 
+      return cls.instance 
+    cls.instance = None 
+    cls.__new__ = staticmethod(my_new) 
+    
+class bar(object): 
+      __metaclass__ = SingletonMetaClass 
+  def __init__(self,val): 
+    self.val = val 
+  def __str__(self): 
+    return `self` + self.val 
+    
+x=bar('sausage') 
+y=bar('eggs') 
+z=bar('spam') 
+print x 
+print y 
+print z 
+print x is y is z 
+#:~ 
+\end{lstlisting}
+  
+[[Descripción prolongada, detallada, informativa de lo que son metaclases y cómo funcionan, por arte de magia insertado aquí]]    
+
+\subsubsection*{Ejercicio}
+Modificar \textbf{BorgSingleton.py} para que utilice un método \textbf{\_\_new\_\_()} de clase.
+
+\subsection{Clasificación de Patrones}
+
+El libro \textit{Design Patterns} discute 23 patrones diferentes, clasificados en tres propósitos (los cuales giran en torno al aspecto particular que puede variar). Los tres propósitos son:  \newline
+
+\textbf{1. Creacional:} 
+cómo se puede crear un objeto. Esto a menudo involucra el aislamiento de los detalles en la creación de objetos, por lo que su código no depende de qué tipos de objetos existen y por lo tanto no tiene que cambiarse cuando se agrega un nuevo tipo de objeto. El ya mencionado \textit{Singleton} es clasificado como un patrón creacional, y más adelante en este libro usted verá ejemplos de \textit{Factory Method and Prototype}.     \newline
+
+\textbf{2. Estructural:} diseñar objetos para complementar las limitaciones del proyecto. Estos funcionan con la forma en que los objetos están conectados con otros objetos para asegurar que los cambios en el sistema no requieren cambios en dichas conexiones.        \newline
+
+\textbf{3. Comportamental:} corresponde a los objetos que manejan tipos particulares de acciones dentro de un programa. Estos encapsulan procesos que usted desea realizar, tales como la interpretación de un lenguaje, el cumplimiento de una solicitud, el movimiento a través de una secuencia (como en un iterador), o la implementación un algoritmo. Este libro contiene ejemplos de los patrones \textit{Observer : Observador} y \textit{Visitor : visitante}. \newline
+
+El libro \textit{Design Patterns} tiene una sección para cada uno de sus 23 patrones junto con uno o más ejemplos para cada uno, normalmente en C ++, pero algunos en Smalltalk. (Usted encontrará que esto no importa demasiado puesto que puedes traducir fácilmente los conceptos de cualquier lenguaje en Python.) En este libro no se repetirán todos los patrones mostrados en \textit{Design Patterns} ya que el libro se destaca por su cuenta y deberían ser estudiados por separado. En lugar de ello, este libro le dará algunos ejemplos que deberían proporcionarle una sensación decente de para que son los patrones y por qué son tan importantes. \newline
+
+Después de algunos años de trabajar en el tema,me di cuenta que los mismos patones utilizan principios básicos de organización, aparte de (y más fundamental que) los descritos en \textit{Design Patterns}. Estos principios se basan en la estructura de las implementaciones, que es donde he visto grandes similitudes entre los patrones (más que aquellos expresados en \textit{Design Patterns}). Aunque nosotros generalmente tratamos de evitar la implementación en favor de la interfaz, he encontrado que a menudo es más fácil de pensar, y especialmente para aprender, acerca de los patrones en términos de estos principios estructurales. Este libro tratará de presentar los patrones basados en su estructura en lugar de las categorías presentadas en \textit{Design Patterns}.         \newline
+
+\subsection{El desafío para el desarrollo}
+
+Problemas del desarrollo, el proceso UML y la programación extrema.\newline 
+  
+¿Es la evaluación valiosa?  La Capacidad de la inmadurez del modelo: \newline
+
+Wiki Página: \textcolor[rgb]{0.2,0.5,0.7}{\underline{http://c2.com/cgi-bin/wiki?CapabilityImMaturityModel}} \newline 
+
+Articulo: \textcolor[rgb]{0.2,0.5,0.7}{\underline{http://www.embedded.com/98/9807br.htm}} \newline  
+
+Investigación \textit{programación en parejas}:   \newline
+
+\textcolor[rgb]{0.2,0.5,0.7}{\underline{http://collaboration.csc.ncsu.edu/laurie/}} \newline 
+
+\subsection{Ejercicios}
+
+1. \textbf{SingletonPattern.py} siempre crea un objeto,  incluso si nunca se ha utilizado. Modifique este programa para usar \textit{lazy initialization}, de tal forma que el objeto singleton sea creado la primera vez que se necesite.    \newline
+
+2. Usando \textbf{SingletonPattern.py} como punto de partida, cree una clase que gestione una serie fija de sus propios objetos. Asuma que los objetos son las conexiones de base de datos y usted tiene solamente una licencia para usar una cantidad fija de estos objetos en cualquier momento.    \newline
