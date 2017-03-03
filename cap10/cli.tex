@@ -1,0 +1,124 @@
+\section*{7: Cambiando la interfaz.}
+\label{sec:cli}
+\addcontentsline{toc}{section}{\nameref{sec:cli}}
+
+
+A veces el problema que usted está resolviendo es tan simple como: "Yo no tengo la interfaz que quiero." Dos de los patrones en \textit{Design Patterns : Diseño de Patrones} resuelven este problema: \textit{Adapter : Adaptador} toma un tipo y produce una interfaz a algún otro tipo.  \textit{Façade: Fachada} crea una interfaz para un conjunto de clases, simplemente para proporcionar una manera más cómoda para hacer frente a una biblioteca o un paquete de recursos.
+
+
+\subsection*{Adapter (Adaptador)}
+\label{subsec:Adapter}
+\addcontentsline{toc}{subsection}{\nameref{subsec:Adapter}}
+
+
+Cuando tienes \textit{this}, y usted necesita \textit{that}, \textit{Adapter (Adaptador)} resuelve el problema. El único requisito es producir un \textit{that},  y hay un número de maneras que usted puede lograr esta adaptación.
+
+\begin{lstlisting} 
+#: c07:Adapter.py 
+# Variations on the Adapter pattern.
+
+class WhatIHave: 
+  def g(self): pass 
+  def h(self): pass 
+  
+class WhatIWant: 
+  def f(self): pass 
+  
+class ProxyAdapter(WhatIWant): 
+  def __init__(self, whatIHave): 
+    self.whatIHave = whatIHave 
+    
+  def f(self): 
+    # Implement behavior using  
+    # methods in WhatIHave: 
+    self.whatIHave.g() 
+    self.whatIHave.h() 
+    
+class WhatIUse: 
+  def op(self, whatIWant): 
+    whatIWant.f() 
+    
+# Approach 2: build adapter use into op(): 
+class WhatIUse2(WhatIUse): 
+  def op(self, whatIHave): 
+    ProxyAdapter(whatIHave).f() 
+    
+# Approach 3: build adapter into WhatIHave: 
+class WhatIHave2(WhatIHave, WhatIWant): 
+  def f(self): 
+    self.g() 
+    self.h() 
+    
+# Approach 4: use an inner class: 
+class WhatIHave3(WhatIHave): 
+  class InnerAdapter(WhatIWant): 
+    def __init__(self, outer): 
+      self.outer = outer 
+    def f(self): 
+      self.outer.g() 
+      self.outer.h() 
+      
+        def whatIWant(self):  
+    return WhatIHave3.InnerAdapter(self) 
+    
+whatIUse = WhatIUse() 
+whatIHave = WhatIHave() 
+adapt= ProxyAdapter(whatIHave) 
+whatIUse2 = WhatIUse2() 
+whatIHave2 = WhatIHave2() 
+whatIHave3 = WhatIHave3() 
+whatIUse.op(adapt) 
+# Approach 2: 
+whatIUse2.op(whatIHave) 
+# Approach 3: 
+whatIUse.op(whatIHave2) 
+# Approach 4: 
+whatIUse.op(whatIHave3.whatIWant()) 
+#:~ 
+\end{lstlisting}
+
+Estoy tomando libertades con el término "proxy" aquí, porque en \textit{Design Patterns} afirman que un proxy debe tener una interfaz idéntica con el objeto que es para un sustituto : surrogate. Sin embargo, si tiene las dos palabras juntas: "adaptador de proxy," tal vez sea más razonable.  \newline
+
+\subsection*{Façade (Fachada)}
+\label{subsec:Fachada}
+\addcontentsline{toc}{subsection}{\nameref{subsec:Fachada}}
+
+Un principio general que aplico cuando estoy fundido en tratar de moldear requisitos en un objeto de primer corte es "Si algo es feo, esconderlo dentro de un objeto." Esto es básicamente lo que logra \textit{Façade}. Si usted tiene una colección bastante confusa de las clases y las interacciones que el programador cliente no tiene realmente necesidad de ver, entonces usted puede crear una interfaz que es útil para el programador cliente y que sólo presenta lo que sea necesario.
+
+\textit{Façade} se suele implementar como fábrica abstracta \textit{singleton}. Claro, usted puede conseguir fácilmente este efecto mediante la creación de una clase que contiene métodos de fábrica \textbf{static}:  \newline
+
+\begin{lstlisting} 
+# c07:Facade.py 
+class A: 
+  def __init__(self, x): pass 
+class B: 
+  def __init__(self, x): pass 
+class C: 
+  def __init__(self, x): pass 
+  
+# Other classes that aren't exposed by the 
+# facade go here ... 
+class Facade: 
+  def makeA(x): return A(x) 
+  makeA = staticmethod(makeA) 
+  def makeB(x): return B(x) 
+  makeB = staticmethod(makeB) 
+  def makeC(x): return C(x) 
+  makeC = staticmethod(makeC) 
+# The client programmer gets the objects 
+# by calling the static methods: 
+a = Facade.makeA(1); 
+b = Facade.makeB(1); 
+c = Facade.makeC(1.0); 
+# :~ 
+\end{lstlisting}
+[reescribir esta sección utilizando la investigación del libro de Larman]   \newline
+
+\subsection*{Ejercicios}
+\label{subsec:Ejercicios10}
+\addcontentsline{toc}{subsection}{\nameref{subsec:Ejercicios10}}
+
+
+1. Crear una clase adaptador que carga automáticamente una matriz bidimensional de objetos en un diccionario como pares clave-valor.
+
+\newpage

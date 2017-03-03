@@ -1,11 +1,12 @@
 \section*{El concepto de Patrón}
 \label{sec:ecp}
 \addcontentsline{toc}{section}{\nameref{sec:ecp}}
+\begin{center}
+\textbf{“Los patrones de diseño ayudan a aprender de los éxitos de los demás en lugar de sus propios fracasos"} \footnote{De Mark Johnson}\\
+\end{center}
 
-\textbf{"Los patrones de diseño ayudan a aprender de los éxitos de los demás en lugar de sus propios fracasos"} \footnote{De Mark Johnson}
-\newline
-Probablemente el avance más importante en el diseño orientado a objetos es el movimiento "patrones de diseño", descrito en \textit{Design Patterns : Diseño de patrones (ibid)}\footnote{Pero cuidado: los ejemplos están en C ++.} Ese libro muestra 23 soluciones diferentes a las clases particulares de problemas. En este libro, los conceptos básicos de los patrones de diseño se introducirán junto con ejemplos. 
-Esto debería abrir su apetito para leer el libro \textit{Design Patterns : Diseño de patrones} por Gamma, et. al., una fuente de lo que ahora se ha convertido en un elemento esencial, casi obligatorio, vocabulario para los usuarios de la programación orientada a objetos.\newline
+Probablemente el avance más importante en el diseño orientado a objetos es el movimiento “patrones de diseño", descrito en \textit{Design Patterns (ibid)}\footnote{Pero cuidado: los ejemplos están en C ++.} Ese libro muestra 23 soluciones diferentes a las clases particulares de problemas. En este libro, los conceptos básicos de los patrones de diseño se introducirán junto con ejemplos. 
+Esto debería abrir su apetito para leer el libro \textit{Design Patterns} por Gamma, et. al., una fuente de lo que ahora se ha convertido en un elemento esencial, casi obligatorio, vocabulario para los usuarios de la programación orientada a objetos.\newline
 
 La última parte de este libro contiene un ejemplo del proceso de evolución del diseño, comenzando con una solución inicial y moviéndose a través de la lógica y el proceso de la evolución de la solución a los diseños más apropiados. El programa mostrado (una simulación de clasificación de basura) ha evolucionado con el tiempo, puede mirar en dicha evolución como un prototipo de la forma en que su propio diseño puede comenzar como una solución adecuada a un problema particular  y evolucionar hacia un enfoque flexible para una clase de problemas.
 
@@ -20,7 +21,7 @@ Aunque se les llama "patrones de diseño", ellos realmente no están atados al �
 
 El concepto básico de un patrón también puede ser visto como el concepto básico de diseño del programa; es decir, la adición de una capa de abstracción. Cuando usted abstrae algo, usted está aislando detalles particulares, y una de las motivaciones más convincentes detrás de esto es \textit{separar cosas que cambian de las cosas que al final quedan igual}. Otra manera de poner esto es que una vez usted encuentra alguna parte de su programa que es probable que cambie por una razón u otra, usted querrá mantener esos cambios con respecto a la propagación de otros cambios a través de su código. Esto no sólo hace el código mucho más económico de mantener, pero también resulta que por lo general es más fácil de entender (lo cual resulta en menores costes).    \newline
 
-A menudo, la parte más difícil de desarrollar un diseño elegante y sencillo de mantener, es en el descubrimiento de lo que yo llamo "el vector del cambio." (Aquí, "vector" se refiere al gradiente máximo y no una clase contenedora.) Esto significa encontrar la cosa más importante que cambia en su sistema, o dicho de otra manera, descubrir donde esta su mayor valor. Una vez que descubra el vector del cambio, usted tiene el punto focal alrededor del cual estructurar su diseño.      \newline
+A menudo, la parte más difícil de desarrollar un diseño elegante y sencillo de mantener, es en el descubrimiento de lo que yo llamo “el vector del cambio." (Aquí,  “vector" se refiere al gradiente máximo y no una clase contenedora.) Esto significa encontrar la cosa más importante que cambia en su sistema, o dicho de otra manera, descubrir donde esta su mayor valor. Una vez que descubra el vector del cambio, usted tiene el punto focal alrededor del cual estructurar su diseño.      \newline
 
 Así que el objetivo de los patrones de diseño es identificar los cambios en su código. Si se mira de esta manera, usted ha estado viendo algunos patrones de diseño que ya están en este libro. Por ejemplo, la herencia puede ser pensada como un patrón de diseño (aunque uno puesto en ejecución por el compilador). Esto le permite expresar diferencias del comportamiento (esto cambia) de los objetos que todos tienen la misma interfaz (permaneciendo igual). La composición también puede ser considerada un patrón, ya que le permite cambiar — dinámica o estáticamente — los objetos que implementan la clase, y por lo tanto la forma en que funciona la clase. \\
 
@@ -31,11 +32,10 @@ Otro patrón que aparece en \textit{Design Patterns} es el \textit{iterador}, el
 \label{subsec:txp}
 \addcontentsline{toc}{subsection}{\nameref{subsec:txp}}
 
-Uno de los acontecimientos que se produjeron con el aumento de patrones de diseño es lo que podría ser considerado como la ``contaminación" del término – la gente ha empezado a utilizar el término para definir 
-casi cualquier cosa en sinónimo de "bueno". Después de alguna ponderación, yo he llegado con una especie de jerarquía que describe una sucesión de diferentes tipos de categorías:      
+Uno de los acontecimientos que se produjeron con el aumento de patrones de diseño es lo que podría ser considerado como la ``contaminación" del término – la gente ha empezado a utilizar el término para definir casi cualquier cosa en sinónimo de  “bueno". Después de alguna ponderación, yo he llegado con una especie de jerarquía que describe una sucesión de diferentes tipos de categorías:      
 \begin{enumerate}
     
-    \item{Idioma:} Cómo escribimos código en un lenguaje particular, para hacer este tipo particular de cosas. Esto podría ser algo tan común como la forma en que codifica el proceso de paso a paso a través de una matriz en C (y no se corre al final).
+    \item{Idioma:} Cómo escribimos código en un lenguaje particular, para hacer este tipo particular de cosas. Esto podría ser algo tan común como la forma en que codifica el proceso de paso a paso a través de una matriz en C (y no se corre hasta el final).
     
     \item{Diseño Especifico:} la solución que se nos ocurrió para resolver este problema en particular. Esto podría ser un diseño inteligente, pero no intenta ser general.
     
@@ -47,11 +47,11 @@ casi cualquier cosa en sinónimo de "bueno". Después de alguna ponderación, yo
 
 Siento que esto ayuda a poner las cosas en perspectiva, y para mostrar donde algo podría encajar. Sin embargo, esto no dice que uno es mejor que otro. No tiene sentido tratar de tomar todas las soluciones de problemas y generalizarlas a un patrón de diseño – no es un buen uso de su tiempo, y no se puede forzar el descubrimiento de patrones de esa manera; ellos tienden a ser sutiles y aparecen con el tiempo.     \newline
 
-También se podría argumentar a favor de la inclusión del \textit{Analysis Pattern : Patrón Análisis} y \textit{Architectural Pattern : Patrón arquitectónico} en esta taxonomía.
+También se podría argumentar a favor de la inclusión del \textit{Analysis Pattern (Patrón Análisis)} y \textit{Architectural Pattern (Patrón arquitectónico)} en esta taxonomía.
 
 \newpage
 
-\subsection*{Estructuras Diseño}
+\subsection*{Estructuras de Diseño}
 \label{subsec:estd}
 \addcontentsline{toc}{subsection}{\nameref{subsec:estd}}
 
@@ -110,7 +110,9 @@ Cuando puse un concurso de ideas en mi boletín de noticias\footnote{Una publica
 
 En el proceso de lluvia de ideas para una idea, espero llegar con un pequeño puñado de ideas fundamentales que se puede mantener en su cabeza mientras usted analiza un problema. Ahora bien, otras ideas que vienen de esta lista puede terminar siendo útiles como una lista de verificación mientras recorre y analiza su diseño.  \newline
 
-\subsection{Singleton}
+\subsection*{Singleton}
+\label{subsec:singl}
+\addcontentsline{toc}{subsection}{\nameref{subsec:singl}}
 
 Posiblemente el patrón de diseño más simple es el \textit{Singleton}, 
 el cual es una manera de proporcionar un y sólo un objeto de un tipo particular. Para lograr esto, usted debe tomar el control de la creación de objetos fuera de las manos del programador. Una forma cómoda de hacerlo es delegar una sola instancia de una clase interna privada anidada:    \newline %nest= anidar
@@ -322,7 +324,9 @@ print x is y is z
 \subsubsection*{Ejercicio}
 Modificar \textbf{BorgSingleton.py} para que utilice un método \textbf{\_\_new\_\_()} de clase.
 
-\subsection{Clasificación de Patrones}
+\subsection*{Clasificación de Patrones}
+\label{subsec:clPat}
+\addcontentsline{toc}{subsection}{\nameref{subsec:clPat}}
 
 El libro \textit{Design Patterns} discute 23 patrones diferentes, clasificados en tres propósitos (los cuales giran en torno al aspecto particular que puede variar). Los tres propósitos son:  \newline
 
@@ -337,7 +341,9 @@ El libro \textit{Design Patterns} tiene una sección para cada uno de sus 23 pat
 
 Después de algunos años de trabajar en el tema,me di cuenta que los mismos patones utilizan principios básicos de organización, aparte de (y más fundamental que) los descritos en \textit{Design Patterns}. Estos principios se basan en la estructura de las implementaciones, que es donde he visto grandes similitudes entre los patrones (más que aquellos expresados en \textit{Design Patterns}). Aunque nosotros generalmente tratamos de evitar la implementación en favor de la interfaz, he encontrado que a menudo es más fácil de pensar, y especialmente para aprender, acerca de los patrones en términos de estos principios estructurales. Este libro tratará de presentar los patrones basados en su estructura en lugar de las categorías presentadas en \textit{Design Patterns}.         \newline
 
-\subsection{El desafío para el desarrollo}
+\subsection*{El desafío para el desarrollo}
+\label{subsec:edped}
+\addcontentsline{toc}{subsection}{\nameref{subsec:edped}}
 
 Problemas del desarrollo, el proceso UML y la programación extrema.\newline 
   
@@ -351,7 +357,9 @@ Investigación \textit{programación en parejas}:   \newline
 
 \textcolor[rgb]{0.2,0.5,0.7}{\underline{http://collaboration.csc.ncsu.edu/laurie/}} \newline 
 
-\subsection{Ejercicios}
+\subsection*{Ejercicios}
+\label{subsec:exercise}
+\addcontentsline{toc}{subsection}{\nameref{subsec:exercise}}
 
 1. \textbf{SingletonPattern.py} siempre crea un objeto,  incluso si nunca se ha utilizado. Modifique este programa para usar \textit{lazy initialization}, de tal forma que el objeto singleton sea creado la primera vez que se necesite.    \newline
 

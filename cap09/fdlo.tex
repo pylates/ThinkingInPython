@@ -1,0 +1,235 @@
+\section*{6 : Función de los objetos}
+\label{sec:fdlo}
+\addcontentsline{toc}{section}{\nameref{sec:fdlo}}
+
+
+En \textit{Advanced C++:Programming Styles And Idioms (Addison-Wesley, 1992)},  Jim Coplien acuña el término \textit{functor} que es un objeto cuyo único propósito es encapsular una función (ya que "Functor" tiene un significado en matemáticas, Voy a utilizar el término más explícito  \textit{function object}). El punto es desacoplar la elección de la función que se llamará desde el sitio en que esa función se llama.   \newline
+
+Este término se menciona pero no se utiliza en \textit{Design Patterns}. Sin embargo, el tema del objeto de función se repite en una serie de patrones en ese libro.    \newline
+
+\subsection*{Comando: la elección de la operación en tiempo de ejecución}
+\label{subsec:cledloetde}
+\addcontentsline{toc}{subsection}{\nameref{subsec:cledloetde}}
+
+
+Este es el objeto de función en su sentido más puro: un método que es un objeto \footnote{En el lenguaje Python, todas las funciones son ya objetos y así el patrón \textit{Comando} suele ser redundante.}. Al envolver un método en un objeto, usted puede pasarlo a otros métodos u objetos como un parámetro, para decirles que para realizar esta operación en particular en el proceso de cumplir con su petición.     \newline
+
+\begin{lstlisting}
+#: c06:CommandPattern.py 
+
+class Command: 
+  def execute(self): pass 
+  
+class Loony(Command): 
+  def execute(self): 
+    print "You're a loony." 
+    
+class NewBrain(Command): 
+  def execute(self): 
+    print "You might even need a new brain." 
+    
+class Afford(Command): 
+  def execute(self): 
+    print "I couldn't afford a whole new brain."
+    
+# An object that holds commands: 
+class Macro: 
+  def __init__(self): 
+    self.commands = [] 
+  def add(self, command):  
+    self.commands.append(command)  
+  def run(self): 
+    for c in self.commands: 
+      c.execute() 
+      
+macro = Macro() 
+macro.add(Loony()) 
+macro.add(NewBrain()) 
+macro.add(Afford()) 
+macro.run() 
+#:~       
+\end{lstlisting}
+
+El punto primario de \textit{Command} es para que pueda entregar una acción deseada a un método u objeto. En el ejemplo anterior, esto proporciona una manera de hacer cola en un conjunto de acciones a realizar colectivamente. En este caso, ello le permite crear dinámicamente un nuevo comportamiento, algo que sólo puede hacer normalmente escribiendo nuevo código, pero en el ejemplo anterior se podría hacer mediante la interpretación de un script (ver el patrón \textit{Interpreter : intérprete} si lo que necesita hacer se pone muy complejo). \newline
+
+\textit{Design Patterns} dice que "Los comandos son un reemplazo orientado a objetos para devoluciones de llamada\footnote{Página 235}." Sin embargo, Creo que la palabra "vuelta" es una parte esencial del concepto de devoluciones de llamada. Es decir, Creo que una devolución de llamada en realidad se remonta al creador de la devolución de llamada. Por otro lado, con un objeto \textit{Command} normalmente se acaba de crear y entregar a algún método o un objeto,  y no está conectado de otra forma el transcurso del tiempo con el objeto Command. Esa es mi opinión sobre ella, de todos modos. Más adelante en este libro, Combino un grupo de patrones de diseño bajo el título de "devoluciones de llamada."  \newline
+
+\subsection*{Estrategia: elegir el algoritmo en tiempo de ejecución}
+\label{subsec:eeeaetde}
+\addcontentsline{toc}{subsection}{\nameref{subsec:eeeaetde}}
+
+
+\textit{Strategy} parece ser una familia de clases \textit{Command}, todo heredado de la misma base. Pero si nos fijamos en \textit{Command}, verá que tiene la misma estructura: una jerarquía de objetos de función. La diferencia está en la forma en que se utiliza esta jerarquía. Como se ve en \textbf{c12:DirList.py}, usted utiliza \textit{Command} para resolver un problema particular — en este caso, seleccionando los archivos de una lista. La "cosa que permanece igual" es el cuerpo del método que está siendo llamado, y la parte que varía es aislado en el objeto función. Me atrevería a decir que \textit{Command} proporciona flexibilidad. mientras usted está escribiendo el programa, visto que la flexibilidad de \textit{Strategy} está en tiempo de ejecución. 
+
+\textit{Strategy} también agrega un "Contexto" que puede ser una clase sustituta que controla la selección y uso de la estrategia de objeto particular — al igual que \textit{State!} Esto es lo que parece:   \newpage
+
+\begin{lstlisting} 
+#: c06:StrategyPattern.py 
+
+# The strategy interface: 
+class FindMinima: 
+  # Line is a sequence of points: 
+  def algorithm(self, line) : pass 
+  
+# The various strategies: 
+class LeastSquares(FindMinima): 
+  def algorithm(self, line): 
+    return [ 1.1, 2.2 ] # Dummy 
+    
+class NewtonsMethod(FindMinima): 
+  def algorithm(self, line): 
+    return [ 3.3, 4.4 ]  # Dummy 
+    
+class Bisection(FindMinima): 
+  def algorithm(self, line): 
+      return [ 5.5, 6.6 ] # Dummy 
+class ConjugateGradient(FindMinima): 
+  def algorithm(self, line): 
+    return [ 3.3, 4.4 ] # Dummy 
+# The "Context" controls the strategy: 
+class MinimaSolver: 
+  def __init__(self, strategy): 
+    self.strategy = strategy 
+  def minima(self, line): 
+    return self.strategy.algorithm(line) 
+    
+  def changeAlgorithm(self, newAlgorithm): 
+    self.strategy = newAlgorithm 
+solver = MinimaSolver(LeastSquares()) 
+line = [ 
+    1.0, 2.0, 1.0, 2.0, -1.0, 3.0, 4.0, 5.0, 4.0  
+  ] 
+print solver.minima(line) 
+solver.changeAlgorithm(Bisection()) 
+print solver.minima(line) 
+#:~ 
+\end{lstlisting}
+
+Observe similitud con el método de plantilla  – TM afirma distinción que este tiene más de un método para llamar, hace las cosas por partes. Ahora bien, no es probable que la estrategia de objeto tendría más de una llamada al método; considerar sistema de cumplimiento de la orden de Shalloway.con información de los países en cada estrategia.  \newline
+
+Ejemplo Estrategia de Python estándar: \textbf{sort( )} toma un segundo argumento opcional que actúa como un objeto de comparación; esta es una estrategia.    \newpage
+
+\subsection*{Cadena de responsabilidad}
+\label{subsec:cdr}
+\addcontentsline{toc}{subsection}{\nameref{subsec:cdr}}
+
+\textit{Chain of Responsibility (Cadena de responsabilidad)} podría ser pensado como una generalización dinámica de recursividad utilizando objetos \textit{Strategy}. Usted hace una llamada, y cada \textit{Strategy} en una secuencia vinculada trata de satisfacer la llamada. El proceso termina cuando una de las estrategias es exitosa o termina la cadena. En la recursividad, un método se llama a sí mismo una y otra vez hasta que se alcance una condición de terminación; con \textit{Chain of Responsibility : Cadena de responsabilidad}, un método se llama a sí mismo, que (moviendo por la cadena de \textit{Strategies}) llama una implementación diferente del método, etc., hasta que se alcanza una condición de terminación. La condición de terminación es o bien que se alcanza la parte inferior de la cadena (en cuyo caso se devuelve un objeto por defecto; usted puede o no puede ser capaz de proporcionar un resultado por defecto así que usted debe ser capaz de determinar el éxito o el fracaso de la cadena) o una de las \textit{Strategies : Estrategias} tiene éxito.      \newline
+
+En lugar de llamar a un solo método para satisfacer una solicitud, múltiples métodos de la cadena tienen la oportunidad de satisfacer la solicitud, por lo que tiene el sabor de un sistema experto. Dado que la cadena es efectivamente una lista enlazada, puede ser creada dinámicamente, por lo que también podría pensar en ello como una más general, declaración \textbf{switch} dinámicamente construida.   \newline
+
+En el GoF, hay una buena cantidad de discusión sobre cómo crear la cadena de responsabilidad como una lista enlazada. Ahora bien, cuando nos fijamos en el patrón realmente no debería importar cómo se mantiene la cadena; eso es un detalle de implementación. Ya que GoF fue escrito antes de la Librería de plantillas estándar (STL :  Standard Template Library ) fue incorporado en la mayoría de los compiladores de C ++, La razón de esto más probable es (1) no había ninguna lista y por lo tanto tuvieron que crear una y (2) las estructuras de datos a menudo se enseñan como una habilidad fundamental en el mundo académico, y la idea de que las estructuras de datos deben ser herramientas estándar disponibles con el lenguaje de programación puede no haber ocurrido a los autores GoF. Yo sostengo que la implementación de \textit{Chain of Responsibility} como una cadena  (específicamente, una lista enlazada) no añade nada a la solución y puede fácilmente ser implementado utilizando una lista estándar de Python, como se muestra más abajo. Además, usted verá que he ido a algún esfuerzo para separar las partes de gestión de la cadena de la implementación de las distintas \textit{Strategies}, de modo que el código puede ser más fácilmente reutilizado.    \newline
+
+% Además==Furthermore
+
+En \textbf{StrategyPattern.py}, anteriormente, lo que probablemente quiere es encontrar automáticamente una solución. \textit{Chain of Responsibility : Cadena de Responsabilidad} proporciona una manera de hacer esto por el encadenamiento de los objetos \textit{Strategy} juntos y proporcionando un mecanismo para que recursivamente automáticamente a través de cada uno en la cadena:     \newline
+
+\begin{lstlisting} 
+#: c06:ChainOfResponsibility.py 
+
+# Carry the information into the strategy: 
+class Messenger: pass 
+
+# The Result object carries the result data and 
+# whether the strategy was successful: 
+class Result: 
+  def __init__(self): 
+    self.succeeded = 0 
+  def isSuccessful(self):  
+    return self.succeeded  
+  def setSuccessful(self, succeeded):  
+    self.succeeded = succeeded 
+    
+class Strategy: 
+  def __call__(messenger): pass 
+  def __str__(self):  
+    return "Trying " + self.__class__.__name__ \ 
+      + " algorithm" 
+      
+# Manage the movement through the chain and 
+# find a successful result: 
+class ChainLink: 
+  def __init__(self, chain, strategy): 
+    self.strategy = strategy 
+    self.chain = chain 
+    self.chain.append(self) 
+    
+  def next(self): 
+    # Where this link is in the chain: 
+    location = self.chain.index(self) 
+    if not self.end(): 
+      return self.chain[location + 1] 
+      
+  def end(self): 
+    return (self.chain.index(self) + 1 >=  
+            len(self.chain)) 
+  def __call__(self, messenger): 
+    r = self.strategy(messenger) 
+    if r.isSuccessful() or self.end(): return r 
+    return self.next()(messenger) 
+    
+# For this example, the Messenger 
+# and Result can be the same type: 
+class LineData(Result, Messenger): 
+  def __init__(self, data): 
+    self.data = data 
+  def __str__(self): return `self.data` 
+  
+class LeastSquares(Strategy):   
+  def __call__(self, messenger): 
+    print self 
+    linedata = messenger 
+    # [ Actual test/calculation here ] 
+    result = LineData([1.1, 2.2]) # Dummy data 
+    result.setSuccessful(0) 
+    return result 
+    
+class NewtonsMethod(Strategy): 
+  def __call__(self, messenger): 
+    print self 
+    linedata = messenger 
+    # [ Actual test/calculation here ] 
+    result = LineData([3.3, 4.4]) # Dummy data 
+    result.setSuccessful(0) 
+    return result 
+    
+class Bisection(Strategy): 
+  def __call__(self, messenger): 
+    print self 
+    linedata = messenger 
+    # [ Actual test/calculation here ] 
+    result = LineData([5.5, 6.6]) # Dummy data 
+    result.setSuccessful(1) 
+    return result 
+    
+class ConjugateGradient(Strategy): 
+  def __call__(self, messenger): 
+    print self 
+    linedata = messenger 
+    # [ Actual test/calculation here ] 
+    result = LineData([7.7, 8.8]) # Dummy data 
+    result.setSuccessful(1) 
+    return result 
+    
+solutions = [] 
+solutions = [ 
+  ChainLink(solutions, LeastSquares()), 
+  ChainLink(solutions, NewtonsMethod()), 
+  ChainLink(solutions, Bisection()), 
+  ChainLink(solutions, ConjugateGradient()) 
+] 
+
+line = LineData([  
+      1.0, 2.0, 1.0, 2.0, -1.0,  
+  3.0, 4.0, 5.0, 4.0  
+]) 
+print solutions[0](line) 
+#:~ 
+\end{lstlisting}
+
+
+\subsection*{Ejercicios}
+\label{subsec:Ejercicios09}
+\addcontentsline{toc}{subsection}{\nameref{subsec:Ejercicios09}}
+
+1. Usar \textit{Command} en el capitulo 3, Ejercicio 1.     \newline
+2. Implementar \textit{Chain of Responsibility: cadena de responsabilidad} para crear un "sistema experto" que resuelva problemas, tratando sucesivamente una única solución tras otro hasta que uno coincida. Usted debe ser capaz de añadir dinámicamente soluciones para el sistema experto. La prueba para la solución simplemente debe ser un juego de string, pero cuando una solución se ajusta, el sistema experto debe devolver el tipo apropiado de objeto \textbf{ProblemSolver}.     \newline

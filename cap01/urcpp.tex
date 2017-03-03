@@ -1,7 +1,8 @@
 \section*{Un rápido curso para programadores}
 \label{sec:urcpp}
 \addcontentsline{toc}{section}{\nameref{sec:urcpp}}
-
+% Las anteriores lineas evitan la enumeración, 
+% sin que afecte su aparición en la tabla de contenido
 
 \textbf{Este libro asume que usted es un programador experimentado, y es mejor si usted ha aprendido Python a través de otro libro. Para todos los demás, este capitulo da una rápida introducción al lenguaje.}
 
@@ -203,7 +204,10 @@ Sin embargo, si este archivo se importa como un módulo en otro programa, no se 
 Algo que es un poco sorprendente en principio es que se definen campos dentro de los métodos, y no fuera de los métodos como C ++ o Java (si crea campos utilizando el estilo de C ++ / Java, implícitamente se convierten en campos estáticos). Para crear un campo de objeto, sólo lo nombra – usando \textbf{self} – dentro de uno de los métodos (usualmente en el constructor, pero no siempre), y se crea el espacio cuando se ejecuta ese método. %seem: parecer
 Esto parece un poco extraño viniendo de C++ o Java donde debe decidir de antemano cuánto espacio su objeto va a ocupar, pero resulta ser una manera muy flexible para programar.  \newline
 
-\textbf{Herencia} \newline
+% sub sub sub section
+% Declaración no permitida por LaTeX.
+
+\textbf{Herencia}
 
 Porque Python es débilmente tipado, esto realmente no tiene importancia para las interfaces – lo único que importa es la aplicación de las operaciones a los objetos (de hecho, la palabra reservada \textbf{interface} de Java podría ser descartada en Python). Esto significa que la herencia en Python es diferente de la herencia en C++ o Java, donde a menudo se hereda simplemente para establecer una interfaz común. En Python, la única razón por la que hereda es para heredar una implementación – reutilizar el código de la clase base. \newline
 

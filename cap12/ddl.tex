@@ -1,0 +1,578 @@
+
+\section*{10: Devoluciones de Llamada}
+\label{sec:ddl}
+\addcontentsline{toc}{section}{\nameref{sec:ddl}}
+
+Desacoplamiento comportamiento código.  \newline
+
+\textit{Observer} y una categoría de devoluciones de llamada llamada "Despacho múltiple (no en \textit{Design Patterns} )” incluyendo el \textit{Visitor} de \textit{Design Patterns}.   \newline
+
+\subsection*{Observer : Observador}
+\label{subsec:Observer}
+\addcontentsline{toc}{subsection}{\nameref{subsec:Observer}}
+
+Al igual que las otras formas de devolución de llamada, este contiene un punto de gancho donde se puede cambiar el código. La diferencia es de naturaleza completamente dinámica del observador. A menudo se utiliza para el caso específico de los cambios basados en el cambio de otro objeto de estado, pero es también la base de la gestión de eventos. Cada vez que desee desacoplar la fuente de la llamada desde el código de llamada de forma totalmente dinámica.     \newline
+
+El patrón observador resuelve un problema bastante común: ¿Qué pasa si un grupo de objetos necesita actualizar a sí mismos cuando algún objeto cambia de estado? Esto se puede ver en el "modelo-vista" aspecto de MVC (modelo-vista-controlador) de Smalltalk, o el "Documento - Ver Arquitectura" casi equivalente. Supongamos que usted tiene algúnos datos (el "documento") y más de una vista, decir una parcela y una vista textual. Al cambiar los datos, los dos puntos de vista deben saber actualizarse a sí mismos,y eso es lo que facilita el observador. Es un problema bastante común que su solución se ha hecho una parte de la libreria  estándar \textit{java.util}. \newline
+
+Hay dos tipos de objetos que se utilizan para implementar el patrón de observador en Python. La clase \textbf{Observable} lleva un registro de todos los que quieran ser informados cuando un cambio ocurre, si el "Estado" ha cambiado o no. Cuando alguien dice "Está bien, todo el mundo debe revisar y, potencialmente, actualizarse," La clase \textbf{Observable} realiza esta tarea mediante una llamada al método \textbf{notifyObservers( )} para cada uno en la lista. El método \textbf{notifyObservers( )} es parte de la clase base \textbf{Observable}.   \newline
+
+En realidad, hay dos "cosas que cambian" en el patrón observador: la cantidad de objetos de observación y la forma se produce una actualización. Es decir, el patrón observador permite modificar ambos sin afectar el código circundante.
+
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-  \newline
+
+\textbf{Observer} es una clase "interfaz" que solo tiene una función miembro, \textbf{update( )}. Esta función es llamada por el objeto que está siendo observado, cuando ese objeto decide que es hora de actualizar todos sus observadores. Los argumentos son opcionales; usted podría tener un \textbf{update( )} sin argumentos y eso todavía encajaría en el patrón observador; sin embargo, esto es más general — permite al objeto observado pasar el objeto que causó la actualización (ya que un \textbf{Observer} puede ser registrado con más de un objeto observado) y cualquier información adicional si eso es útil, en lugar de forzar el objeto \textbf{Observer} que busca alrededor para ver quién está actualizando y para ir a buscar cualquier otra información que necesita.    \newline
+
+El "objeto observado" que decide cuándo y cómo hacer la actualización será llamado \textbf{Observable}.   \newline
+
+\textbf{Observable} tiene una bandera para indicar si se ha cambiado. En un diseño más simple, no habría ninguna bandera; si algo pasó, cad uno sería notificado. La bandera le permite esperar, y sólo notificar al \textbf{Observer}s cuando usted decide sea el momento adecuado. Nótese, sin embargo, que el control del estado de la bandera es \textbf{protected}, de modo que sólo un heredero puede decidir lo que constituye un cambio, y no el usuario final de la clase \textbf{Observer} derivada resultante.  \newline
+
+La mayor parte del trabajo se hace en \textbf{notifyObservers( )}. Si la bandera \textbf{changed} no se ha establecido, esto no hace nada. De otra manera, ello primero despeja la bandera \textbf{changed} así repitió las llamadas a \textbf{notifyObservers( )} para no perder el tiempo. Esto se hace antes de notificar a los observadores en el caso de las llamadas a \textbf{update( )} hacer cualquier cosa que causa un cambio de nuevo a este objeto \textbf{Observable}. Entonces se mueve a través del \textbf{set} y vuelve a llamar a la función miembro \textbf{update( )} de cada \textbf{Observer}.   \newline
+
+Al principio puede parecer que usted puede utilizar un objeto ordinario \textbf{Observable} para administrar las actualizaciones. Pero esto no funciona; para obtener un efecto, usted \textit{debe} heredar de
+\textbf{Observable} y en algún lugar en el código de la clase derivada llamar \textbf{setChanged( )}. Esta es la función miembro que establece la bandera "cambiado", lo que significa que cuando se llama \textbf{notifyObservers( )} todos los observadores serán, de hecho, serán notificados. \textit{Cuando} usted llama \textbf{setChanged( )} depende de la lógica de su programa.
+ 
+\newpage
+
+\subsubsection*{Observando Flores}
+\label{subsubsec:of}
+\addcontentsline{toc}{subsubsection}{\nameref{subsubsec:of}} 
+ 
+
+Dado que Python  no tiene componentes de la  librería estándar para apoyar el patrón observador (como hace Java), primero tenemos que crear una. Lo más sencillo de hacer es traducir la librería estándar de Java \textbf{Observer} y clases \textbf{Observable} . Esto también proporciona la traducción más fácil a partir de código Java que utiliza estas librerías.    \newline
+
+Al tratar de hacer esto, nos encontramos con un obstáculo menor, que es el hecho de que Java tiene una palabra clave \textbf{synchronized} que proporciona soporte integrado para la sincronización hilo. Ciertamente se podría lograr lo mismo a mano utilizando código como el siguiente:\newline
+
+\begin{lstlisting} 
+import threading  
+class ToSynch: 
+  def __init__(self): 
+    self.mutex = threading.RLock() 
+    self.val = 1 
+  def aSynchronizedMethod(self): 
+    self.mutex.acquire() 
+    try: 
+      self.val += 1 
+      return self.val 
+    finally: 
+      self.mutex.release() 
+\end{lstlisting}
+
+ Pero esto se convierte rápidamente tedioso de escribir y de leer.  Peter Norvig me proporcionó una solución mucho más agradable:     \newline
+ 
+\begin{lstlisting}    
+#: util:Synchronization.py 
+'''Simple emulation of Java's 'synchronized' 
+keyword, from Peter Norvig.''' 
+import threading 
+
+def synchronized(method): 
+  def f(*args): 
+    self = args[0] 
+    self.mutex.acquire();   
+    # print method.__name__, 'acquired' 
+    try: 
+      return apply(method, args) 
+    finally: 
+      self.mutex.release();   
+      # print method.__name__, 'released' 
+  return f 
+  
+ def synchronize(klass, names=None): 
+  """Synchronize methods in the given class.   
+  Only synchronize the methods whose names are  
+  given, or all methods if names=None.""" 
+  if type(names)==type(''): names = names.split() 
+  for (name, val) in klass.__dict__.items(): 
+    if callable(val) and name != '__init__' and \ 
+      (names == None or name in names): 
+        # print "synchronizing", name 
+        klass.__dict__[name] = synchronized(val) 
+        
+# You can create your own self.mutex, or inherit 
+# from this class: 
+class Synchronization: 
+  def __init__(self): 
+    self.mutex = threading.RLock() 
+#:~  
+\end{lstlisting}
+
+La función \textbf{synchronized( )} toma un método y lo envuelve en una función que añade la funcionalidad mutex. El método es llamado dentro de esta función:     \newline
+
+\begin{lstlisting} 
+return apply(method, args)
+\end{lstlisting}
+
+y como la sentencia \textit{return } pasa a través de la cláusula \textbf{finally}, el mutex es liberado. \newline
+
+Esto es de alguna manera el patrón de diseño \textit{decorador}, pero mucho más fácil de crear y utilizar. Todo lo que tienes que decir es:  \newline
+
+\begin{lstlisting} 
+myMethod = synchronized(myMethod)
+\end{lstlisting}
+
+Para rodear su método con un mutex. \newline
+
+\textbf{synchronized( )} es una función de conveniencia que aplica \textbf{synchronized( )} para una clase entera, o bien todos los métodos de la clase (por defecto) o métodos seleccionados que son nombrados en un string : cadena como segundo argumento. \newline
+
+Finalmente, para \textbf{synchronized( )} funcione debe haber un \textbf{self.mutex} creado en cada clase que utiliza \textbf{synchronized( )}. Este puede ser creado a mano por el autor de clases, pero es más consistente para utilizar la herencia, por tanto la clase base \textbf{Synchronization} es proporcionada.  \newline
+
+He aquí una prueba sencilla del módulo de \textbf{Synchronization}. \newline
+
+\begin{lstlisting} 
+#: util:TestSynchronization.py 
+from Synchronization import *  
+
+# To use for a method: 
+class C(Synchronization): 
+  def __init__(self): 
+    Synchronization.__init__(self) 
+    self.data = 1 
+  def m(self): 
+    self.data += 1 
+    return self.data 
+  m = synchronized(m) 
+  def f(self): return 47 
+  def g(self): return 'spam'
+  
+# So m is synchronized, f and g are not. 
+c = C() 
+
+# On the class level: 
+class D(C): 
+  def __init__(self): 
+    C.__init__(self) 
+  # You must override an un-synchronized method 
+  # in order to synchronize it (just like Java): 
+  def f(self): C.f(self) 
+  
+ # Synchronize every (defined) method in the class: 
+synchronize(D) 
+d = D() 
+d.f() # Synchronized 
+d.g() # Not synchronized 
+d.m() # Synchronized (in the base class) 
+
+class E(C): 
+  def __init__(self): 
+    C.__init__(self) 
+  def m(self): C.m(self) 
+  def g(self): C.g(self) 
+  def f(self): C.f(self) 
+# Only synchronizes m and g. Note that m ends up 
+# being doubly-wrapped in synchronization, which 
+# doesn't hurt anything but is inefficient: 
+synchronize(E, 'm g') 
+e = E() 
+e.f() 
+e.g() 
+e.m() 
+#:~
+\end{lstlisting}
+
+Usted debe llamar al constructor de la clase base para \textbf{Synchronization}, pero esto es todo. En la clase \textbf{C} puede ver el uso de \textbf{Synchronized()} para \textbf{m}, dejando \textbf{f} y \textbf{g} solos. Clase \textbf{D} tiene todos sus métodos sincronizados en masa, y la clase \textbf{E} utiliza la función de conveniencia para sincronizar \textbf{m} y \textbf{g}. Tenga en cuenta que dado que \textbf{m} termina siendo sincronizado en dos ocasiones, ello se entró y salió dos veces para cada llamada, que no es muy deseable [puede haber una corrección para este].     \newline
+      
+\begin{lstlisting} 
+#: util:Observer.py 
+# Class support for "observer" pattern. 
+from Synchronization import * 
+
+class Observer: 
+  def update(observable, arg): 
+    '''Called when the observed object is  
+    modified. You call an Observable object's  
+    notifyObservers method to notify all the  
+    object's observers of the change.''' 
+    pass 
+    
+class Observable(Synchronization): 
+  def __init__(self): 
+    self.obs = [] 
+    self.changed = 0 
+    Synchronization.__init__(self) 
+    
+  def addObserver(self, observer): 
+    if observer not in self.obs: 
+      self.obs.append(observer) 
+      
+  def deleteObserver(self, observer): 
+    self.obs.remove(observer) 
+    
+  def notifyObservers(self, arg = None): 
+    '''If 'changed' indicates that this object  
+    has changed, notify all its observers, then  
+    call clearChanged(). Each observer has its  
+    update() called with two arguments: this  
+    observable object and the generic 'arg'.''' 
+    
+        self.mutex.acquire() 
+    try: 
+      if not self.changed: return
+            # Make a local copy in case of synchronous 
+      # additions of observers: 
+      localArray = self.obs[:] 
+      self.clearChanged() 
+    finally: 
+      self.mutex.release() 
+    # Updating is not required to be synchronized: 
+    for observer in localArray: 
+      observer.update(self, arg) 
+      
+  def deleteObservers(self): self.obs = [] 
+  def setChanged(self): self.changed = 1 
+  def clearChanged(self): self.changed = 0 
+  def hasChanged(self): return self.changed 
+  def countObservers(self): return len(self.obs) 
+  
+synchronize(Observable,  
+  "addObserver deleteObserver deleteObservers " + 
+  "setChanged clearChanged hasChanged " + 
+  "countObservers") 
+#:~ 
+\end{lstlisting}
+
+Usando esta librería, aquí esta un ejemplo de el patrón  observador:\newline
+
+\begin{lstlisting} 
+#: c10:ObservedFlower.py 
+# Demonstration of "observer" pattern. 
+import sys 
+sys.path += ['../util'] 
+from Observer import Observer, Observable 
+
+class Flower: 
+  def __init__(self):  
+    self.isOpen = 0 
+    self.openNotifier = Flower.OpenNotifier(self) 
+    self.closeNotifier= Flower.CloseNotifier(self) 
+  def open(self): # Opens its petals 
+    self.isOpen = 1 
+    self.openNotifier.notifyObservers() 
+    self.closeNotifier.open() 
+  def close(self): # Closes its petals 
+    self.isOpen = 0 
+    self.closeNotifier.notifyObservers() 
+    self.openNotifier.close() 
+  def closing(self): return self.closeNotifier 
+    class OpenNotifier(Observable): 
+    def __init__(self, outer): 
+      Observable.__init__(self) 
+      self.outer = outer 
+      self.alreadyOpen = 0 
+    def notifyObservers(self): 
+      if self.outer.isOpen and \ 
+      not self.alreadyOpen: 
+        self.setChanged() 
+        Observable.notifyObservers(self) 
+        self.alreadyOpen = 1 
+    def close(self):  
+      self.alreadyOpen = 0  
+      
+  class CloseNotifier(Observable): 
+    def __init__(self, outer): 
+      Observable.__init__(self) 
+      self.outer = outer 
+      self.alreadyClosed = 0 
+    def notifyObservers(self): 
+      if not self.outer.isOpen and \ 
+      not self.alreadyClosed: 
+        self.setChanged() 
+        Observable.notifyObservers(self) 
+        self.alreadyClosed = 1 
+    def open(self):  
+      alreadyClosed = 0  
+      
+      class Bee: 
+  def __init__(self, name): 
+    self.name = name 
+    self.openObserver = Bee.OpenObserver(self) 
+    self.closeObserver = Bee.CloseObserver(self) 
+    
+  # An inner class for observing openings: 
+  class OpenObserver(Observer): 
+    def __init__(self, outer): 
+      self.outer = outer 
+    def update(self, observable, arg): 
+      print "Bee " + self.outer.name + \ 
+        "'s breakfast time!" 
+  # Another inner class for closings: 
+  class CloseObserver(Observer): 
+    def __init__(self, outer): 
+      self.outer = outer 
+      
+          def update(self, observable, arg): 
+      print "Bee " + self.outer.name + \ 
+        "'s bed time!" 
+        
+class Hummingbird: 
+  def __init__(self, name):  
+    self.name = name 
+    self.openObserver = \ 
+      Hummingbird.OpenObserver(self) 
+    self.closeObserver = \ 
+      Hummingbird.CloseObserver(self) 
+  class OpenObserver(Observer): 
+    def __init__(self, outer): 
+      self.outer = outer 
+    def update(self, observable, arg): 
+      print "Hummingbird " + self.outer.name + \ 
+        "'s breakfast time!" 
+  class CloseObserver(Observer): 
+    def __init__(self, outer): 
+      self.outer = outer 
+    def update(self, observable, arg): 
+      print "Hummingbird " + self.outer.name + \ 
+        "'s bed time!" 
+        
+        f = Flower() 
+ba = Bee("Eric") 
+bb = Bee("Eric 0.5") 
+ha = Hummingbird("A") 
+hb = Hummingbird("B") 
+f.openNotifier.addObserver(ha.openObserver) 
+f.openNotifier.addObserver(hb.openObserver) 
+f.openNotifier.addObserver(ba.openObserver) 
+f.openNotifier.addObserver(bb.openObserver) 
+f.closeNotifier.addObserver(ha.closeObserver) 
+f.closeNotifier.addObserver(hb.closeObserver) 
+f.closeNotifier.addObserver(ba.closeObserver) 
+f.closeNotifier.addObserver(bb.closeObserver) 
+# Hummingbird 2 decides to sleep in: 
+f.openNotifier.deleteObserver(hb.openObserver) 
+# A change that interests observers: 
+f.open() 
+f.open() # It's already open, no change. 
+# Bee 1 doesn't want to go to bed: 
+f.closeNotifier.deleteObserver(ba.closeObserver) f.close() 
+f.close() # It's already closed; no change 
+f.openNotifier.deleteObservers() 
+f.open() 
+f.close() 
+#:~ 
+\end{lstlisting}
+
+Los acontecimientos de interés incluyen que una \textbf{Flower} puede abrir o cerrar. Debido al uso del idioma de la clase interna, estos dos eventos pueden ser fenómenos observables por separado. \textbf{OpenNotifier} y \textbf{CloseNotifier} ambos heredan de \textbf{Observable}, así que tienen acceso a \textbf{setChanged( )} y pueden ser entregados a todo lo que necesita un \textbf{Observable}. \newline
+
+El lenguaje de la clase interna también es muy útil para definir más de un tipo de \textbf{Observer}, en \textbf{Bee} y \textbf{Hummingbird}, ya que tanto las clases pueden querer observar independientemente aberturas \textbf{Flower} y cierres. Observe cómo el lenguaje de la clase interna ofrece algo que tiene la mayor parte de los beneficios de la herencia (la capacidad de acceder a los datos de \textbf{private} en la clase externa, por ejemplo) sin las mismas restricciones.  \newline
+
+En \textbf{main( )}, se puede ver uno de los beneficios principales de del patrón observador: la capacidad de cambiar el comportamiento en tiempo de ejecución mediante el registro de forma dinámica y anular el registro \textbf{Observer}s con \textbf{Observable}s.    \newline
+
+Si usted estudia el código de arriba verás que \textbf{OpenNotifier} y \textbf{CloseNotifier} utiliza la interfaz \textbf{Observable} básica. Esto significa que usted podría heredar otras clases \textbf{Observable} completamente diferentes; la única conexión de \textbf{Observable} que tiene con \textbf{Flower}, es la interfaz \textbf{Observable}.    \newline
+
+\subsection*{Un ejemplo visual de Observadores}
+\label{subsec:uevdo}
+\addcontentsline{toc}{subsection}{\nameref{subsec:uevdo}}
+
+El siguiente ejemplo es similar al ejemplo \textbf{ColorBoxes}  del Capítulo 14 en \textit{Thinking in Java, 2nd Edición}. Las cajas se colocan en una cuadrícula en la pantalla y cada uno se inicializa a un color aleatorio. En adición, cada caja \textbf{implements} la interfaz \textbf{Observer} y es registrado con un objeto \textbf{Observable}.Al hacer clic en una caja, todas las otras cajas son notificados de que un cambio se ha hecho porque el objeto \textbf{Observable} llama automáticamente método \textbf{update( )} de cada objeto \textbf{Observer}.  Dentro de este método, las comprobaciones de caja para ver si es adyacente a la que se ha hecho clic, y si de modo que cambia de color para que coincida con el cuadro se hace clic.  \newline
+
+[[NOTA: este ejemplo no se ha convertido. Véase más adelante una versión que tiene la interfaz gráfica de usuario, pero no los observadores, en PythonCard. ]]  \newline
+
+\begin{lstlisting} 
+#  c10:BoxObserver.py 
+# Demonstration of Observer pattern using 
+# Java's built-in observer classes. 
+
+# You must inherit a type of Observable: 
+class BoxObservable(Observable): 
+  def notifyObservers(self, Object b): 
+    # Otherwise it won't propagate changes: 
+    setChanged() 
+    super.notifyObservers(b) 
+    
+    class BoxObserver(JFrame): 
+  Observable notifier = BoxObservable() 
+  def __init__(self, int grid): 
+    setTitle("Demonstrates Observer pattern") 
+    Container cp = getContentPane() 
+    cp.setLayout(GridLayout(grid, grid)) 
+    for(int x = 0 x < grid x++) 
+      for(int y = 0 y < grid y++) 
+        cp.add(OCBox(x, y, notifier)) 
+        
+  def main(self, String[] args): 
+    int grid = 8 
+    if(args.length > 0) 
+      grid = Integer.parseInt(args[0]) 
+    JFrame f = BoxObserver(grid) 
+    f.setSize(500, 400) 
+    f.setVisible(1) 
+    # JDK 1.3: 
+    f.setDefaultCloseOperation(EXIT_ON_CLOSE) 
+    # Add a WindowAdapter if you have JDK 1.2 
+    
+    class OCBox(JPanel) implements Observer: 
+  Observable notifier 
+  int x, y # Locations in grid 
+  Color cColor = newColor() 
+  static final Color[] colors =:  
+    Color.black, Color.blue, Color.cyan,  
+    Color.darkGray, Color.gray, Color.green, 
+    Color.lightGray, Color.magenta,  
+    Color.orange, Color.pink, Color.red,  
+    Color.white, Color.yellow 
+    
+      static final Color newColor(): 
+    return colors[ 
+      (int)(Math.random() * colors.length) 
+    ] 
+    
+  def __init__(self, int x, int y, Observable 
+notifier): 
+    self.x = x 
+    self.y = y 
+    notifier.addObserver(self) 
+    self.notifier = notifier 
+    addMouseListener(ML()) 
+    
+  def paintComponent(self, Graphics g): 
+    super.paintComponent(g) 
+    g.setColor(cColor) 
+    Dimension s = getSize() 
+    g.fillRect(0, 0, s.width, s.height) 
+    
+  class ML(MouseAdapter): 
+    def mousePressed(self, MouseEvent e): 
+      notifier.notifyObservers(OCBox.self) 
+      
+     def update(self, Observable o, Object arg): 
+    OCBox clicked = (OCBox)arg 
+    if(nextTo(clicked)): 
+      cColor = clicked.cColor 
+      repaint() 
+      
+  private final boolean nextTo(OCBox b): 
+    return Math.abs(x - b.x) <= 1 &&  
+           Math.abs(y - b.y) <= 1 
+# :~   
+\end{lstlisting}
+
+La primera vez que usted mira la documentación en línea para \textbf{Observable} que es un poco confuso, ya que parece que se puede utilizar un objeto ordinario \textbf{Observable}para manejar las actualizaciones. Pero esto no funciona; inténtalo \- dentro de \textbf{BoxObserver}, crea un objeto \textbf{Observable} en lugar de un objeto \textbf{BoxObserver} y observe lo que ocurre: nada. Para conseguir un efecto, \textit{debe} heredar de \textbf{Observable} y en alguna parte de su código la clase derivada llamada \textbf{setChanged( )}. Este es el método que establece la bandera "changed : cambiado", lo que significa que cuando se llama \textbf{notifyObservers( )} todos los observadores serán, de hecho, serán notificado. En el ejemplo anterior, \textbf{setChanged( )} es simplemente llamado dentro de \textbf{notifyObservers( )}, pero podría utilizar cualquier criterio que desee para decidir cuándo llamar \textbf{setChanged( )}.      \newline
+
+\textbf{BoxObserver} contiene un solo objeto \textbf{Observable} llamado \textbf{notifier}, y cada vez que se crea un objeto \textbf{OCBox}, está vinculada a \textbf{notifier}.  En \textbf{OCBox} al hacer clic con el mouse el método \textbf{notifyObservers( )} es llamado, pasando el objeto se hace clic en un argumento para que todas las cajas que reciben el mensaje (en su método \textbf{update( ) }) de que se ha hecho clic saben y pueden decidir si cambiar sí o no. Usando una combinación de código en \textbf{notifyObservers( )} y \textbf{update( )} se puede trabajar algunos esquemas bastante complejos.     \newline
+
+Podría parecer que la forma en que los observadores son notificados debe ser congelada en tiempo de compilación en el método \textbf{notifyObservers( )}. Ahora bien, si se mira más de cerca el código anterior usted verá que el único lugar en \textbf{BoxObserver} o \textbf{OCBox} cuando es consciente de que usted está trabajando con una \textbf{BoxObservable} está en el punto de la creación del objeto \textbf{Observable} — de ahí en adelante todo lo que utiliza la interfaz básica \textbf{Observable}. Esto significa que usted podría heredar otras clases \textbf{Observable} y intercambiarlos en tiempo de ejecución si desea cambiar el comportamiento de notificación luego.  \newline
+
+Aquí esta una versión de lo anterior que no utiliza el patrón Observador, escrito por Kevin Altis usando PythonCard, y colocado aquí como un punto de partida para una traducción que sí incluye Observador:  \newline
+
+\begin{lstlisting} 
+#: c10:BoxObserver.py 
+""" Written by Kevin Altis as a first-cut for 
+converting BoxObserver to Python. The Observer 
+hasn't been integrated yet. 
+To run this program, you must: 
+Install WxPython from 
+http://www.wxpython.org/download.php 
+Install PythonCard. See: 
+http://pythoncard.sourceforge.net 
+""" 
+
+from PythonCardPrototype import log, model 
+import random 
+
+GRID = 8 
+
+class ColorBoxesTest(model.Background): 
+  def on_openBackground(self, target, event):
+      self.document = [] 
+    for row in range(GRID): 
+      line = [] 
+      for column in range(GRID): 
+        line.append(self.createBox(row, column)) 
+      self.document.append(line[:]) 
+  def createBox(self, row, column): 
+    colors = ['black', 'blue', 'cyan', 
+    'darkGray', 'gray', 'green', 
+    'lightGray', 'magenta', 
+    'orange', 'pink', 'red', 
+    'white', 'yellow'] 
+    width, height = self.panel.GetSizeTuple() 
+    boxWidth = width / GRID 
+    boxHeight = height / GRID 
+    log.info("width:" + str(width) + 
+      " height:" + str(height)) 
+    log.info("boxWidth:" + str(boxWidth) + 
+      " boxHeight:" + str(boxHeight)) 
+    # use an empty image, though some other 
+    # widgets would work just as well 
+    boxDesc = {'type':'Image', 
+      'size':(boxWidth, boxHeight), 'file':''} 
+    name = 'box-\%d-%d' % (row, column) 
+    # There is probably a 1 off error in the 
+    # calculation below since the boxes should 
+    # probably have a slightly different offset 
+    # to prevent overlaps 
+    boxDesc['position'] = 
+      (column * boxWidth, row * boxHeight) 
+    boxDesc['name'] = name 
+    boxDesc['backgroundColor'] = 
+            random.choice(colors) 
+    self.components[name] =  boxDesc 
+    return self.components[name] 
+    
+  def changeNeighbors(self, row, column, color): 
+  
+    # This algorithm will result in changing the 
+    # color of some boxes more than once, so an 
+    # OOP solution where only neighbors are asked 
+    # to change or boxes check to see if they are 
+    # neighbors before changing would be better 
+    # per the original example does the whole grid 
+    # need to change its state at once like in a 
+    # Life program? should the color change  
+    # in the propogation of another notification 
+    # event? 
+    
+    for r in range(max(0, row - 1),  
+                   min(GRID, row + 2)): 
+      for c in range(max(0, column - 1),  
+                     min(GRID, column + 2)): 
+        self.document[r][c].backgroundColor=color 
+        
+  # this is a background handler, so it isn't   
+  # specific to a single widget. Image widgets  
+  # don't have a mouseClick event (wxCommandEvent 
+  # in wxPython) 
+  def on_mouseUp(self, target, event): 
+    prefix, row, column = target.name.split('-') 
+    self.changeNeighbors(int(row), int(column),  
+                         target.backgroundColor) 
+                         
+if __name__ == '__main__': 
+  app = model.PythonCardApp(ColorBoxesTest) 
+  app.MainLoop() 
+#:~ 
+\end{lstlisting}
+
+Este es el archivo de recursos para ejecutar el programa (ver PythonCard para más detalles):  \newline
+
+\begin{lstlisting} 
+#: c10:BoxObserver.rsrc.py 
+{'stack':{'type':'Stack', 
+          'name':'BoxObserver', 
+    'backgrounds': [ 
+      { 'type':'Background', 
+        'name':'bgBoxObserver', 
+        'title':'Demonstrates Observer pattern', 
+        'position':(5, 5), 
+        'size':(500, 400), 
+        'components': [ 
+        
+] # end components 
+} # end background 
+] # end backgrounds 
+} } 
+#:~ 
+\end{lstlisting}
+
+
+\subsection*{Ejercicios}
+\label{subsec:Ejercicios12}
+\addcontentsline{toc}{subsection}{\nameref{subsec:Ejercicios12}}
+
+
+1. Utilizando el enfoque en  \textbf{Synchronization.py}, crear una herramienta que ajuste automáticamente todos los métodos en una clase para proporcionar una rastreo de ejecución, de manera que se puede ver el nombre del método y cuando entró y salió. \newline
+
+2. Crear un diseño minimalista Observador-observable en dos clases. Basta con crear el mínimo en las dos clases, luego demostrar su diseño mediante la creación de un \textbf{Observable} y muchos \textbf{Observer}s, y hacer que el \textbf{Observable} para actualizar los \textbf{Observer}s.   \newline
+
+3. Modifica \textbf{BoxObserver.py} para convertirlo en un juego sencillo. Si alguno de los cuadrados que rodean el que usted hizo clic es parte de un parche contiguo del mismo color, entonces todas los cuadros en ese parche se cambian al color que ha hecho clic. Puede configurar el juego para la competencia entre los jugadores o para no perder de vista el número de clics que un solo jugador utiliza para convertir el campo en un solo color. También puede restringir el color de un jugador a la primera que fue elegido. \newline

@@ -1,0 +1,56 @@
+\section*{\texorpdfstring{Y: Iteradores: \newline  Algoritmos de desacoplamiento de contenedores}{Y: Iteradores: Algoritmos de desacoplamiento de contenedores}}
+\label{sec:yiadddc}
+\addcontentsline{toc}{section}{\nameref{sec:yiadddc}}
+
+
+% \textcolor{red}{Este capítulo no ha tenido traducción significativa todavía.}    \newline
+
+\textit{Alexander Stepanov pensó durante años sobre el problema de las técnicas de programación genéricas antes de crear el STL (junto con Dave Musser). Llegó a la conclusión de que todos los algoritmos están definidos en las estructuras algebraicas – lo que llamaríamos contenedores.}
+
+En el proceso, el se dio cuenta que los iteradores son fundamentales para el uso de algoritmos, porque desacoplan los algoritmos del tipo especifico de contenedor con que el algoritmo actualmente podría estar trabajando. Esto significa que usted puede describir el algoritmo sin preocuparse de la secuencia particular en que está operando. Más generalmente, \textit{cualquier} código que usted escribe utilizando iteradores es desacoplado de la estructura de datos que el código está manipulando, y por lo tanto su código es más general y reutilizable. \newline
+
+El uso de iteradores también amplía su código en el campo de \textit{programación funcional}, cuyo objetivo es describir lo que un programa está haciendo a cada paso en lugar de cómo lo está haciendo. Es decir, usted dice usted dice "tipo" en lugar de
+describir el tipo. El objetivo del STL de C ++ fue proporcionar este enfoque genérico para la programación C ++ (cómo este enfoque exitoso será en realidad, aún está por verse). \newline
+
+Si ha utilizado contenedores en Java (y es difícil escribir código sin usarlos), usted tiene iteradores usados – en la forma del \textbf{Enumeration} en Java 1.0/1.1 y el \textbf{Iterator} en Java 2.0. Así que usted ya debe estar familiarizado con su uso general. Si no, consulte el Capítulo 9, \textit{Holding Your Objects : Manteniendo Sus objetos}, bajo \textit{Iterators in Thinking in Java} segunda edición (descargable gratuitamente desde \textit{www.Bruce Eckel.com}). \newline
+
+Debido a que 2 contenedores en Java dependen en gran medida de los iteradores, se convierten en excelentes candidatos para las técnicas de programación genéricas / funcionales. Este capítulo explorará estas técnicas mediante la conversión de los algoritmos de STL para Java, para su uso con la librería de contenedor Java 2.  \newline
+
+
+\subsection*{Iteradores con seguridad de tipos}
+\label{subsec:icsdt}
+\addcontentsline{toc}{subsection}{\nameref{subsec:icsdt}}
+
+
+En \textit{Thinking in Java, segunda edición}, Muestro la creación de un contenedor de tipo seguro que sólo aceptará un tipo particular de objeto. Un lector, Linda 
+Pazzaglia, pidió el otro componente de tipo seguro obvio, un iterador que trabajaría con los contenedores básicos \textbf{java.util}, pero imponer la restricción de que el tipo de objetos sobre los que itera sea de un tipo particular. \newline
+
+Si Java siempre incluye un mecanismo de plantilla, este tipo de iterador tendrá la ventaja añadida de ser capaz de devolver un tipo específico de objeto, pero sin las plantillas se ve obligado a retornar \textbf{Objects} genéricos, o requerir un poco de codificación manual para cada tipo que desea iterar. Tomaré el enfoque anterior.     \newline
+
+Una segunda decisión de diseño involucra el tiempo que el tipo de objeto es determinado. Un enfoque consiste en tomar el tipo del primer objeto que el iterador encuentra, pero esto es problemático debido a que los contenedores pueden arreglar de nuevo los objetos de acuerdo con un mecanismo de ordenamiento interno (tal como una tabla hash\footnote{hash: picadillo, picar. \newline  hash table : tabla de picadillo}) y por lo tanto es posible obtener diferentes resultados de una iteración a la siguiente. El enfoque seguro es exigir al usuario establecer el tipo durante la construcción del iterador.     \newline
+
+Por último, ¿cómo construir el iterador? No podemos reescribir las librerías de clases Java existentes que ya producen \textbf{Enumerations} y \textbf{Iterators}.  Sin embargo, podemos utilizar el patrón de diseño \textit{Decorator}, y crear una clase que simplemente envuelve el \textbf{Enumeration} o \textbf{Iterator} que se produce, generando un nuevo objeto que tiene el comportamiento de iteración que queremos (que es, en este caso, lanzar un \textbf{RuntimeException} si se encuentra un tipo incorrecto) pero con la misma interfaz que el \textbf{Enumeration} original o \textbf{Iterator}, de modo que se puede utilizar en los mismos lugares (puede argumentar que esto es en realidad un patrón \textit{Proxy}, pero es más probable \textit{Decorator} debido a su intención). Aquí está el código: \newline
+
+\begin{lstlisting} 
+# util:TypedIterator.py 
+
+class TypedIterator(Iterator): 
+  private Iterator imp 
+  private Class type 
+  def __init__(self, Iterator it, Class type): 
+    imp = it 
+    self.type = type 
+    
+  def hasNext(self):  
+    return imp.hasNext()  
+    
+  def remove(self): imp.remove()  
+  def next(self): 
+    Object obj = imp.next() 
+    if(!type.isInstance(obj)) 
+      throw ClassCastException( 
+        "TypedIterator for type " + type + 
+        " encountered type: " + obj.getClass()) 
+    return obj 
+# :~ 
+\end{lstlisting}
