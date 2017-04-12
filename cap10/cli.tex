@@ -2,8 +2,7 @@
 \label{sec:cli}
 \addcontentsline{toc}{section}{\nameref{sec:cli}}
 
-
-A veces el problema que usted está resolviendo es tan simple como: "Yo no tengo la interfaz que quiero." Dos de los patrones en \textit{Design Patterns : Diseño de Patrones} resuelven este problema: \textit{Adapter : Adaptador} toma un tipo y produce una interfaz a algún otro tipo.  \textit{Façade: Fachada} crea una interfaz para un conjunto de clases, simplemente para proporcionar una manera más cómoda para hacer frente a una biblioteca o un paquete de recursos.
+A veces el problema que usted está resolviendo es tan simple como: “Yo no tengo la interfaz que quiero." Dos de los patrones en \textit{Design Patterns} resuelven este problema: Adapter\textit{(Adaptador)} toma un tipo y produce una interfaz a algún otro tipo. Façade \textit{(Fachada)} crea una interfaz para un conjunto de clases, simplemente para proporcionar una manera más cómoda para hacer frente a una biblioteca o un paquete de recursos.
 
 
 \subsection*{Adapter (Adaptador)}
@@ -11,7 +10,7 @@ A veces el problema que usted está resolviendo es tan simple como: "Yo no tengo
 \addcontentsline{toc}{subsection}{\nameref{subsec:Adapter}}
 
 
-Cuando tienes \textit{this}, y usted necesita \textit{that}, \textit{Adapter (Adaptador)} resuelve el problema. El único requisito es producir un \textit{that},  y hay un número de maneras que usted puede lograr esta adaptación.
+Cuando tienes \textit{this}, y usted necesita \textit{that}, Adapter \textit{(Adaptador)} resuelve el problema. El único requisito es producir un \textit{that}, y hay un número de maneras para que usted pueda lograr esta adaptación.
 
 \begin{lstlisting} 
 #: c07:Adapter.py 
@@ -77,15 +76,15 @@ whatIUse.op(whatIHave3.whatIWant())
 #:~ 
 \end{lstlisting}
 
-Estoy tomando libertades con el término "proxy" aquí, porque en \textit{Design Patterns} afirman que un proxy debe tener una interfaz idéntica con el objeto que es para un sustituto : surrogate. Sin embargo, si tiene las dos palabras juntas: "adaptador de proxy," tal vez sea más razonable.  \newline
+Estoy tomando libertades con el término “proxy" aquí, porque en \textit{Design Patterns} afirman que un proxy debe tener una interfaz idéntica con el objeto que es para un sustituto \textit{(surrogate)}. Sin embargo, si tiene las dos palabras juntas: “proxy adapter" tal vez sea más razonable.  \newline
 
 \subsection*{Façade (Fachada)}
 \label{subsec:Fachada}
 \addcontentsline{toc}{subsection}{\nameref{subsec:Fachada}}
 
-Un principio general que aplico cuando estoy fundido en tratar de moldear requisitos en un objeto de primer corte es "Si algo es feo, esconderlo dentro de un objeto." Esto es básicamente lo que logra \textit{Façade}. Si usted tiene una colección bastante confusa de las clases y las interacciones que el programador cliente no tiene realmente necesidad de ver, entonces usted puede crear una interfaz que es útil para el programador cliente y que sólo presenta lo que sea necesario.
+Un principio general que aplico cuando estoy tratando de moldear los requisitos de un objeto es "Si algo es feo, esconderlo dentro de un objeto." Esto es básicamente lo que logra \textit{Façade}. Si usted tiene una colección bastante confusa de las clases y las interacciones que el programador cliente no tiene realmente necesidad de ver, entonces usted puede crear una interfaz que es útil para el programador cliente y que sólo presenta lo que sea necesario.
 
-\textit{Façade} se suele implementar como fábrica abstracta \textit{singleton}. Claro, usted puede conseguir fácilmente este efecto mediante la creación de una clase que contiene métodos de fábrica \textbf{static}:  \newline
+\textit{Façade} se suele implementar como fábrica abstracta \textit{Singleton}. Claro, usted puede conseguir fácilmente este efecto mediante la creación de una clase que contiene métodos de fábrica \textbf{static}:  \newline
 
 \begin{lstlisting} 
 # c07:Facade.py 

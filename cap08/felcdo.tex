@@ -2,17 +2,15 @@
 \label{sec:felcdo}
 \addcontentsline{toc}{section}{\nameref{sec:felcdo}}
 
-%\section{5: Fábricas: \newline  encapsular \newline la creación de objetos}
+Cuando descubre que es necesario agregar nuevos tipos a un sistema, el primer paso más sensato es utilizar el polimorfismo para crear una interfaz común a esos nuevos tipos. Esto separa el resto del código en el sistema desde el conocimiento de los tipos específicos que está agregando. Nuevos tipos pueden añadirse sin molestar código existente ... o al menos eso parece. Al principio parecería que el único lugar que necesita cambiar el código en tal diseño es el lugar donde usted hereda un nuevo tipo, pero esto no es del todo cierto. Usted todavía debe crear un objeto de su nuevo tipo, y en el punto de la creación debe especificar el constructor exacto a utilizar. Así, si el código que crea objetos se distribuye a través de su aplicación, usted tiene el mismo problema cuando añade nuevos tipos — usted todavía debe perseguir todos los puntos de su código en asuntos de tipos. Esto sucede para ser la creación del tipo que importa en este caso en lugar del uso del tipo (que es atendido por el polimorfismo), pero el efecto es el mismo : la adición de un nuevo tipo puede causar problemas. \newline
 
-Cuando descubre que es necesario agregar nuevos tipos a un sistema, el primer paso más sensato es utilizar el polimorfismo para crear una interfaz común a esos nuevos tipos. Esto separa el resto del código en el sistema desde el conocimiento de los tipos específicos que está agregando. Nuevos tipos pueden añadirse sin molestar código existente ... o al menos eso parece. Al principio parecería que el único lugar que necesita cambiar el código en tal diseño es el lugar donde usted hereda un nuevo tipo, pero esto no es del todo cierto. Usted todavía debe crear un objeto de su nuevo tipo, y en el punto de la creación debe especificar el constructor exacto a utilizar. Así, si el código que crea objetos se distribuye a través de su aplicación, usted tiene el mismo problema cuando añade nuevos tipos — usted todavía debe perseguir todos los puntos de su código en asuntos de tipos. Esto sucede para ser la \textit{creation : creación} del tipo que importa en este caso en lugar del \textit{use : uso} del tipo (que es atendido por el polimorfismo), pero el efecto es el mismo : la adición de un nuevo tipo puede causar problemas. \newline
-
-La solución es forzar la creación de objetos que se produzca a través de una \textit{factory : fábrica} común antes que permitir que el código creacional que se extendió por todo el sistema. Si todo el código en su programa debe ir a través de esta fábrica cada vez que necesita crear uno de sus objetos, entonces todo lo que debe hacer cuando añada un nuevo objeto es modificar la fábrica.   \newline
+La solución es forzar la creación de objetos que se produzcan a través de una fábrica \textit{(factory)} común, antes que permitir que el código creacional se extienda por todo el sistema. Si todo el código en su programa debe ir a través de esta fábrica cada vez que necesita crear uno de sus objetos, entonces todo lo que debe hacer cuando añada un nuevo objeto es modificar la fábrica.   \newline
 
 Ya que cada programa orientado a objetos crea objetos, y puesto que es muy probable que se extienda su programa mediante la adición de nuevos tipos, sospecho que las fábricas pueden ser los tipos más universalmente útiles de los patrones de diseño.  \newline
 
 \subsection*{Simple método de fábrica}
-\label{subsec:felcdo}
-\addcontentsline{toc}{subsection}{\nameref{subsec:felcdo}}
+\label{subsec:smdf}
+\addcontentsline{toc}{subsection}{\nameref{subsec:smdf}}
 
 Como ejemplo, vamos a revisar el sistema \textbf{Shape}. 
 Un enfoque es hacer la fábrica de un método \textbf{static} de la clase base:   \newline
@@ -55,11 +53,11 @@ for shape in shapes:
 #:~   
 \end{lstlisting}
 
-\textbf{factory( )} toma un argumento que le permite determinar qué tipo de \textbf{Shape} para crear; que pasa a ser un \textbf{String} en este caso, pero podría ser cualquier conjunto de datos.  \textbf{factory( )} es ahora el único otro código en el sistema que necesita ser cambiado cuando untipo nuevo de \textbf{Shape} es agregado (los datos de inicialización de los objetos presumiblemente vendrán de alguna parte fuera del sistema, y no son una matriz de codificación fija como en el ejemplo anterior).    \newline
+\textbf{factory( )} toma un argumento que le permite determinar qué tipo de \textbf{Shape} para crear; que pasa a ser un \textbf{String} en este caso, pero podría ser cualquier conjunto de datos.  \textbf{factory( )} es ahora el único otro código en el sistema que necesita ser cambiado cuando un tipo nuevo de \textbf{Shape} es agregado (los datos de inicialización de los objetos presumiblemente vendrán de alguna parte fuera del sistema, y no son una matriz de codificación fija como en el ejemplo anterior).    \newline
 
-Tenga en cuenta que este ejemplo también muestra el nuevo Python 2.2 \textbf{staticmethod( )} técnica para crear métodos estáticos en una clase.     \newline
+Tenga en cuenta que este ejemplo también muestra el nuevo Python 2.2 \textbf{staticmethod( )} técnicas para crear métodos estáticos en una clase.     \newline
 
-También he utilizado una herramienta que es nueva en Python 2.2 llamada un \textit{generator : generador}. Un generador es un caso especial de una fábrica: es una fábrica que no toma ningún argumento con el fin de crear un nuevo objeto. Normalmente usted entrega alguna información a una fábrica con el fin de decirle qué tipo de objeto para crear y cómo crearlo,pero generador tiene algún tipo de algoritmo interno que le dice qué y cómo construir. Esto "genera de la nada" en vez de estar diciendo qué crear. \newline
+También he utilizado una herramienta que es nueva en Python 2.2 llamada un generador \textit{(generator)}. Un generador es un caso especial de una fábrica: es una fábrica que no toma ningún argumento con el fin de crear un nuevo objeto. Normalmente usted entrega alguna información a una fábrica con el fin de decirle qué tipo de objeto crear y cómo crearlo, pero un generador tiene algún tipo de algoritmo interno que le dice qué y cómo construirlo. Esto "se genera de la nada" en vez de decirle qué crear. \newline
 
 Ahora, esto puede no parecer consistente con el código que usted ve arriba:     \newline
 
@@ -67,7 +65,7 @@ Ahora, esto puede no parecer consistente con el código que usted ve arriba:    
 for i in shapeNameGen(7)
 \end{lstlisting}
 
-parece que hay una inicialización teniendo lugar. Aquí es donde un generador es un poco extraño – cuando llama una función que contiene una declaración \textbf{yield} (\textbf{yield} es una nueva palabra clave que determina que una función es un generador), esa función en realidad devuelve un objeto generador que tiene un iterador. Este iterador se utiliza implícitamente en la sentencia \textbf{for} anterior, por lo que parece que se está iterando a través de la función generador, no lo que devuelve. Esto se hizo para la conveniencia de uso.    \newline
+parece que hay una inicialización en la anterior línea. Aquí es donde un generador es un poco extraño – cuando llama una función que contiene una declaración \textbf{yield} (\textbf{yield} es una nueva palabra clave que determina que una función es un generador), esa función en realidad devuelve un objeto generador que tiene un iterador. Este iterador se utiliza implícitamente en la sentencia \textbf{for} anterior, por lo que parece que se está iterando a través de la función generador, no lo que devuelve. Esto se hizo para mayor comodidad en su uso.    \newline
 
 Por lo tanto, el código que usted escribe es en realidad una especie de fábrica, que crea los objetos generadores que hacen la generación real. Usted puede utilizar el generador de forma explícita si quiere, por ejemplo:    \newline
 
@@ -80,7 +78,7 @@ Así que \textbf{next()} es el método iterador que es realmente llamado a gener
 
 En el interior del generador de fábrica, se puede ver la llamada a \textbf{\_\_subclasses\_\_( )}, que produce una lista de referencias a cada una de las subclases de \textbf{Shape} (que debe ser heredado de \textbf{object} para que esto funcione). Debe tener en cuenta, sin embargo, que esto sólo funciona para el primer nivel de herencia de \textbf{Item}, así que si usted fuera a heredar una nueva clase de \textbf{Circle}, no aparecería en la lista generada por \textbf{\_\_subclasses\_\_( )}. Si necesita crear una jerarquía más profunda de esta manera, debe recurse\footnote{utilizar la recursión en la programación, usar funciones recursivas (que se repiten) en la creación de un programa} la lista \textbf{\_\_subclasses\_\_( )}.   \newline
 
-También tenga en cuenta que, en \textbf{shapeNameGen( )} la declaración   \newline
+También tenga en cuenta la sentencia \textbf{shapeNameGen( )}  \newline
 
 \begin{lstlisting}
 types = Shape.__subclasses__()
@@ -92,7 +90,7 @@ Sólo se ejecuta cuando se produce el objeto generador; cada vez que se llama al
 \label{subsec:fp}
 \addcontentsline{toc}{subsection}{\nameref{subsec:fp}}
 
-El método estatico \textbf{ factory( )} en el ejemplo anterior obliga a todas las operaciones de creación que se centran en un solo lugar, así que es el único lugar que necesita cambiar el código. Esto es ciertamente una solución razonable, ya que arroja un cuadro alrededor del proceso de creación de objetos. Sin embargo, el libro \textit{Design Patterns} enfatiza en que la razón para el patrón de \textit{Factory Method} es para que diferentes tipos de fábricas pueden ser subclases de la fábrica básica (el diseño anterior se menciona como un caso especial). Sin embargo, el libro no proporciona un ejemplo, pero en su lugar justamente repite el ejemplo utilizado para el \textit{Abstract Factory} (usted verá un ejemplo de esto en la siguiente sección). Aquí \textbf{ShapeFactory1.py} está modificado por lo que los métodos de fábrica están en una clase separada como funciones virtuales. Observe también que las clases específicas de \textbf{Shape} se cargan dinámicamente en la demanda:    \newline
+El método estático \textbf{factory( )} en el ejemplo anterior obliga a todas las operaciones de creación que se centran en un solo lugar, así que es el único lugar que necesita cambiar el código. Esto es ciertamente una solución razonable, ya que arroja un cuadro alrededor del proceso de creación de objetos. Sin embargo, el libro \textit{Design Patterns} enfatiza en que la razón para el patrón de \textit{Factory Method} es para que diferentes tipos de fábricas pueden ser subclases de la fábrica básica (el diseño anterior se menciona como un caso especial). Sin embargo, el libro no proporciona un ejemplo, pero en su lugar justamente repite el ejemplo utilizado para el \textit{Abstract Factory} (usted verá un ejemplo de esto en la siguiente sección). Aquí \textbf{ShapeFactory1.py} está modificado por lo que los métodos de fábrica están en una clase separada como funciones virtuales. Observe también que las clases específicas de \textbf{Shape} se cargan dinámicamente por demanda:    \newline
 
 \begin{lstlisting} 
 #: c05:shapefact2:ShapeFactory2.py 
@@ -142,14 +140,14 @@ for shape in shapes:
     shape.erase() 
 #:~ 
 \end{lstlisting}
-Ahora el método de fábrica aparece en su propia clase, \textbf{ShapeFactory}, como el método \textbf{create( )}. Los diferentes tipos de formas deben crear cada uno su propia fábrica con un método \textbf{create( )} para crear un objeto de su propio tipo. La creación real de formas se realiza llamando \textbf{ShapeFactory.createShape( )}, que es un método estático que utiliza el diccionario en \textbf{ShapeFactory} para encontrar el objeto de fábrica apropiado basado en un identificador que se le pasa. La fábrica se utiliza de inmediato para crear el objeto \textit{shape : forma}, pero se puede imaginar un problema más complejo donde se devuelve el objeto de fábrica apropiado y luego utilizado por la persona que llama para crear un objeto de una manera más sofisticada. Ahora bien, parece que la mayor parte del tiempo usted no necesita la complejidad del método de fábrica polimórfico, y un solo método estático en la clase base (como se muestra en \textbf{ShapeFactory1.py}) funcionará bien. Observe que \textbf{ShapeFactory} debe ser inicializado por la carga de su diccionario con objetos de fábrica, que tiene lugar en la cláusula de inicialización estática de cada una de las implementaciones de forma.   \newline
+Ahora el método de fábrica aparece en su propia clase, \textbf{ShapeFactory}, como el método \textbf{create( )}. Los diferentes tipos de formas deben crear cada uno su propia fábrica con un método \textbf{create( )} para crear un objeto de su propio tipo. La creación real de formas se realiza llamando \textbf{ShapeFactory.createShape( )}, que es un método estático que utiliza el diccionario en \textbf{ShapeFactory} para encontrar el objeto de fábrica apropiado basado en un identificador que se le pasa. La fábrica se utiliza de inmediato para crear el objeto shape, pero se puede imaginar un problema más complejo donde se devuelve el objeto de fábrica apropiado y luego utilizado por la persona que llama para crear un objeto de una manera más sofisticada. Ahora bien, parece que la mayor parte del tiempo usted no necesita la complejidad del método de fábrica polimórfico, y un solo método estático en la clase base (como se muestra en \textbf{ShapeFactory1.py}) funcionará bien. Observe que \textbf{ShapeFactory} debe ser inicializado por la carga de su diccionario con objetos de fábrica, que tiene lugar en la cláusula de inicialización estática de cada una de las implementaciones de forma.   \newline
 
 \subsection*{Fábricas abstractas}
 \label{subsec:fa}
 \addcontentsline{toc}{subsection}{\nameref{subsec:fa}}
 
 
-El patrón \textit{Abstract Factory : Fábrica abstracta} se parece a los objetos de fábrica que hemos visto anteriormente, con no uno, sino varios métodos de fábrica. Cada uno de los métodos de fábrica crea un tipo diferente de objeto. La idea es que en el punto de la creación del objeto de fábrica, usted decide cómo se usarán todos los objetos creados por esa fábrica. El ejemplo dado en \textit{Design Patterns} implementa portabilidad a través de diferentes interfaces gráficas de usuario (GUI): crea un objeto de fábrica apropiada a la interfaz gráfica de usuario que se está trabajando, ya partir de entonces cuando se pregunta por un menú, botón, control deslizante, etc. se creará automáticamente la versión adecuada de ese tema para la interfaz gráfica de usuario. De esta manera usted es capaz de aislar, en un solo lugar, el efecto de cambiar de una interfaz gráfica de usuario a otra.     \newline
+El patrón Abstract Factory \textit{(Fábrica abstracta)} se parece a los objetos de fábrica que hemos visto anteriormente, no con uno, sino varios métodos de fábrica. Cada uno de los métodos de fábrica crea un tipo diferente de objeto. La idea es que en el punto de la creación del objeto de fábrica, usted decide cómo se usarán todos los objetos creados por esa fábrica. El ejemplo dado en \textit{Design Patterns} implementa portabilidad a través de diferentes interfaces gráficas de usuario (GUI): crea un objeto de fábrica apropiada a la interfaz gráfica de usuario que se está trabajando, y a partir de entonces cuando se pida un menú, botón, control deslizante, etc. se creará automáticamente la versión adecuada de ese ítem para la interfaz gráfica de usuario. De esta manera usted es capaz de aislar, en un solo lugar, el efecto de cambiar de una interfaz gráfica de usuario a otra.     \newline
 
 Como otro ejemplo, supongamos que usted está creando un entorno de juego de uso general y usted quiere ser capaz de soportar diferentes tipos de juegos. Así es cómo puede parecer utilizando una fábrica abstracta:     \newline
 
@@ -260,7 +258,7 @@ g2.play()
 #:~ 
 \end{lstlisting}
 
-Otra manera de poner esto es que toda la herencia en Python es la herencia de implementación; ya que Python hace su la comprobación de tipo en tiempo de ejecución, no hay necesidad de utilizar la herencia de interfaces para que pueda upcast al tipo base.  \newline
+Otra manera de poner esto es que toda la herencia en Python es la herencia de implementación; ya que Python hace su la comprobación de tipo en tiempo de ejecución, no hay necesidad de utilizar la herencia de interfaces para que pueda convertirla al tipo base.  \newline
 
 Es posible que desee estudiar los dos ejemplos de comparación, sin embargo. ¿La primera de ellas agrega suficiente información útil sobre el patrón que vale la pena mantener algún aspecto de la misma? Tal vez todo lo que necesita es "clases de etiquetado" como esta:    \newline
 

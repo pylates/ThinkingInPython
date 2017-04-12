@@ -1,11 +1,11 @@
 
-\section*{10: Devoluciones de Llamada}
+\section*{10: Devoluciones de llamados}
 \label{sec:ddl}
 \addcontentsline{toc}{section}{\nameref{sec:ddl}}
 
-Desacoplamiento comportamiento código.  \newline
+Desacoplamiento en el comportamiento del código.  \newline
 
-\textit{Observer} y una categoría de devoluciones de llamada llamada "Despacho múltiple (no en \textit{Design Patterns} )” incluyendo el \textit{Visitor} de \textit{Design Patterns}.   \newline
+\textit{Observer} y una categoría de retorno de llamados denominada “Despacho múltiple (no en \textit{Design Patterns} )” incluyendo el \textit{Visitor} de \textit{Design Patterns}.   \newline
 
 \subsection*{Observer : Observador}
 \label{subsec:Observer}
@@ -15,32 +15,33 @@ Al igual que las otras formas de devolución de llamada, este contiene un punto 
 
 El patrón observador resuelve un problema bastante común: ¿Qué pasa si un grupo de objetos necesita actualizar a sí mismos cuando algún objeto cambia de estado? Esto se puede ver en el "modelo-vista" aspecto de MVC (modelo-vista-controlador) de Smalltalk, o el "Documento - Ver Arquitectura" casi equivalente. Supongamos que usted tiene algúnos datos (el "documento") y más de una vista, decir una parcela y una vista textual. Al cambiar los datos, los dos puntos de vista deben saber actualizarse a sí mismos,y eso es lo que facilita el observador. Es un problema bastante común que su solución se ha hecho una parte de la libreria  estándar \textit{java.util}. \newline
 
-Hay dos tipos de objetos que se utilizan para implementar el patrón de observador en Python. La clase \textbf{Observable} lleva un registro de todos los que quieran ser informados cuando un cambio ocurre, si el "Estado" ha cambiado o no. Cuando alguien dice "Está bien, todo el mundo debe revisar y, potencialmente, actualizarse," La clase \textbf{Observable} realiza esta tarea mediante una llamada al método \textbf{notifyObservers( )} para cada uno en la lista. El método \textbf{notifyObservers( )} es parte de la clase base \textbf{Observable}.   \newline
+Hay dos tipos de objetos que se utilizan para implementar el patrón de observador en Python. La clase \textbf{Observable} lleva un registro de todos los que quieran ser informados cuando un cambio ocurre, si el “Estado" ha cambiado o no. Cuando alguien dice “está bien, todo el mundo debe revisar y, potencialmente, actualizarse," La clase \textbf{Observable} realiza esta tarea mediante una llamada al método \textbf{notifyObservers( )} para cada uno en la lista. El método \textbf{notifyObservers( )} es parte de la clase base \textbf{Observable}.   \newline
 
-En realidad, hay dos "cosas que cambian" en el patrón observador: la cantidad de objetos de observación y la forma se produce una actualización. Es decir, el patrón observador permite modificar ambos sin afectar el código circundante.
+En realidad, hay dos “cosas que cambian" en el patrón observador: la cantidad de objetos observables y el modo de ocurrencia de una actualización. Es decir, el patrón observador permite modificar ambos sin afectar el código subrogado.
 
 
 \-\-\-\-\-\-\-\-\-\-\-\-\-  \newline
 
-\textbf{Observer} es una clase "interfaz" que solo tiene una función miembro, \textbf{update( )}. Esta función es llamada por el objeto que está siendo observado, cuando ese objeto decide que es hora de actualizar todos sus observadores. Los argumentos son opcionales; usted podría tener un \textbf{update( )} sin argumentos y eso todavía encajaría en el patrón observador; sin embargo, esto es más general — permite al objeto observado pasar el objeto que causó la actualización (ya que un \textbf{Observer} puede ser registrado con más de un objeto observado) y cualquier información adicional si eso es útil, en lugar de forzar el objeto \textbf{Observer} que busca alrededor para ver quién está actualizando y para ir a buscar cualquier otra información que necesita.    \newline
+\textbf{Observer} es una clase “interfaz" que solo tiene una función miembro, \textbf{update( )}. Esta función es llamada por el objeto que está siendo observado, cuando ese objeto decide que es hora de actualizar todos sus observadores. Los argumentos son opcionales; usted podría tener un \textbf{update( )} sin argumentos y eso todavía encajaría en el patrón observador; sin embargo, esto es más general — permite al objeto observado pasar el objeto que causó la actualización (ya que un \textbf{Observer} puede ser registrado con más de un objeto observado) y cualquier información adicional si eso es útil, en lugar de forzar el objeto \textbf{Observer} que busca alrededor para ver quién está actualizando y para ir a buscar cualquier otra información que necesita.    \newline
 
 El "objeto observado" que decide cuándo y cómo hacer la actualización será llamado \textbf{Observable}.   \newline
 
-\textbf{Observable} tiene una bandera para indicar si se ha cambiado. En un diseño más simple, no habría ninguna bandera; si algo pasó, cad uno sería notificado. La bandera le permite esperar, y sólo notificar al \textbf{Observer}s cuando usted decide sea el momento adecuado. Nótese, sin embargo, que el control del estado de la bandera es \textbf{protected}, de modo que sólo un heredero puede decidir lo que constituye un cambio, y no el usuario final de la clase \textbf{Observer} derivada resultante.  \newline
+\textbf{Observable} tiene una bandera para indicar si se ha cambiado. En un diseño más simple, no habría ninguna bandera; si algo pasó, cada uno sería notificado. La bandera le permite esperar, y sólo notificar al \textbf{Observer}s cuando usted decide sea el momento adecuado. Nótese, sin embargo, que el control del estado de la bandera es \textbf{protected}, de modo que sólo un heredero puede decidir lo que constituye un cambio, y no el usuario final de la clase \textbf{Observer} derivada resultante.  \newline
 
-La mayor parte del trabajo se hace en \textbf{notifyObservers( )}. Si la bandera \textbf{changed} no se ha establecido, esto no hace nada. De otra manera, ello primero despeja la bandera \textbf{changed} así repitió las llamadas a \textbf{notifyObservers( )} para no perder el tiempo. Esto se hace antes de notificar a los observadores en el caso de las llamadas a \textbf{update( )} hacer cualquier cosa que causa un cambio de nuevo a este objeto \textbf{Observable}. Entonces se mueve a través del \textbf{set} y vuelve a llamar a la función miembro \textbf{update( )} de cada \textbf{Observer}.   \newline
+La mayor parte del trabajo se hace en \textbf{notifyObservers( )}. Si la bandera \textbf{changed} no se ha establecido, esto no hace nada. 
+De otra manera, se limpia la bandera \textbf{changed} y luego se repiten las llamadas a \textbf{notifyObservers( )} para no perder el tiempo. 
+Esto se hace antes de notificar a los observadores en el caso de las llamadas a \textbf{update( )}. Hacer cualquier cosa que causa un cambio de nuevo a este objeto \textbf{Observable}. Entonces se mueve a través del \textbf{set} y vuelve a llamar a la función miembro \textbf{update( )} de cada \textbf{Observer}.   \newline
 
-Al principio puede parecer que usted puede utilizar un objeto ordinario \textbf{Observable} para administrar las actualizaciones. Pero esto no funciona; para obtener un efecto, usted \textit{debe} heredar de
-\textbf{Observable} y en algún lugar en el código de la clase derivada llamar \textbf{setChanged( )}. Esta es la función miembro que establece la bandera "cambiado", lo que significa que cuando se llama \textbf{notifyObservers( )} todos los observadores serán, de hecho, serán notificados. \textit{Cuando} usted llama \textbf{setChanged( )} depende de la lógica de su programa.
+Al principio puede parecer que usted puede utilizar un objeto ordinario \textbf{Observable} para administrar las actualizaciones. Pero esto no funciona; para obtener un efecto, usted debe heredar de \textbf{Observable} y en algún lugar en el código de la clase derivada llamar \textbf{setChanged( )}. Esta es la función miembro que establece la bandera “changed", lo que significa que cuando se llama \textbf{notifyObservers( )} todos los observadores, de hecho, serán notificados. \textit{Cuando} usted llama \textbf{setChanged( )} depende de la lógica de su programa.
  
 \newpage
 
 \subsubsection*{Observando Flores}
 \label{subsubsec:of}
 \addcontentsline{toc}{subsubsection}{\nameref{subsubsec:of}} 
- 
 
-Dado que Python  no tiene componentes de la  librería estándar para apoyar el patrón observador (como hace Java), primero tenemos que crear una. Lo más sencillo de hacer es traducir la librería estándar de Java \textbf{Observer} y clases \textbf{Observable} . Esto también proporciona la traducción más fácil a partir de código Java que utiliza estas librerías.    \newline
+
+Dado que Python  no tiene componentes de la  librería estándar para apoyar el patrón observador (como hace Java), primero tenemos que crear una. Lo más sencillo de hacer es traducir la librería estándar de Java \textbf{Observer} y la clase \textbf{Observable}. Esto también proporciona la traducción más fácil a partir de código Java que utiliza estas librerías.    \newline
 
 Al tratar de hacer esto, nos encontramos con un obstáculo menor, que es el hecho de que Java tiene una palabra clave \textbf{synchronized} que proporciona soporte integrado para la sincronización hilo. Ciertamente se podría lograr lo mismo a mano utilizando código como el siguiente:\newline
 
@@ -171,7 +172,7 @@ e.m()
 #:~
 \end{lstlisting}
 
-Usted debe llamar al constructor de la clase base para \textbf{Synchronization}, pero esto es todo. En la clase \textbf{C} puede ver el uso de \textbf{Synchronized()} para \textbf{m}, dejando \textbf{f} y \textbf{g} solos. Clase \textbf{D} tiene todos sus métodos sincronizados en masa, y la clase \textbf{E} utiliza la función de conveniencia para sincronizar \textbf{m} y \textbf{g}. Tenga en cuenta que dado que \textbf{m} termina siendo sincronizado en dos ocasiones, ello se entró y salió dos veces para cada llamada, que no es muy deseable [puede haber una corrección para este].     \newline
+Usted debe llamar al constructor de la clase base para \textbf{Synchronization}, pero esto es todo. En la clase \textbf{C} puede ver el uso de \textbf{Synchronized()} para \textbf{m}, dejando \textbf{f} y \textbf{g} solos. Clase \textbf{D} tiene todos sus métodos sincronizados en masa, y la clase \textbf{E} utiliza la función de conveniencia para sincronizar \textbf{m} y \textbf{g}. Tenga en cuenta que dado que \textbf{m} termina siendo sincronizado en dos ocasiones, este entró y salió dos veces para cada llamada, que no es muy deseable [puede haber una corrección para este].     \newline
       
 \begin{lstlisting} 
 #: util:Observer.py 
@@ -360,13 +361,14 @@ En \textbf{main( )}, se puede ver uno de los beneficios principales de del patr�
 
 Si usted estudia el código de arriba verás que \textbf{OpenNotifier} y \textbf{CloseNotifier} utiliza la interfaz \textbf{Observable} básica. Esto significa que usted podría heredar otras clases \textbf{Observable} completamente diferentes; la única conexión de \textbf{Observable} que tiene con \textbf{Flower}, es la interfaz \textbf{Observable}.    \newline
 
-\subsection*{Un ejemplo visual de Observadores}
+\subsection*{Un ejemplo visual de Observers}
 \label{subsec:uevdo}
 \addcontentsline{toc}{subsection}{\nameref{subsec:uevdo}}
 
-El siguiente ejemplo es similar al ejemplo \textbf{ColorBoxes}  del Capítulo 14 en \textit{Thinking in Java, 2nd Edición}. Las cajas se colocan en una cuadrícula en la pantalla y cada uno se inicializa a un color aleatorio. En adición, cada caja \textbf{implements} la interfaz \textbf{Observer} y es registrado con un objeto \textbf{Observable}.Al hacer clic en una caja, todas las otras cajas son notificados de que un cambio se ha hecho porque el objeto \textbf{Observable} llama automáticamente método \textbf{update( )} de cada objeto \textbf{Observer}.  Dentro de este método, las comprobaciones de caja para ver si es adyacente a la que se ha hecho clic, y si de modo que cambia de color para que coincida con el cuadro se hace clic.  \newline
+El siguiente ejemplo es similar al ejemplo \textbf{ColorBoxes} en el Capítulo 14 del libro \textit{Thinking in Java, 2nd Edición}. Las cajas se colocan en una cuadrícula en la pantalla y cada uno se inicializa a un color aleatorio. 
+En adición, cada caja \textbf{implements} de la interfaz \textbf{Observer} y es registrada con un objeto \textbf{Observable}.Al hacer clic en una caja, todas las otras cajas son notificados de que un cambio se ha hecho porque el objeto \textbf{Observable} llama automáticamente al método \textbf{update( )} de cada objeto \textbf{Observer}.  Dentro de este método, las comprobaciones de caja muestran si es adyacente a la que se ha hecho clic, y si es así, cambia de color para que coincida con dicha caja.\footnote{[este ejemplo no se ha convertido. Véase más adelante una versión que tiene la interfaz gráfica de usuario, pero no los observadores, en PythonCard.]}  \newline
 
-[[NOTA: este ejemplo no se ha convertido. Véase más adelante una versión que tiene la interfaz gráfica de usuario, pero no los observadores, en PythonCard. ]]  \newline
+
 
 \begin{lstlisting} 
 #  c10:BoxObserver.py 
@@ -447,13 +449,14 @@ notifier):
 # :~   
 \end{lstlisting}
 
-La primera vez que usted mira la documentación en línea para \textbf{Observable} que es un poco confuso, ya que parece que se puede utilizar un objeto ordinario \textbf{Observable}para manejar las actualizaciones. Pero esto no funciona; inténtalo \- dentro de \textbf{BoxObserver}, crea un objeto \textbf{Observable} en lugar de un objeto \textbf{BoxObserver} y observe lo que ocurre: nada. Para conseguir un efecto, \textit{debe} heredar de \textbf{Observable} y en alguna parte de su código la clase derivada llamada \textbf{setChanged( )}. Este es el método que establece la bandera "changed : cambiado", lo que significa que cuando se llama \textbf{notifyObservers( )} todos los observadores serán, de hecho, serán notificado. En el ejemplo anterior, \textbf{setChanged( )} es simplemente llamado dentro de \textbf{notifyObservers( )}, pero podría utilizar cualquier criterio que desee para decidir cuándo llamar \textbf{setChanged( )}.      \newline
+Cuando usted ve por primera vez la documentación en línea para \textbf{Observable}, es un poco confuso, ya que parece que se puede utilizar un objeto ordinario \textbf{Observable} para manejar las actualizaciones. Pero esto no funciona; inténtalo \- dentro de \textbf{BoxObserver}, crea un objeto \textbf{Observable} en lugar de un objeto \textbf{BoxObserver} y observe lo que ocurre: nada. Para conseguir un efecto, debe heredar de \textbf{Observable} y en alguna parte de su código la clase derivada llamada \textbf{setChanged( )}. Este es el método que establece el cambio de bandera , lo que significa que cuando se llama \textbf{notifyObservers( )} todos los observadores, de hecho, serán notificados. En el ejemplo anterior, \textbf{setChanged( )} es simplemente llamado dentro de \textbf{notifyObservers( )}, pero podría utilizar cualquier criterio que desee para decidir cuándo llamar \textbf{setChanged( )}.      \newline
 
-\textbf{BoxObserver} contiene un solo objeto \textbf{Observable} llamado \textbf{notifier}, y cada vez que se crea un objeto \textbf{OCBox}, está vinculada a \textbf{notifier}.  En \textbf{OCBox} al hacer clic con el mouse el método \textbf{notifyObservers( )} es llamado, pasando el objeto se hace clic en un argumento para que todas las cajas que reciben el mensaje (en su método \textbf{update( ) }) de que se ha hecho clic saben y pueden decidir si cambiar sí o no. Usando una combinación de código en \textbf{notifyObservers( )} y \textbf{update( )} se puede trabajar algunos esquemas bastante complejos.     \newline
+\textbf{BoxObserver} contiene un solo objeto \textbf{Observable} llamado \textbf{notifier}, y cada vez que se crea un objeto \textbf{OCBox}, está vinculada a \textbf{notifier}.  En \textbf{OCBox} al hacer clic con el mouse, el método \textbf{notifyObservers( )} es llamado, pasando el objeto seleccionado como un argumento para que todas las cajas reciban el mensaje (en su método \textbf{update( ) }) y sabiendo quien fue seleccionado decidan el cambio.
+Usando una combinación de código en \textbf{notifyObservers( )} y \textbf{update( )} se puede trabajar algunos esquemas bastante complejos.     \newline
 
-Podría parecer que la forma en que los observadores son notificados debe ser congelada en tiempo de compilación en el método \textbf{notifyObservers( )}. Ahora bien, si se mira más de cerca el código anterior usted verá que el único lugar en \textbf{BoxObserver} o \textbf{OCBox} cuando es consciente de que usted está trabajando con una \textbf{BoxObservable} está en el punto de la creación del objeto \textbf{Observable} — de ahí en adelante todo lo que utiliza la interfaz básica \textbf{Observable}. Esto significa que usted podría heredar otras clases \textbf{Observable} y intercambiarlos en tiempo de ejecución si desea cambiar el comportamiento de notificación luego.  \newline
+Podría parecer que la forma en que los observadores son notificados debe ser congelada en tiempo de compilación en el método \textbf{notifyObservers( )}. Ahora bien, si se mira más de cerca el código anterior usted verá que el único lugar en \textbf{BoxObserver} o \textbf{OCBox}, cuando es consciente de que usted está trabajando con una \textbf{BoxObservable}, se está en el punto de la creación del objeto \textbf{Observable} — de ahí en adelante todo lo que utiliza la interfaz básica \textbf{Observable}. Esto significa que usted podría heredar otras clases \textbf{Observable} e intercambiarlas en tiempo de ejecución si desea cambiar el comportamiento de notificación luego.  \newline
 
-Aquí esta una versión de lo anterior que no utiliza el patrón Observador, escrito por Kevin Altis usando PythonCard, y colocado aquí como un punto de partida para una traducción que sí incluye Observador:  \newline
+Aquí esta una versión de lo anterior que no utiliza el patrón Observador\footnote{escrito por Kevin Altis usando PythonCard}, y colocado aquí como un punto de partida para una traducción que sí incluye Observador:  \newline
 
 \begin{lstlisting} 
 #: c10:BoxObserver.py 
@@ -575,4 +578,4 @@ Este es el archivo de recursos para ejecutar el programa (ver PythonCard para m�
 
 2. Crear un diseño minimalista Observador-observable en dos clases. Basta con crear el mínimo en las dos clases, luego demostrar su diseño mediante la creación de un \textbf{Observable} y muchos \textbf{Observer}s, y hacer que el \textbf{Observable} para actualizar los \textbf{Observer}s.   \newline
 
-3. Modifica \textbf{BoxObserver.py} para convertirlo en un juego sencillo. Si alguno de los cuadrados que rodean el que usted hizo clic es parte de un parche contiguo del mismo color, entonces todas los cuadros en ese parche se cambian al color que ha hecho clic. Puede configurar el juego para la competencia entre los jugadores o para no perder de vista el número de clics que un solo jugador utiliza para convertir el campo en un solo color. También puede restringir el color de un jugador a la primera que fue elegido. \newline
+3. Modifica \textbf{BoxObserver.py} para convertirlo en un juego sencillo. Si alguno de los cuadrados que rodean el que usted seleccionó, es parte de un parche contiguo del mismo color, entonces todas los cuadros en ese parche se cambian al color que ha hecho clic. Puede configurar el juego para la competencia entre los jugadores o para no perder de vista el número de clics que un solo jugador utiliza para convertir el campo en un solo color. También puede restringir el color de un jugador a la primera que haya elegido. \newline
