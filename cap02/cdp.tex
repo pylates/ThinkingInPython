@@ -14,7 +14,6 @@ La última parte de este libro contiene un ejemplo del proceso de evolución del
 \label{subsec:qeup}
 \addcontentsline{toc}{subsection}{\nameref{subsec:qeup}}
 
-% ------- 18 de Octubre ----------
 Inicialmente, usted puede pensar en un patrón como una forma especialmente inteligente y perspicaz de la solución de una determinada clase de problemas. Es decir, parece que muchas personas han trabajado todos los ángulos de un problema y han llegado a la solución más general y flexible para ello. El problema podría ser uno que usted ha visto y ha resuelto antes, pero su solución probablemente no tenía el conjunto de complementos que usted vería incorporados en un patrón.    \newline
 
 Aunque se les llama "patrones de diseño", ellos realmente no están atados al ámbito del diseño. Un patrón parece estar al margen de la forma tradicional de pensar en el análisis, diseño, e implementación. En lugar, un patrón encarna una idea completa dentro de un programa, y por lo tanto a veces puede aparecer en la fase de análisis o de la fase de diseño de alto nivel. Esto es interesante porque un patrón tiene una aplicación directa en el código y por lo que podría no esperar que aparezca antes del diseño o implementación de bajo nivel (de hecho, es posible que no se dé cuenta de que se necesita un patrón particular hasta llegar a esas fases).      \newline
@@ -95,14 +94,13 @@ Cuando puse un concurso de ideas en mi boletín de noticias\footnote{Una publica
     
     \item \textbf{Ley de Demeter:} también denominado "No hables con extraños". Un objeto sólo debe hacer referencia a sí mismo, sus atributos, y los argumentos de sus métodos.
     
-    \item \textbf{Sustracción:} un diseño se termina cuando no puede llevar nada más lejos\footnote{Esta idea se atribuye generalmente a Antoine de St. Exupery de \textit{The Little Prince : El principito}  "La perfection est atteinte non quand il ne reste rien à ajouter, mais quand il ne reste rien à enlever," o "La perfección se alcanza no cuando no hay nada más que añadir, sino cuando no hay nada más que eliminar".}.
+    \item \textbf{Sustracción:} Un diseño se termina cuando no se puede quitar nada\footnote{Esta idea se atribuye generalmente a Antoine de St. Exupery de \textit{The Little Prince : El principito}  "La perfection est atteinte non quand il ne reste rien à ajouter, mais quand il ne reste rien à enlever," o "La perfección se alcanza no cuando no hay nada más que añadir, sino cuando no hay nada más que eliminar".}.
     
-    \item \textbf{Simplicidad antes de generalidad:}\footnote{A partir de un correo electrónico de Kevlin Henney.} (Una variación de \textit{Occam’s Razor}, que dice que "la solución más simple es el mejor"). Un problema común que encontramos en la estructura es que están diseñados para ser de uso general sin hacer referencia a los sistemas reales. Esto lleva a una increíble variedad de opciones que están a menudo sin uso, mal uso o simplemente no es útil. Sin embargo, la mayoría de los desarrolladores trabajan en sistemas específicos, y la búsqueda de la generalidad no siempre sirve bien. La mejor ruta para la generalidad es a través de la comprensión de ejemplos específicos bien definidos. Por lo tanto, este principio actúa como el punto decisivo entre alternativas de diseño de otro modo igualmente viables. Por supuesto, es totalmente posible que la solución más simple es la más general. % ------------- Marcador página 25------------------
-    %----Preguntar cual es el error en la oración--------------
+    \item \textbf{Simplicidad antes de generalidad:}\footnote{A partir de un correo electrónico de Kevlin Henney.} (Una variación de \textit{Occam’s Razor}, que dice que "la solución más simple es el mejor"). Un problema común que encontramos en la estructura es que están diseñados para ser de uso general sin hacer referencia a los sistemas reales. Esto lleva a una increíble variedad de opciones que están a menudo sin uso, mal uso o simplemente no es útil. Sin embargo, la mayoría de los desarrolladores trabajan en sistemas específicos, y la búsqueda de la generalidad no siempre sirve bien. La mejor ruta para la generalidad es a través de la comprensión de ejemplos específicos bien definidos. Por lo tanto, este principio actúa como el punto decisivo entre alternativas de diseño de otro modo igualmente viables. Por supuesto, es totalmente posible que la solución más simple es la más general. % -------------posible existencia de error en la oración--------------
     
     \item \textbf{La reflexividad:} (mi término sugerido). Una abstracción por clase, una clase por la abstracción. También podría ser llamado \textbf{Isomorfismo}.
     
-    \item \textbf{Independencia o Ortogonalidad.} Expresar ideas independientes de forma independiente. Esto complementa Separación, Encapsulación y Variación, y es parte del Bajo-Acoplamiento-Alta-Cohesión.
+    \item \textbf{Independencia o Ortogonalidad.} Expresar ideas independientes de forma independiente. Esto complementa la Separación, la Encapsulación y la Variación, y es parte del Bajo Acoplamiento, Alta Cohesión.
     
     \item \textbf{Una vez y sólo una vez:} Evitar la duplicación de la lógica y de la estructura donde la duplicación no es accidental, es decir, donde ambas piezas de código expresan la misma intención por la misma razón.
 
@@ -283,9 +281,11 @@ print x is y is z
 #:~ 
 \end{lstlisting}
 
-[[ Descripción ]] \newline
+
 
 El segundo enfoque utiliza metaclases, un tema que aún no entiendo pero el cual se ve muy interesante y poderoso ciertamente (tenga en cuenta que Python 2.2 ha mejorado / simplificado la sintaxis metaclase, y por lo que este ejemplo puede cambiar): \newline
+
+% Ejemplos.
 
 \begin{lstlisting}
 #: c01:SingletonMetaClass.py 
