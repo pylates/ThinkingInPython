@@ -79,6 +79,7 @@ La belleza de la utilización de  \textbf{\_\_getattr\_\_( )} es que \textbf{Pro
 
 \newpage
 
+
 \subsection*{State}
 \label{subsec:State}
 \addcontentsline{toc}{subsection}{\nameref{subsec:State}}
@@ -142,6 +143,7 @@ La diferencia entre \textit{Proxy} y \textit{State} está en los problemas que s
     \item \textbf{Referencia inteligente.} Para agregar acciones adicionales cuando se accede al objeto proxy. Por ejemplo, o para llevar un registro del número de referencias que se realizan para un objeto en particular, con el fin de implementar el lenguaje \textit{copy-on-write} (copiar en escritura) y prevenir objeto aliasing.
     %Objeto aliasing   {sugerencias: objetos espejos}
     Un ejemplo sencillo es hacer el seguimiento del número de llamadas a un método en particular.
+    
 \end{enumerate}
 
 Usted podría mirar una referencia de Python como un tipo de proxy de protección, ya que controla el acceso al objeto real de los demás (y asegura, por ejemplo, que no utilice una referencia nula). \newline

@@ -1,8 +1,6 @@
 \section*{3: Construyendo aplicaciones Framework}
 \label{sec:caf}
 \addcontentsline{toc}{section}{\nameref{sec:caf}}
-% frameworks = MArco, entorno, estructura
-% Preguntar! ¿aplicación Framework? ¿Framework de aplicación?
 % Framework: conjunto de herramientas
 
 Una aplicación framework le permite heredar de una clase o conjunto de clases y crear una nueva aplicación, reutilizando la mayor parte del código en las clases existentes y anular uno o más métodos con el fin de personalizar la aplicación a sus necesidades. Un concepto fundamental en el entorno de aplicación es el \textit{Template Method} (Método Plantilla) el cual normalmente se oculta debajo de las cubiertas e impulsa la aplicación  llamando a los diversos métodos en la clase base (algunos de los cuales usted ha reemplazado con el fin de crear la aplicación).    \newline
@@ -13,8 +11,7 @@ Por ejemplo, cuando se crea un applet, se está utilizando una aplicación frame
 \subsection*{\textit{Template Method} (Método Plantilla)}
 \label{subsec:tm}
 \addcontentsline{toc}{subsection}{\nameref{subsec:tm}}
-        
-        
+                
         
 Una característica importante del Método Plantilla es que está definido en la clase base y no puede ser cambiado. Este algunas veces es un método \textbf{Privado} pero siempre es prácticamente \textbf{final}. El llamado a otros métodos de la clase base (los que usted reemplaza) con el fin de hacer su trabajo, pero se le suele llamar sólo como parte de un proceso de inicialización (y por tanto el programador-cliente no necesariamente es capaz de llamarlo directamente).    \newline
 
@@ -50,7 +47,7 @@ Veremos \textit{Template Method} (Método plantilla) otras numerosas veces a lo 
 \label{subsec:exercises}
 \addcontentsline{toc}{subsection}{\nameref{subsec:exercises}}
 
-% .---- 16 deNoviembre
+
 \begin{enumerate}[1.]
     \item Crear un framework que tome una lista de nombres de archivo en la línea de comandos. Este abre cada archivo, excepto el último para la lectura, y el último para la escritura. El framework procesará cada archivo de entrada utilizando una política indeterminada y escribir la salida al último archivo. Heredar para personalizar este framework para crear dos aplicaciones separadas:
     \begin{enumerate}[1)]

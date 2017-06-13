@@ -140,6 +140,7 @@ for shape in shapes:
     shape.erase() 
 #:~ 
 \end{lstlisting}
+
 Ahora el método de fábrica aparece en su propia clase, \textbf{ShapeFactory}, como el método \textbf{create( )}. Los diferentes tipos de formas deben crear cada uno su propia fábrica con un método \textbf{create( )} para crear un objeto de su propio tipo. La creación real de formas se realiza llamando \textbf{ShapeFactory.createShape( )}, que es un método estático que utiliza el diccionario en \textbf{ShapeFactory} para encontrar el objeto de fábrica apropiado basado en un identificador que se le pasa. La fábrica se utiliza de inmediato para crear el objeto shape, pero se puede imaginar un problema más complejo donde se devuelve el objeto de fábrica apropiado y luego utilizado por la persona que llama para crear un objeto de una manera más sofisticada. Ahora bien, parece que la mayor parte del tiempo usted no necesita la complejidad del método de fábrica polimórfico, y un solo método estático en la clase base (como se muestra en \textbf{ShapeFactory1.py}) funcionará bien. Observe que \textbf{ShapeFactory} debe ser inicializado por la carga de su diccionario con objetos de fábrica, que tiene lugar en la cláusula de inicialización estática de cada una de las implementaciones de forma.   \newline
 
 \subsection*{Fábricas abstractas}

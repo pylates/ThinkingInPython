@@ -1,4 +1,3 @@
-
 \section*{12 : Patrón Refactorización}
 \label{sec:pr}
 \addcontentsline{toc}{section}{\nameref{sec:pr}}
@@ -20,6 +19,7 @@ Por supuesto, esta es una tendencia natural, pero en la programación informáti
 La naturaleza de este problema es que la basura se lanza sin clasificar en un solo compartimiento, por lo que la información de tipo específico se pierde. Pero más tarde, la información de tipo específico debe ser recuperada para ordenar adecuadamente la basura. En la solución inicial, RTTI(descrito en el capítulo 12 de \textit{Thinking in Java, Segunda edición}) es utilizado.    \newline
 
 Esto no es un diseño trivial, ya que tiene una restricción añadida. Eso es lo que hace que sea interesante — se parece más a los problemas desordenados que es probable que encuentre en su trabajo. La restricción adicional es que la basura llega a la planta de reciclaje del vertedero sanitario. El programa debe modelar la clasificación de esa basura. Aquí es donde entra en juego RTTI : usted tiene un montón de piezas anónimas de basura, y el programa se da cuenta exactamente de qué tipo son.  \newline
+
 
 \begin{lstlisting} 
 # c12:recyclea:RecycleA.py  
@@ -153,19 +153,19 @@ Esto por lo general nos lleva a los principios de la programación orientada a o
 Considere primero el lugar donde se crean los objetos \textbf{Trash}, que es una sentencia \textbf{switch} dentro de \textbf{main()}:    \newline
 
 \begin{lstlisting} 
-    for(int i = 0 i < 30 i++) 
-      switch((int)(Math.random() * 3)): 
-        case 0 : 
-          bin.add(new 
-            Aluminum(Math.random() * 100)) 
-          break 
-        case 1 : 
-          bin.add(new 
-            Paper(Math.random() * 100)) 
-          break 
-        case 2 : 
-            bin.add(new 
-                Glass(Math.random() * 100)) 
+for(int i = 0 i < 30 i++) 
+  switch((int)(Math.random() * 3)): 
+    case 0 : 
+      bin.add(new 
+        Aluminum(Math.random() * 100)) 
+      break 
+    case 1 : 
+      bin.add(new 
+        Paper(Math.random() * 100)) 
+      break 
+    case 2 : 
+        bin.add(new 
+            Glass(Math.random() * 100)) 
 \end{lstlisting}
 
 Esto es definitivamente desordenado, y también un lugar donde usted debe cambiar el código cada vez que se agrega un nuevo tipo. Si comúnmente se añaden nuevos tipos, una mejor solución es un sólo método que toma toda la información necesaria y produce una referencia a un objeto del tipo correcto, yaproyectado a un objeto de basura. En \textit{Design Patterns} esto se conoce en general como un \textit{patrón creacional} (de los cuales hay varios). El patrón específico que se aplicará aquí es una variante del \textit{Factory Method : Método de fábrica}. Aquí, el método de fábrica es un miembro \textbf{static} de \textbf{Trash}, pero más comúnmente es un método que se anula en la clase derivada.  \newline
@@ -337,6 +337,7 @@ Una vez que entienda cómo hacerlo, el proceso de crear un nuevo objeto dado só
 Por supuesto, la referencia apropiada \textbf{Class} podría no estar en la lista \textbf{trashTypes}. En este caso, el \textbf{return} en el bucle interno no se ejecuta y que se retirará al final. Aquí, el programa trata de rectificar la situación mediante la carga del objeto \textbf{Class} dinámicamente y agregarlo a la lista \textbf{trashTypes}. Si aún así no se puede encontrar algo anda realmente mal, pero si la carga tiene éxito, entonces el método  \textbf{factory} se llama de forma recursiva para volver a intentarlo.    \newline
 
 Como verá, la belleza de este diseño es que el código no necesita ser cambiado, independientemente de las diferentes situaciones en que se utilizará (asumiendo que todas las subclases \textbf{Trash} contiene un constructor que toma un solo argumento \textbf{double}).     \newline
+
 
 \subsection*{Subclases \textbf{Trash}}
 \label{subsec:st}

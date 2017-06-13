@@ -101,6 +101,7 @@ En algún sentido, este framework proporciona un lugar alternativo para todas aq
 
 Para crear un conjunto de pruebas, usted comienza haciendo una clase interna \textbf{static} dentro de la clase que desea probar (su código de prueba también puede probar otras clases; usted decide). Este código de prueba se distingue heredando de \textbf{UnitTest:}   \newline
 
+%Ejemplos
  \begin{lstlisting}
 #  test:UnitTest.py 
 # The basic unit testing class 
@@ -230,9 +231,8 @@ Incluso el nombre de la clase interna puede ser el mismo. En el código anterior
 \label{subsec:pdcbycn}
 \addcontentsline{toc}{subsection}{\nameref{subsec:pdcbycn}}
 
-Los ejemplos de prueba de unidad hasta el momento son los que tradicionalmente se llaman \textit{white-box tests : pruebas de caja blanca}. Esto significa que el código de prueba tiene un acceso completo a la parte interna de la clase que está siendo probada 
-(por lo que podría ser llamado más apropiadamente las pruebas "caja transparente"). Las pruebas de caja blanca suceden automáticamente cuando usted 
-hace la clase de prueba de unidad como una clase interna de la clase que está probando, ya que las clases internas tienen automáticamente acceso a todos sus elementos de clase exteriores, incluso las que son \textbf{private}.   \newline
+Los ejemplos de prueba de unidad hasta el momento son los que tradicionalmente se llaman \textit{white-box tests} (pruebas de caja blanca). Esto significa que el código de prueba tiene un acceso completo a la parte interna de la clase que está siendo probada 
+(por lo que podría ser llamado más apropiadamente las pruebas "caja transparente"). Las pruebas de caja blanca suceden automáticamente cuando usted hace la clase de prueba de unidad como una clase interna de la clase que está probando, ya que las clases internas tienen automáticamente acceso a todos sus elementos de clase exteriores, incluso las que son \textbf{private}.   \newline
 
 Una forma posiblemente más común de la prueba es la \textbf{black-box testing :  prueba de caja negra}, que se refiere al tratamiento de la clase que se está probando como una caja impenetrable. No se puede ver el funcionamiento interno; sólo se puede acceder a las partes \textbf{public}  de la clase. Así, las pruebas de caja negra corresponden más estrechamente a las pruebas funcionales, para verificar los métodos que el programador-cliente va a utilizar. En adición, las pruebas de caja negra proporcionan una hoja de instrucciones mínimas para el programador-cliente  – en ausencia de toda otra documentación, las pruebas de caja negra al menos demuestran cómo hacer llamadas básicas a los métodos de la clase \textbf{public}.    \newline
 
@@ -406,10 +406,9 @@ class RunUnitTests:
 \addcontentsline{toc}{subsection}{\nameref{subsec:ex}}
 
 
-        1. Instalar el árbol del código fuente este libro y asegurar que usted tenga una utilidad \textbf{make} instalada en su sistema. (GNU \textbf{make} está disponible libremente en varios sitios de internet). En \textbf{TestDemo.py}, no comente \textbf{test3( )}, entonces escriba \textbf{make} y observe los resultados. \\
-        
-        2. Modificar TestDemo.java mediante la adición de una nueva prueba que produzca una excepción. Escriba \textbf{make} y observar los resultados.\newline
-        
-        3. Modifique sus soluciones a los ejercicios en el capítulo 1, añadiendo las pruebas unitarias. Escribe makefiles que incorporen las pruebas unitarias. \newline
-        
-        
+    1. Instalar el árbol del código fuente este libro y asegurar que usted tenga una utilidad \textbf{make} instalada en su sistema. (GNU \textbf{make} está disponible libremente en varios sitios de internet). En \textbf{TestDemo.py}, no comente \textbf{test3( )}, entonces escriba \textbf{make} y observe los resultados. \\
+    
+    2. Modificar TestDemo.java mediante la adición de una nueva prueba que produzca una excepción. Escriba \textbf{make} y observar los resultados.\newline
+    
+    3. Modifique sus soluciones a los ejercicios en el capítulo 1, añadiendo las pruebas unitarias. Escribe makefiles que incorporen las pruebas unitarias. \newline
+            
