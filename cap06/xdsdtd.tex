@@ -3,11 +3,9 @@
 \addcontentsline{toc}{section}{\nameref{sec:xdstd}}
 
 
-%\section{X: Decoradores: \newline  Selección Tipo dinámico}
-
 \textbf{El uso de objetos en capas, para añadir de forma dinámica y transparente, responsabilidades a los objetos individuales se le conoce como el patrón \textit{decorator} (decorador)}. \newline
 
-Se utiliza cuando la subclasificación crea demasiadas (o inflexibles) clases.   \newline
+Se utilizan cuando la subclasificación crea demasiadas (o inflexibles) clases.   \newline
 
 Todos los decoradores que envuelven al objeto original deben tener la misma interfaz básica. \newline
 
@@ -56,7 +54,7 @@ class Cappuccino:
     return self.description 
 \end{lstlisting}
 
-La clave para el uso de este método es encontrar la combinación particular que desea. Así, una vez que haya encontrado la bebida que le gustaría, aquí le presentamos una forma de hacerlo, como se muestra en la clase CoffeeShop en el siguiente código:     \newline
+La clave para el uso de este método es encontrar la combinación particular que desea. Así, una vez que haya encontrado la bebida que le gustaría, aquí le presentamos una forma de hacerlo, como se muestra en la clase \textbf{CoffeeShop} en el siguiente código:     \newline
 
 \begin{lstlisting}
 #: cX:decorator:nodecorators:CoffeeShop.py 

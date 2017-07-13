@@ -2,13 +2,11 @@
 \label{sec:pr}
 \addcontentsline{toc}{section}{\nameref{sec:pr}}
 
-%\textcolor{red}{Este capítulo no ha tenido traducción significativa todavía.}    \newline% COLOCAR COLOR ROJO
 
 En este capítulo se analizará el proceso de resolver un problema mediante la aplicación de patrones de diseño de una forma evolutiva. Es decir, un primer diseño de corte será utilizado para la solución inicial, y luego esta solución será examinada y diversos patrones de diseño se aplicarán al problema (algunos de los cuales funcionaran y otros no). La pregunta clave que siempre se preguntó en la búsqueda de soluciones mejoradas es “¿qué va a cambiar?"     \newline
 
 Este proceso es similar a lo que Martin Fowler habla en su libro \textit{Refactoring:Improving the Design of Existing Code\footnote{Addison-Wesley, 1999.}} (a pesar de que tiende a hablar de piezas de código más de diseños a nivel de patrón). 
-Se comienza con una solución, y luego cuando se descubre que no es continuo en la satisfacción de sus necesidades, lo arregla. 
-Por supuesto, esta es una tendencia natural, pero en la programación informática que ha sido muy difícil de lograr con programas de procedimiento, y la aceptación de la idea de que \textit{podemos} refactorizar código y añadir diseño al cuerpo de prueba como la programación orientada a objetos es "una cosa buena." \newline
+Se comienza con una solución, y luego cuando se descubre que no es continuo en la satisfacción de sus necesidades, lo arregla. Por supuesto, esta es una tendencia natural, pero en la programación informática que ha sido muy difícil de lograr con programas de procedimiento, y la aceptación de la idea de que \textit{podemos} refactorizar código y añadir diseño al cuerpo de prueba como la programación orientada a objetos es "una cosa buena." \newline
 
 
 
@@ -16,7 +14,7 @@ Por supuesto, esta es una tendencia natural, pero en la programación informáti
 \label{subsec:serdb}
 \addcontentsline{toc}{subsection}{\nameref{subsec:serdb}}
 
-La naturaleza de este problema es que la basura se lanza sin clasificar en un solo compartimiento, por lo que la información de tipo específico se pierde. Pero más tarde, la información de tipo específico debe ser recuperada para ordenar adecuadamente la basura. En la solución inicial, RTTI(descrito en el capítulo 12 de \textit{Thinking in Java, Segunda edición}) es utilizado.    \newline
+La naturaleza de este problema es que la basura se lanza sin clasificar en un solo compartimiento, por lo que la información de tipo específico se pierde. Pero más tarde, la información de tipo específico debe ser recuperada para ordenar adecuadamente la basura. En la solución inicial, RTTI (descrito en el capítulo 12 de \textit{Thinking in Java, Segunda edición}) es utilizado.    \newline
 
 Esto no es un diseño trivial, ya que tiene una restricción añadida. Eso es lo que hace que sea interesante — se parece más a los problemas desordenados que es probable que encuentre en su trabajo. La restricción adicional es que la basura llega a la planta de reciclaje del vertedero sanitario. El programa debe modelar la clasificación de esa basura. Aquí es donde entra en juego RTTI : usted tiene un montón de piezas anónimas de basura, y el programa se da cuenta exactamente de qué tipo son.  \newline
 
@@ -115,16 +113,15 @@ class RecycleA(UnitTest):
 # :~ 
 \end{lstlisting}
 
-En los listados de código fuente disponibles para este libro, este archivo se colocará en el subdirectorio \textbf{recyclea} que se ramifica desde el subdirectorio \textbf{c12} (para el Capítulo 12). La herramienta de desembalaje se encarga de colocarlo en el subdirectorio correcto. La razón para hacer esto es que este capítulo reescribe este ejemplo particular, un número de veces y poniendo cada versión en su propio directorio (utilizando el paquete por defecto en cada directorio para que al ser invocado, el programa sea fácil), los nombres de clase no entran en conflicto.     \newline
+En los listados de código fuente disponibles para este libro, este archivo se colocará en el subdirectorio \textbf{recyclea} que se ramifica desde el subdirectorio \textbf{c12} (para el Capítulo 12). La herramienta de desembalaje se encarga de colocarlo en el subdirectorio correcto. La razón para hacer esto es que este capítulo reescribe este ejemplo particular, un número de veces y poniendo cada versión en su propio directorio (utilizando el paquete por defecto en cada directorio para que al ser invocado, el programa sea fácil), los nombres de clase no entren en conflicto.     \newline
 
-Varios objetos \textbf{ArrayList} se crean para mantener referencias \textbf{Trash}. Claro, \textbf{ArrayList}s en realidad tendrá \textbf{Object}s vacíos (no sostendrán nada en absoluto). La razón por la que tienen \textbf{Trash} (o algo derivado de \textbf{Trash}) es sólo porque usted ha sido cuidadoso de no poner en nada, excepto \textbf{Trash}. Si usted ha puesto algo “equivocado" en el \textbf{ArrayList}, usted no conseguirá ninguna compilación — advertencias de tiempo o errores — usted descubrirá sólo a través de una excepción, el tiempo de ejecución.   \newline
+Varios objetos \textbf{ArrayList} se crean para mantener referencias \textbf{Trash}. Claro, \textbf{ArrayList}s en realidad tendrá \textbf{Object}s vacíos (no sostendrán nada en absoluto). La razón por la que tienen \textbf{Trash} (o algo derivado de \textbf{Trash}) es sólo porque usted ha sido cuidadoso de no poner nada, excepto \textbf{Trash}. Si usted ha puesto algo “equivocado" en el \textbf{ArrayList}, usted no conseguirá ninguna compilación — advertencias de tiempo o errores — usted descubrirá sólo a través de una excepción, el tiempo de ejecución.   \newline
 
 Cuando las referencias \textbf{Trash} son añadidas, pierden sus identidades específicas y se vuelven simplemente \textbf{Object reference}s (son \textit{upcast}). Sin embargo, debido al polimorfismo el comportamiento apropiado se sigue produciendo cuando los métodos dinámicamente enlazados son llamados a través de la \textbf{Iterator sorter}, una vez que el \textbf{Object} resultante haya sido lanzado de nuevo a \textbf{Trash. sumValue( )} también toma un \textbf{Iterator} para realizar operaciones en cada objeto en el \textbf{ArrayList}.   \newline
 
-Parece una tontería moldear los tipos de \textbf{Trash} en una base de contenedor tipo de referencia base, y luego dar un giro y abatirlo. ¿Por qué no poner la basura en el recipiente adecuado en el primer lugar? (De hecho, se trata de todo el enigma del reciclaje). 
-En este programa sería fácil reparar, pero a veces la estructura y la flexibilidad de un sistema pueden beneficiarse enormemente de \textbf{downcasting}.     \newline
+Parece una tontería moldear los tipos de \textbf{Trash} en una base de contenedor tipo referencia base, y luego dar un giro y abatirlo. ¿Por qué no poner la basura en el recipiente adecuado en el primer lugar? (De hecho, se trata de todo el enigma del reciclaje). En este programa sería fácil reparar, pero a veces la estructura y la flexibilidad de un sistema pueden beneficiarse enormemente de \textbf{downcasting}.     \newline
 
-El programa cumple con los requisitos de diseño: funciona. Esto podría estar bien, siempre y cuando se trata de una solución de primera mano. Ahora bien, un programa útil tiende a evolucionar con el tiempo, por lo que se debe preguntar: “¿Qué pasa si la situación cambia?" Por ejemplo, el cartón es ahora un valioso producto reciclable, así que cómo eso será integrado en el sistema (especialmente si el programa es grande y complicado). Desde la anterior codificación de tipo de verificación en la declaración \textbf{switch} podría estar dispersa en todo el programa, usted debe ir a buscar todo ese código cada vez que se agrega un nuevo tipo, y si se le pasa alguna, el compilador no le dará ninguna ayuda señalando un error.  \newline
+El programa cumple con los requisitos de diseño: funciona. Esto podría estar bien, siempre y cuando se trate de una solución de primera mano. Ahora bien, un programa útil tiende a evolucionar con el tiempo, por lo que se debe preguntar: “¿Qué pasa si la situación cambia?" Por ejemplo, el cartón es ahora un valioso producto reciclable, así que cómo eso será integrado en el sistema (especialmente si el programa es grande y complicado). Desde la anterior codificación de tipo de verificación en la declaración \textbf{switch} podría estar dispersa en todo el programa, usted debe ir a buscar todo ese código cada vez que se agrega un nuevo tipo, y si se le pasa alguna, el compilador no le dará ninguna ayuda señalando un error.  \newline
 
 La clave para el mal uso de RTTI aquí, es que \textit{cada tipo se pone a prueba}. Si usted está buscando sólo un subconjunto de tipos, porque ese subconjunto necesita un tratamiento especial, eso probablemente está muy bien. Pero si usted está buscando para cada tipo dentro de una sentencia switch, entonces usted está probablemente perdiendo un punto importante, y definitivamente hacer su código menos mantenible. En la siguiente sección vamos a ver cómo este programa ha evolucionado a lo largo de varias etapas para llegar a ser mucho más flexible. Esto debe resultar un ejemplo valioso en el diseño del programa.     \newline
 
@@ -148,7 +145,7 @@ A la pregunta “¿Qué va a cambiar? para el sistema de reciclaje es una respue
 
 
 % ludicrously == ridículamente
-Esto por lo general nos lleva a los principios de la programación orientada a objetos, la cual escuché por primera vez hablado por Grady Booch: “Si el diseño es demasiado complicado, hacer más objetos." Esto es ridículamente simple y al mismo tiempo intuitivo; sin embargo es la guía más útil que he encontrado. (Es posible observar que "hacer más objetos" a menudo es equivalente a "agregar otro nivel de indirección.") En general, si usted encuentra un lugar con código desordenado, tenga en cuenta qué tipo de clase limpiaría eso. A menudo, el efecto secundario de la limpieza del código será un sistema que tiene mejor estructura y es más flexible.    \newline
+Esto por lo general nos lleva a los principios de la programación orientada a objetos, la cual escuché por primera vez a Grady Booch: “Si el diseño es demasiado complicado, hacer más objetos." Esto es ridículamente simple y al mismo tiempo intuitivo; sin embargo es la guía más útil que he encontrado. (Es posible observar que "hacer más objetos" a menudo es equivalente a "agregar otro nivel de indirección.") En general, si usted encuentra un lugar con código desordenado, tenga en cuenta qué tipo de clase limpiaría eso. A menudo, el efecto secundario de la limpieza del código será un sistema que tiene mejor estructura y es más flexible.    \newline
 
 Considere primero el lugar donde se crean los objetos \textbf{Trash}, que es una sentencia \textbf{switch} dentro de \textbf{main()}:    \newline
 
@@ -168,7 +165,7 @@ for(int i = 0 i < 30 i++)
             Glass(Math.random() * 100)) 
 \end{lstlisting}
 
-Esto es definitivamente desordenado, y también un lugar donde usted debe cambiar el código cada vez que se agrega un nuevo tipo. Si comúnmente se añaden nuevos tipos, una mejor solución es un sólo método que toma toda la información necesaria y produce una referencia a un objeto del tipo correcto, yaproyectado a un objeto de basura. En \textit{Design Patterns} esto se conoce en general como un \textit{patrón creacional} (de los cuales hay varios). El patrón específico que se aplicará aquí es una variante del \textit{Factory Method : Método de fábrica}. Aquí, el método de fábrica es un miembro \textbf{static} de \textbf{Trash}, pero más comúnmente es un método que se anula en la clase derivada.  \newline
+Esto es definitivamente desordenado, y también un lugar donde usted debe cambiar el código cada vez que se agrega un nuevo tipo. Si comúnmente se añaden nuevos tipos, una mejor solución es un sólo método que toma toda la información necesaria y produce una referencia a un objeto del tipo correcto, ya proyectado a un objeto de basura. En \textit{Design Patterns} esto se conoce en general como un patrón creacional (de los cuales hay varios). El patrón específico que se aplicará aquí es una variante del \textit{Factory Method} (método fábrica). Aquí, el método fábrica es un miembro \textbf{static} de \textbf{Trash}, pero más comúnmente es un método que se anula en la clase derivada.  \newline
 
 La idea del método de fábrica es que se le pasa la información esencial que necesita saber para crear su objeto, a continuación, retroceder y esperar por la referencia (ya upcast al tipo base) para que salga como el valor de retorno.  A partir de entonces, usted trata al objeto polimórficamente. Así, usted ni siquiera necesita saber el tipo exacto de objeto que se crea. De hecho, el método de fábrica lo esconde de usted para evitar el mal uso accidental. Si desea utilizar el objeto sin polimorfismo, debe utilizar explícitamente RTTI y difusión.    \newline
 
@@ -222,19 +219,20 @@ que a su vez produce una especie de objeto \textbf{Trash} en la pila y devuelve 
 
 Se puede ver en el código que el problema “vector de cambio" de la fábrica es responsable de resolver: si agrega nuevos tipos al sistema (el cambio), o el único código que debe ser modificado está dentro de la fábrica, por lo que la fábrica aísla el efecto de ese cambio. \newline
 
+
 \subsection*{Un patrón para la creación de prototipos}
 \label{subsec:upplcdp}
 \addcontentsline{toc}{subsection}{\nameref{subsec:upplcdp}}
 
-Un problema con el diseño anterior es que todavía requiere una ubicación central donde deben ser conocidos todos los tipos de los objetos: dentro del método \textbf{factory()}. Si regularmente se agregan nuevos tipos al sistema, el método \textbf{factory( )} debe cambiarse para cada nuevo tipo. Cuando usted descubre algo como esto, es útil para tratar de avanzar un paso más y mover \textit{toda} la información sobre el tipo — incluyendo su creación — en la clase que representa ese tipo. De esta manera, la única cosa que necesita hacer para agregar un nuevo tipo al sistema es heredar una sola clase.   \newline
+Un problema con el diseño anterior es que aún se requiere una ubicación central donde deben ser conocidos todos los tipos de los objetos: dentro del método \textbf{factory()}. Si regularmente se agregan nuevos tipos al sistema, el método \textbf{factory( )} debe cambiarse para cada nuevo tipo. Cuando se descubre algo como esto, es útil para tratar de avanzar un paso más y mover \textit{toda} la información sobre el tipo — incluyendo su creación — en la clase que representa este tipo. De esta manera, la única cosa que necesita hacer para agregar un nuevo tipo al sistema es heredar una sola clase.   \newline
 
-Para mover la información relativa a la creación de tipo en cada tipo específico de \textbf{Trash}, se utilizará el patrón “prototype" (del libro \textit{Design Patterns}). La idea general es que usted tiene una secuencia principal de los objetos, uno de cada tipo que usted está interesado en hacer. Los objetos en esta secuencia \textit{sólo} se utilizan para la fabricación de nuevos objetos, utilizando una operación que no es diferente del esquema \textbf{clone( )} incorporado en clase raíz \textbf{Object} de Java. En este caso, vamos a nombrar el método de clonación \textbf{tClone( )}. Cuando esté listo para hacer un nuevo objeto, presumiblemente usted tiene algún tipo de información que establece el tipo de objeto que desea crear, a continuación, se mueve a través de la secuencia maestra comparando su información con cualquier información apropiada que se encuentra en los objetos de prototipo en la secuencia principal. Cuando usted encuentra uno que se ajuste a sus necesidades, clonarlo.    \newline
+Para mover la información relativa a la creación de tipo en cada tipo específico de \textbf{Trash}, se utilizará el patrón \textit{prototype} (del libro \textit{Design Patterns}). La idea general es que se tenga una secuencia principal de los objetos, uno de cada tipo que usted está interesado en hacer. Los objetos en esta secuencia \textit{sólo} se utilizan para la fabricación de nuevos objetos, utilizando una operación que no es diferente del esquema \textbf{clone( )} incorporado en la clase raíz \textbf{Object} de Java. En este caso, vamos a nombrar el método de clonación \textbf{tClone( )}. Cuando se esté listo para hacer un nuevo objeto, presumiblemente se tiene algún tipo de información que establece el tipo de objeto que se desea crear, a continuación se mueve a través de la secuencia maestra comparando su información con cualquier información apropiada que se encuentra en los objetos de prototipo en la secuencia principal. Cuando se encuentra uno que se ajuste a sus necesidades, se clona.    \newline
 
 En este esquema no hay información modificable para la creación. Cada objeto sabe cómo exponer la información adecuada y la forma de clonarse a sí mismo. Así, el método \textbf{factory( )} no necesita ser cambiado cuando se añade un nuevo tipo al sistema.     \newline
 
 Un enfoque al problema del prototipado es agregar un número de métodos para apoyar la creación de nuevos objetos. Ahora bien, en Java 1.1 ya hay apoyo para la creación de nuevos objetos si tiene una referencia al objeto \textbf{Class}. Con Java 1.1 \textit{reflection (reflexión)} (introducido en el capítulo 12 de \textit{Thinking in Java}, segunda edición) puede llamar a un constructor, incluso si tiene sólo una referencia al objeto \textbf{Class}. Esta es la solución perfecta para el problema del prototipado.   \newline
 
-La lista de los prototipos será representada indirectamente por una lista de referencias a todos los objetos de \textbf{Class} que desea crear. En adición, si el prototipado falla, el método \textbf{factory( )} asumirá que es porque un objeto particular \textbf{Class} no estaba en la lista, y se tratará de cargarlo. Al cargar los prototipos de forma dinámica como este, la clase \textbf{Trash} no necesita saber con qué tipos está trabajando, por lo que no necesita ninguna modificación al agregar nuevos tipos. Esto permite que sea fácilmente reutilizable durante todo el resto del capítulo.     \newline
+La lista de los prototipos será representada indirectamente por una lista de referencias a todos los objetos de \textbf{Class} que se desea crear. En adición, si el prototipado falla, el método \textbf{factory( )} asumirá que es porque un objeto particular \textbf{Class} no estaba en la lista, y se tratará de cargarlo. Al cargar los prototipos de forma dinámica como este, la clase \textbf{Trash} no necesita saber con qué tipos está trabajando, por lo que no necesita ninguna modificación al agregar nuevos tipos. Esto permite que sea fácilmente reutilizable durante todo el resto del capítulo.     \newline
 
 \begin{lstlisting} 
 # c12:trash:Trash.py 
@@ -314,9 +312,9 @@ class Trash:
 
 La clase básica \textbf{Trash} y \textbf{sumValue( )} permanecen como antes. El resto de la clase soporta el patrón de prototipado. Primero ve dos clases internas (que se hacen \textbf{static}, así que son las clases internas solamente para los propósitos de la organización de código) describiendo excepciones que pueden ocurrir. Esto es seguido por un  \textbf{ArrayList} llamado \textbf{trashTypes}, que se utiliza para mantener las referencias \textbf{Class}.    \newline
 
-En \textbf{Trash.factory( )}, el \textbf{String} dentro del objeto \textbf{Messenger} \textbf{id} (una versión diferente de la clase \textbf{Messenger} que el de la discusión previa) contiene el nombre del tipo de la \textbf{Trash} a crearse; este \textbf{String} es comparado con los nombres \textbf{Class} en la lista. Si hay una coincidencia, entonces ese es el objeto a crear. Por supuesto, hay muchas formas para determinar qué objeto desea hacer. Éste se utiliza para que la información leída desde un archivo se pueda convertir en objetos.    \newline
+En \textbf{Trash.factory( )}, el \textbf{String} dentro del objeto \textbf{Messenger} \textbf{id} (una versión diferente de la clase \textbf{Messenger} que el de la discusión previa) contiene el nombre del tipo de la \textbf{Trash} a crearse; este \textbf{String} es comparado con los nombres \textbf{Class} en la lista. Si hay una coincidencia, entonces ese es el objeto a crear. Por supuesto, hay muchas formas para determinar qué objeto se desea hacer. Éste se utiliza para que la información leída desde un archivo se pueda convertir en objetos.    \newline
 
-Una vez que haya descubierto qué tipo de \textbf{Trash} crear, a continuación, los métodos de reflexión entran en juego. El método \textbf{getConstructor( )} toma un argumento que es un array de referencias \textbf{Class}. Este array representa los argumentos, en su debido orden, para el constructor que usted está buscando. Aquí, el array es creado de forma dinámica usando Jvaa 1.1 la sintaxis de creación de array:  \newline
+Una vez que se haya descubierto qué tipo de \textbf{Trash} se va a crear, a continuación, los métodos de reflexión entran en juego. El método \textbf{getConstructor( )} toma un argumento que es un array de referencias \textbf{Class}. Este array representa los argumentos, en su debido orden, para el constructor que se está buscando. Aquí, el array es creado de forma dinámica usando Java 1.1 la sintaxis para la creación de los arrays es:  \newline
 
 \begin{lstlisting} 
 Class[]:double.class
@@ -324,7 +322,7 @@ Class[]:double.class
 
 Este código asume que cada tipo \textbf{Trash} tiene un constructor que toma un \textbf{double} (y observe que \textbf{double.class} es distinto de \textbf{Double.class}). También es posible, por una solución más flexible, llamar \textbf{getConstructors( )}, que devuelve un array con los posibles constructores.  \newline
 
-Lo que viene de vuelta de \textbf{getConstructor( )} es una referencia a un objeto \textbf{Constructor} (parte de \textbf{java.lang.reflect}). Usted llama al constructor de forma dinámica con el método \textbf{newInstance( )}, lo cual toma un array de \textbf{Object} conteniendo los argumentos reales. Este array se crea de nuevo utilizando la sintaxis de Java 1.1:    \newline
+Lo que devuelve \textbf{getConstructor( )} es una referencia a un objeto \textbf{Constructor} (parte de \textbf{java.lang.reflect}). El constructor se llama de forma dinámica con el método \textbf{newInstance( )}, lo cual toma un array de \textbf{Object} conteniendo los argumentos reales. Este array se crea de nuevo utilizando la sintaxis de Java 1.1, así:    \newline
 
 \begin{lstlisting} 
 Object[]{Double(Messenger.data)
@@ -332,11 +330,11 @@ Object[]{Double(Messenger.data)
 
 En este caso, sin embargo, el \textbf{double} debe ser colocado dentro de una clase de contenedor de modo que pueda ser parte de este array de objetos. El proceso de llamar \textbf{newInstance( )} extrae el \textbf{double}, pero se puede ver que es un poco confuso — un argumento puede ser un \textbf{double} o un \textbf{Double}, pero cuando se hace la llamada siempre se debe pasar en un \textbf{Double}. Afortunadamente, existe este problema sólo para los tipos primitivos.   \newline
 
-Una vez que entienda cómo hacerlo, el proceso de crear un nuevo objeto dado sólo una referencia \textbf{Class} es muy simple. Reflexión también le permite llamar métodos en esta misma manera dinámica.      \newline
+Una vez se entienda cómo hacerlo, el proceso de crear un nuevo objeto dado sólo una referencia \textbf{Class} es muy simple. Reflexión también le permite llamar métodos en esta misma manera dinámica.      \newline
 
-Por supuesto, la referencia apropiada \textbf{Class} podría no estar en la lista \textbf{trashTypes}. En este caso, el \textbf{return} en el bucle interno no se ejecuta y que se retirará al final. Aquí, el programa trata de rectificar la situación mediante la carga del objeto \textbf{Class} dinámicamente y agregarlo a la lista \textbf{trashTypes}. Si aún así no se puede encontrar algo anda realmente mal, pero si la carga tiene éxito, entonces el método  \textbf{factory} se llama de forma recursiva para volver a intentarlo.    \newline
+Por supuesto, la referencia apropiada \textbf{Class} podría no estar en la lista \textbf{trashTypes}. En este caso, el \textbf{return} en el bucle interno no se ejecuta y se retirará al final. Aquí, el programa trata de rectificar la situación mediante la carga del objeto \textbf{Class} dinámicamente y agregarlo a la lista \textbf{trashTypes}. Si aún así no se puede encontrar algo anda realmente mal, pero si la carga tiene éxito, entonces el método  \textbf{factory} se llama de forma recursiva para volver a intentarlo.    \newline
 
-Como verá, la belleza de este diseño es que el código no necesita ser cambiado, independientemente de las diferentes situaciones en que se utilizará (asumiendo que todas las subclases \textbf{Trash} contiene un constructor que toma un solo argumento \textbf{double}).     \newline
+Tal como se muestra, la belleza de este diseño es que el código no necesita ser cambiado, independientemente de las diferentes situaciones en que se utilice (asumiendo que todas las subclases \textbf{Trash} contiene un constructor que toma un solo argumento \textbf{double}).     \newline
 
 
 \subsection*{Subclases \textbf{Trash}}
@@ -344,10 +342,9 @@ Como verá, la belleza de este diseño es que el código no necesita ser cambiad
 \addcontentsline{toc}{subsection}{\nameref{subsec:st}}
 
 
+Para encajar en el esquema de prototipado, lo único que se requiere de cada nueva subclase de \textbf{Trash} es que contiene un constructor que toma un argumento \textbf{double}. Java, reflexión se encarga de todo lo demás.    \newline
 
-Para encajar en el esquema de prototipado, lo único que se requiere de cada nueva subclase de \textbf{Trash} es que contiene un constructor que toma un argumento \textbf{double}. Java reflexión se encarga de todo lo demás.    \newline
-
-Éstos son los diferentes tipos de \textbf{Trash}, cada uno en su propio archivo, pero parte del paquete \textbf{Trash} (de nuevo, para facilitar la reutilización dentro del capítulo):       \newline
+Éstos son los diferentes tipos de \textbf{Trash}, cada uno en su propio archivo, pero parte del paquete \textbf{Trash} (de nuevo, para facilitar la reutilización dentro del capítulo) es:       \newline
 
 \begin{lstlisting} 
 # c12:trash:Aluminum.py  
@@ -385,7 +382,7 @@ class Glass(Trash):
 # :~ 
 \end{lstlisting}
 
-Y aquí hay un nuevo tipo de \textbf{Trash}(basura):
+Y aquí se muestra un nuevo tipo de \textbf{Trash}(basura):
 
 \begin{lstlisting} 
 # c12:trash:Cardboard.py  
@@ -404,15 +401,12 @@ class Cardboard(Trash):
 Se puede ver que, aparte del constructor, no hay nada de especial en cualquiera de estas clases.
 
 
-
-
-
 \subsection*{Analizar \textbf{Trash} desde un archivo externo}
 \label{subsec:atduae}
 \addcontentsline{toc}{subsection}{\nameref{subsec:atduae}}
 
 
-La información sobre los objetos \textbf{Trash} será leído desde un archivo exterior. El archivo cuenta con toda la información necesaria sobre cada pieza de basura en una sola línea en la forma de \textbf{Trash:weight}, como:     \newline
+La información sobre los objetos \textbf{Trash} será leído desde un archivo exterior. El archivo cuenta con toda la información necesaria sobre cada pieza de \textbf{Trash} en una sola línea en la forma de \textbf{Trash:weight}, como:     \newline
 
 \begin{lstlisting} 
 # c12:trash:Trash.dat 
@@ -453,11 +447,11 @@ c12.trash.Cardboard:22
 # :~ 
 \end{lstlisting}
 
-Tenga en cuenta que la ruta de clase debe ser incluido al dar los nombres de las clases, de lo contrario la clase no será encontrada.\newline
+Tenga en cuenta que la ruta de la clase debe ser incluida al dar los nombres de las clases, de lo contrario la clase no será encontrada.\newline
 
-Este archivo se lee utilizando la herramienta \textbf{StringList} definida previamente, y cada línea es recogido aparte usando el método \textbf{String indexOf( )} para producir el índice del ‘:’. Esto se utiliza primero con el método \textbf{String substring( )} para extraer el nombre del tipo de basura,  y al lado para obtener el valor que se convirtió en un \textbf{double} con el método \textbf{static Double.valueOf( )}. El método \textbf{trim( )}  elimina los espacios en blanco en ambos extremos de un string : cadena. \newline
+Este archivo se lee utilizando la herramienta \textbf{StringList} definida previamente, y cada línea se selecciona de forma independiente usando el método \textbf{String indexOf( )} para producir el índice del ‘:’. Esto se utiliza primero con el método \textbf{String substring( )} para extraer el nombre del tipo de \textbf{Trash}, y seguidamente se obtiene el valor convertido en \textbf{double} con el método \textbf{static Double.valueOf( )}. El método \textbf{trim( )}  elimina los espacios en blanco en ambos extremos de un string : cadena. \newline
 
-El analizador \textbf{Trash } es colocado en un archivo separado, ya que se reutilizará en todo este capítulo: \newline
+El analizador sintáctico de \textbf{Trash } es colocado en un archivo separado, ya que se reutilizará en todo este capítulo: \newline
 
 \begin{lstlisting} 
 # c12:trash:ParseTrash.py  
@@ -494,7 +488,7 @@ class Fillable:
 # :~ 
 \end{lstlisting}
 
-Cualquier cosa que soporta esta interfaz se puede utilizar con \textbf{fillBin}. Claro, \textbf{Collection} no implementa \textbf{Fillable}, por lo que no va a funcionar. Dado que \textbf{Collection} se utiliza en la mayoría de los ejemplos, tiene sentido añadir un segundo método \textbf{fillBin( )} sobrecargado que toma un \textbf{Collection}. Cualquier \textbf{Collection} a continuación, se puede utilizar como un objeto \textbf{Fillable} usando una clase adaptador:   \newline
+Cualquier cosa que soporta esta interfaz se puede utilizar con \textbf{fillBin}. Claro, \textbf{Collection} no implementa \textbf{Fillable}, por lo que no va a funcionar. Dado que \textbf{Collection} se utiliza en la mayoría de los ejemplos, tiene sentido añadir un segundo método \textbf{fillBin( )} sobrecargado que toma un \textbf{Collection}. Cualquier \textbf{Collection} a continuación, se puede utilizar como un objeto \textbf{Fillable} usando una clase adaptador así:   \newline
 
 \begin{lstlisting} 
 # c12:trash:FillableCollection.py  
@@ -511,7 +505,7 @@ class FillableCollection(Fillable):
 # :~ 
 \end{lstlisting}
 
-Se puede ver que el único trabajo de esta clase es conectar el método \textbf{addTrash( )} de \textbf{Fillable} a \textbf{Collection’s add( )}. Con esta clase en la mano, el método sobrecargado \textbf{fillBin( )}  se puede utilizar con un \textbf{Collection} en \textbf{ParseTrash.py}.   \newline
+Se puede ver que el único trabajo de esta clase es conectar el método \textbf{addTrash( )} de \textbf{Fillable} a \textbf{Collection’s add( )}. Con esta clase en la mano, el método sobrecargado \textbf{fillBin( )}  se puede utilizar con un \textbf{Collection} en \textbf{ParseTrash.py}, como se muestra:   \newline
 
 \begin{lstlisting} 
   public static void  
@@ -519,7 +513,7 @@ Se puede ver que el único trabajo de esta clase es conectar el método \textbf{
     fillBin(filename, FillableCollection(bin)) 
 \end{lstlisting}
 
-Este enfoque funciona para cualquier clase de contenedor que se utiliza con frecuencia. Alternativamente, la clase de contenedor puede proporcionar su propio adaptador que implementa \textbf{Fillable}. (Usted verá esto después, en \textbf{DynaTrash.py.})     \newline
+Este enfoque funciona para cualquier clase de contenedor que se utiliza con frecuencia. Alternativamente, la clase de contenedor puede proporcionar su propio adaptador que implementa \textbf{Fillable}. (Se verá esto después, en \textbf{DynaTrash.py.})     \newline
 
 
 
@@ -528,7 +522,7 @@ Este enfoque funciona para cualquier clase de contenedor que se utiliza con frec
 \addcontentsline{toc}{subsection}{\nameref{subsec:rcp}}
 
 
-Ahora se puede ver la versión revisada de \textbf{RecycleA.py} utilizando la técnica de prototipos:     \newline
+Ahora se puede ver la versión revisada de \textbf{RecycleA.py} utilizando la técnica de prototipos, de tal forma que:     \newline
 
 \begin{lstlisting} 
 # c12:recycleap:RecycleAP.py  
@@ -571,9 +565,9 @@ class RecycleAP(UnitTest):
 
 Todos los objetos \textbf{Trash}, así como las clases \textbf{ParseTrash} y de apoyo, ahora son parte del paquete de \textbf{c12.trash}, por lo que simplemente son importados.     \newline
 
-El proceso de abrir el archivo de datos que contiene descripciones \textbf{Trash} y el análisis de ese archivo han sido envuelto en el método \textbf{static} \textbf{ParseTrash.fillBin( )}, por lo que ahora ya no es parte de nuestro enfoque de diseño. Verá que en el resto del capítulo, no importa que se agregan nuevas clases, \textbf{ParseTrash.fillBin( )} continuará funcionando sin cambios, lo que indica un buen diseño.   \newline
+El proceso de abrir el archivo de datos que contiene descripciones \textbf{Trash} y el análisis de ese archivo han sido envuelto en el método \textbf{static} \textbf{ParseTrash.fillBin( )}, por lo que ahora ya no es parte de nuestro enfoque de diseño. Se verá que en el resto del capítulo, no importa que se agreguen nuevas clases, \textbf{ParseTrash.fillBin( )} continuará funcionando sin cambios, lo que indica que es un buen diseño.   \newline
 
-En términos de creación de objetos, este diseño en efecto, localiza severamente los cambios que necesita hacer para agregar un nuevo tipo al sistema. Ahora bien, hay un problema significativo en el uso de RTTI que se muestra claramente aquí. El programa parece funcionar bien, y sin embargo, nunca se detecta algún cardboard : cartón, a pesar de que cardboard está en la lista! Esto sucede \textit{debido a} el uso de RTTI, que busca sólo los tipos que le indican que debe buscar. La pista que RTTI está siendo mal utilizada es que \textit{cada tipo} en el sistema se está probando, en lugar de un solo tipo o subconjunto de tipos. Como se verá más adelante, hay maneras de utilizar polimorfismo en lugar de cuando se está probando para cada tipo. Pero si usa RTTI mucho de esta manera, y añade un nuevo tipo a su sistema, usted puede olvidar fácilmente  hacer los cambios necesarios en su programa y producir un error difícil de encontrar. Así que vale la pena tratar de eliminar RTTI en este caso, no sólo por razones estéticas — produce código más mantenible.      \newline
+En términos de creación de objetos, este diseño en efecto, localiza severamente los cambios que necesita hacer para agregar un nuevo tipo al sistema. Ahora bien, hay un problema significativo en el uso de RTTI que se muestra claramente aquí. El programa parece funcionar bien, y sin embargo, nunca se detecta algún cardboard (cartón), a pesar de que cardboard está en la lista! Esto sucede debido al uso de RTTI, que busca sólo los tipos que le indican que debe buscar. La pista que RTTI está siendo mal utilizada es que cada tipo en el sistema se está probando, en lugar de un solo tipo o subconjunto de tipos. Como se verá más adelante, hay maneras de utilizar polimorfismo en lugar de estar probando cada tipo. Pero si usa RTTI mucho de esta manera, y añade un nuevo tipo a su sistema, usted puede olvidar fácilmente  hacer los cambios necesarios en su programa y producir un error difícil de encontrar. Así que vale la pena tratar de eliminar RTTI en este caso, no sólo por razones estéticas — se produce código más mantenible.      \newline
 
 
 
@@ -593,22 +587,22 @@ class TrashSorter(ArrayList):
   def sort(self, Trash t): /* ... */  
 \end{lstlisting}
 
-Es decir, \textbf{TrashSorter} es un \textbf{ArrayList} de referencias a \textbf{ArrayList}s de referencias \textbf{Trash}, y con \textbf puede instalar otro, así:  \newline
+Es decir, \textbf{TrashSorter} es un \textbf{ArrayList} de referencias a \textbf{ArrayList}s de referencias \textbf{Trash}, y con \textbf{add()} se puede instalar otro, así:  \newline
 
 \begin{lstlisting} 
 TrashSorter ts = TrashSorter() 
 ts.add(ArrayList()) 
 \end{lstlisting}
 
-Ahora, sin embargo, \textbf{ sort( )} se convierte en un problema. ¿Cómo el método estáticamente\-codificado trata con el hecho de que un nuevo tipo ha sido añadido? Para solucionar esto, la información de tipo debe ser removido de \textbf{sort( )} de manera que todo lo que que necesita hacer es llamar a un método genérico que se ocupa de los detalles del tipo. Esto, por supuesto, es otra manera de describir un método dinámicamente enlazado. Así \textbf{sort( )} simplemente se moverá a través de la secuencia y llamar a un método dinámicamente enlazado para cada \textbf{ArrayList}. Dado que el trabajo de este método es tomar las piezas de basura en que está interesado, este es llamado \textbf{grab(Trash)}. La estructura ahora queda como:       \newline
+Ahora, sin embargo, \textbf{sort( )} se convierte en un problema. ¿Cómo el método estático - codificado trata con el hecho de que un nuevo tipo ha sido añadido? Para solucionar esto, la información de tipo debe ser removido de \textbf{sort( )} de manera que todo lo que necesita hacer es llamar a un método genérico que se ocupa de los detalles de tipo. Esto, por supuesto, es otra manera de describir un método dinámicamente enlazado. Así \textbf{sort( )} simplemente se moverá a través de la secuencia y llamará a un método dinámicamente enlazado para cada \textbf{ArrayList}. Dado que el trabajo de este método es tomar las piezas de \textbf{Trash} en que está interesado, este es llamado \textbf{grab(Trash)}. La estructura ahora queda como:       \newline
 
 \includegraphics[width=\textwidth]{Pagina148SinTraducir.png}
 
-\textbf{TrashSorter} necesita llamar cada método \textbf{grab()} y obtener un resultado diferente dependiendo de qué tipo de \textbf{Trash} \textbf{ArrayList} actual está sosteniendo. Es decir, cada \textbf{ArrayList} debe ser consciente del tipo que contiene. El enfoque clásico a este problema es crear una clase "\textbf{Trash bin} : Contenedor de basura" base y heredar una nueva clase derivada para cada tipo diferente que quiera mantener. Si Java tenía un mecanismo de tipo parametrizado ese probablemente sería el enfoque más sencillo. Pero en lugar de la codificación manual de todas las clases que tal mecanismo debe estar construyendo para nosotros, mayor observación puede producir un mejor enfoque.   \newline
+\textbf{TrashSorter} necesita llamar cada método \textbf{grab()} y obtener un resultado diferente dependiendo de qué tipo de \textbf{Trash} \textbf{ArrayList} actual está sosteniendo. Es decir, cada \textbf{ArrayList} debe ser consciente del tipo que contiene. El enfoque clásico a este problema es crear una clase "\textbf{Trash bin} : Contenedor de basura" base y heredar una nueva clase derivada para cada tipo diferente que quiera mantener. Si Java tenía un mecanismo de tipo parametrizado ese probablemente sería el enfoque más sencillo. Pero en lugar de la codificación manual de todas las clases que tal mecanismo debe estar construyendo para nosotros, una mayor observación puede producir un mejor enfoque.   \newline
 
-Un principio básico de diseño en programación orientada a objetos es: "Usar los miembros de datos para la variación en el estado, utilice el polimorfismo para la variación en el comportamiento." Su primer pensamiento podría ser que el método \textbf{grab( )} ciertamente se comporta de manera diferente para un \textbf{ArrayList} que contiene \textbf{Paper} que para uno que sostiene \textbf{Glass}. Pero lo que hace es estrictamente dependiente del tipo, y nada más. Esto podría interpretarse como un estado diferente, y dado que Java tiene una clase para representar el tipo \textbf{(Class)} Esto se puede utilizar para determinar el tipo de \textbf{Trash} que sostendrá a \textbf{Tbin} particular .       \newline
+Un principio básico de diseño en programación orientada a objetos es: "Usar los miembros de datos para la variación en el estado, utilizar el polimorfismo para la variación en el comportamiento." Su primer pensamiento podría ser que el método \textbf{grab( )} ciertamente se comporta de manera diferente para un \textbf{ArrayList} que contiene \textbf{Paper} que por su parte contiene \textbf{Glass}. Pero lo que hace es estrictamente dependiente del tipo, y nada más. Esto podría interpretarse como un estado diferente, y dado que Java tiene una clase para representar el tipo \textbf{(Class)}, esto se puede utilizar para determinar el tipo de \textbf{Trash} que sostendrá a \textbf{Tbin} en particular .       \newline
 
-El constructor para este \textbf{Tbin } requiere que le entregue la \textbf{Class} de su elección. Esto le dice al \textbf{ArrayList} qué tipo se supone que debe mantener. Entonces el método \textbf{grab( )} usa \textbf{Class BinType} y RTTI para ver si el objeto \textbf{Trash} que ha entregado coincide con el tipo que se supone que agarra.      \newline
+El constructor para este \textbf{Tbin} requiere lo de la \textbf{Class} de su elección. Esto le dice al \textbf{ArrayList} qué tipo se supone que debe mantener. Entonces el método \textbf{grab( )} usa \textbf{Class BinType} y RTTI para ver si el objeto \textbf{Trash} que ha entregado coincide con el tipo que se supone que ha seleccionado.      \newline
 
 Aquí esta una nueva versión del programa:       \newline
 
@@ -665,9 +659,9 @@ class RecycleB(UnitTest):
 # :~ 
 \end{lstlisting}
 
-\textbf{Tbin} contiene una referencia \textbf{Class} \textbf{type} que establece en el constructor qué tipo debe agarrar. El método \textbf{grab()} revisa este tipo contra el objeto que se pasa. Tenga en cuenta que en este diseño, \textbf{grab()} solo acepta objetos \textbf{Trash} de este modo usted consigue la comprobación de tipos en tiempo de compilación del tipo base, pero usted podría también apenas aceptar \textbf{Object} y todavía funcionaría.      \newline
+\textbf{Tbin} contiene una referencia \textbf{Class} \textbf{type} que establece en el constructor qué tipo debe seleccionar. El método \textbf{grab()} revisa este tipo contra el objeto que se pasa. Tenga en cuenta que en este diseño, \textbf{grab()} solo acepta objetos \textbf{Trash} de este modo usted consigue la comprobación de tipos en tiempo de compilación del tipo base, pero también se podría aceptar solo \textbf{Object} y aún así funcionaría.      \newline
 
-\textbf{TbinList} sostiene un conjunto de referencias \textbf{Tbin}, así que \textbf{sort( )} puede iterar a través de los \textbf{Tbin}s cuando está buscando una pareja para el objeto \textbf{Trash} lo habéis transmitido. Si este no encuentra una pareja, crea un nuevo \textbf{Tbin} para el tipo que no ha sido enconstrado, y hace una llamada recursiva a sí mismo – la próxima vez, se encontrará el nuevo bin.
+\textbf{TbinList} sostiene un conjunto de referencias \textbf{Tbin}, así que \textbf{sort()} puede iterar a través de los \textbf{Tbin}s cuando está buscando una pareja para el objeto \textbf{Trash} se lo ha transmitido. Si este no encuentra una pareja, crea un nuevo \textbf{Tbin} para el tipo que no ha sido enconstrado, y hace una llamada recursiva a sí mismo – la próxima vez encontrará el nuevo bin.
 %   time around == vez
 
 Note la generalidad de este código: no cambia en absoluto si se añaden nuevos tipos. Si la mayor parte de su código no necesita cambiar cuando se añade un nuevo tipo (o algún otro cambio ocurre) entonces usted tiene un sistema fácilmente extensible.
@@ -679,33 +673,32 @@ Note la generalidad de este código: no cambia en absoluto si se añaden nuevos 
 \label{subsec:dmul}
 \addcontentsline{toc}{subsection}{\nameref{subsec:dmul}}
 
-El diseño anterior es ciertamente satisfactorio. La adición de nuevos tipos al sistema consiste en añadir o modificar clases distintas sin causar cambios en el código que se propagan por todo el sistema. En adición, RTTI no está "mal utilizada" como lo estaba en \textbf{RecycleA.py}. Sin embargo, es posible ir un paso más allá y tomar un punto de vista purista sobre RTTI y decir que debe ser eliminada por completo de la operación de clasificar la basura en los contenedores. \newline
+El diseño anterior es ciertamente satisfactorio. La adición de nuevos tipos al sistema consiste en añadir o modificar clases distintas sin causar cambios en el código que se propaguen por todo el sistema. En adición, RTTI no está "mal utilizada" como lo estaba en \textbf{RecycleA.py}. Sin embargo, es posible ir un paso más allá y tomar un punto de vista purista sobre RTTI y decir que debe ser eliminada por completo de la operación de clasificar la basura en los contenedores. \newline
 
-Para lograr esto, primero debe tomar la perspectiva de que todas las actividades de tipo dependiente — tal como la detección del tipo de un pedazo de basura y ponerla en el recipiente apropiado — deben ser controladas a través del polimorfismo y enlace dinámico. \newline
+Para lograr esto, primero debe tomar la perspectiva de que todas las actividades de tipo dependiente — tal como la detección del tipo de un pedazo de \textbf{Trash} y ponerla en el recipiente apropiado — deben ser controladas a través del polimorfismo y de un enlace dinámico. \newline
 
-Los ejemplos anteriores primero ordenados por tipo,  entonces actuaron en las secuencias de elementos que eran todos de un tipo particular. Pero cada vez que usted se encuentra eligiendo tipos particulares, deténgase y piense. 
+Los ejemplos anteriores primero ordenados por tipo, luego actuando en las secuencias de elementos que eran todos de un tipo en particular. Pero cada vez que usted se encuentra eligiendo tipos particulares, deténgase y piense. 
 Toda la idea de polimorfismo (dinámicamente enlazado con llamadas a métodos) es encargarse de la información de tipo específico para usted. Así que ¿por qué la búsqueda de tipos?      \newline
 
-La respuesta es algo que probablemente no piensa: Python sólo realiza despacho individual. Es decir, si está realizando una operación en más de un objeto cuyo tipo es desconocido, Python invocará el mecanismo de enlace dinámico en sólo uno de esos tipos. Esto no resuelve el problema, así que usted termina la detección de algunos tipos manualmente y produciendo eficazmente su propio comportamiento de enlace dinámico. \newline
+La respuesta es algo que probablemente no se piensa: que Python sólo realiza despacho individual. Es decir, si está realizando una operación en más de un objeto cuyo tipo es desconocido, Python invocará el mecanismo de enlace dinámico en sólo uno de esos tipos. Esto no resuelve el problema, así que se termina la detección de algunos tipos manualmente y produciendo eficazmente su propio comportamiento de enlace dinámico. \newline
 
-La solución es llamada  \textit{multiple dispatching : Despacho múltiple} lo cual significa la creación de una configuración tal que una única llamada al método produce más de una llamada a un método dinámico y por lo tanto determina más de un tipo en el proceso. Para conseguir este efecto, usted necesita trabajar con más de una jerarquía de tipos: usted necesitará una jerarquía de tipos para cada envío. El siguiente ejemplo trabaja con dos jerarquías: la familia \textbf{Trash} existente y una jerarquía de los tipos de contenedores de basura en que la basura será colocada. Esta segunda jerarquía no siempre es evidente y en este caso esto necesitaba ser creado con el fin de producir despacho múltiple (en este caso habrá sólo dos despachos, lo cual hace referencia como \textit{double dispatching : despacho doble}).
+La solución es llamada  \textit{multiple dispatching (Despacho múltiple)} lo cual significa la creación de una configuración tal que una única llamada al método produce más de una llamada a un método dinámico y por lo tanto determina más de un tipo en el proceso. Para conseguir este efecto, se necesita trabajar con más de una jerarquía de tipos: se necesitará una jerarquía de tipos para cada envío. En el siguiente ejemplo se trabaja con dos jerarquías: la familia \textbf{Trash} existente y una jerarquía de los tipos de contenedores de basura, en los cuales los desechos serán colocados. Esta segunda jerarquía no siempre es evidente y en este caso se requiere crear un orden para producir múltiples despachos (en este caso habrá sólo dos despachos, lo cual hace referencia como \textit{double dispatching (despacho doble)}).
 % Despacho, envio (sinonimos)
 \newpage
 
 
-
-\subsubsection*{La implementación del doble despacho}
+\subsubsection*{La implementación del despacho doble}
 \label{subsubsec:liddd}
 \addcontentsline{toc}{subsubsection}{\nameref{subsubsec:liddd}}
 
 
-Recuerde que el polimorfismo puede ocurrir sólo a través de llamadas a métodos, así que si quiere que se produzca el despacho doble, deben existir dos llamadas a métodos: uno utilizado para determinar el tipo dentro de cada jerarquía. En la jerarquía \textbf{Trash} habrá un nuevo método llamado \textbf{addToBin()}, que toma un argumento de un array de \textbf{TypedBin}. Utiliza este array para recorrer y tratar de agregarse a sí misma a a la papelera apropiada, y aquí es donde usted verá el doble despacho.          \newline
+Recuerde que el polimorfismo puede ocurrir sólo a través de llamadas a métodos, así que si quiere que se produzca el despacho doble, deben existir dos llamadas a métodos: uno utilizado para determinar el tipo dentro de cada jerarquía. En la jerarquía \textbf{Trash} habrá un nuevo método llamado \textbf{addToBin()}, que toma un argumento de un array de \textbf{TypedBin}. Utiliza este array para recorrer y tratar de agregarse a sí misma al contenedor apropiado, y aquí es donde se verá el despacho doble. \newline
 
 \includegraphics[width=\textwidth]{DobleDespacho}
 
 \vspace{0.5 cm}
 
-La nueva jerarquía es \textit{TypedBin}, y que contiene su propio método llamado add() que también es utilizado polimórficamente. Pero aquí está un giro adicional: add() está sobrecargado  para tomar argumentos de los diferentes tipos de \textit{trash : basura}. Así que una parte esencial del esquema de doble despacho también implica una sobrecarga. El rediseño del programa produce un dilema: ahora es necesario para la clase base \textbf{Trash} contener un método \textbf{addToBin( )}. Un enfoque consiste en copiar todo el código y cambiar la clase base. Otro enfoque, que puede tomar cuando usted no tiene el control del código fuente, es poner el método \textbf{addToBin( )} dentro de un \textbf{interface}, dejar \textbf{Trash} solo, y heredar nuevos tipos específicos de \textbf{Aluminum, Paper, Glass}, y \textbf{Cardboard}. Este es el enfoque que se tomará aquí.    \newline
+La nueva jerarquía es \textbf{TypedBin}, y que contiene su propio método llamado \textbf{add()} que también es utilizado polimórficamente. Pero aquí está un giro adicional: \textbf{add()} está sobrecargado  para tomar argumentos de los diferentes tipos de \textit{trash : basura}. Así que una parte esencial del esquema de doble despacho también implica una sobrecarga. El rediseño del programa produce un dilema: ahora es necesario para la clase base \textbf{Trash} contener un método \textbf{addToBin()}. Un enfoque consiste en copiar todo el código y cambiar la clase base. Otro enfoque, que puede tomar es cuando no se tiene el control del código fuente, es poner el método \textbf{addToBin( )} dentro de un \textbf{interface}, dejar \textbf{Trash} solo, y heredar nuevos tipos específicos de \textbf{Aluminum, Paper, Glass}, y \textbf{Cardboard}. Este es el enfoque que se tomará aquí.    \newline
 
 La mayoría de las clases en este diseño debe ser \textbf{public}, por lo que se colocan en sus propios archivos. Aquí esta la interfaz:     \newline
 
@@ -779,7 +772,7 @@ class DDCardboard(Cardboard)
 # :~ 
 \end{lstlisting}
 
-El código en cada \textbf{addToBin( )} llama \textbf{add( )} para cada objeto \textbf{TypedBin} en el array. Pero note el argumento: \textbf{this}. El tipo de \textbf{this} es diferente para cada subclase de \textbf{Trash}, por lo que el código es diferente. (Aunque este código se beneficiará si un mecanismo de tipo parametrizado es alguna vez agregado a Java.) Así que esta es la primera parte del doble despacho, porque una vez que está dentro de este método usted sabe que es \textbf{Aluminum},  o \textbf{Paper}, etc. Durante la llamada a \textbf{add( )}, esta información se pasa a través del tipo de \textbf{this}. El compilador resuelve la llamada a la versión correcta sobrecargada de \textbf{add( )}. Pero puesto que \textbf{tb[i]} produce una referencia al tipo base \textbf{TypedBin}, esta llamada va a terminar llamando a un método diferente dependiendo del tipo de \textbf{TypedBin} que está actualmente seleccionado. Ese es el segundo despacho. \newline
+El código en cada \textbf{addToBin( )} llama \textbf{add( )} para cada objeto \textbf{TypedBin} en el array. Pero notece el argumento: \textbf{this}. El tipo de \textbf{this} es diferente para cada subclase de \textbf{Trash}, por lo que el código es diferente. (Aunque este código se beneficiará si un mecanismo de tipo parametrizado es alguna vez agregado a Java.) Así que esta es la primera parte del doble despacho, porque una vez que está dentro de este método se sabe que es \textbf{Aluminum},  o \textbf{Paper}, etc. Durante la llamada a \textbf{add( )}, esta información se pasa a través del tipo de \textbf{this}. El compilador resuelve la llamada a la versión correcta sobrecargada de \textbf{add( )}. Pero desde que \textbf{tb[i]} produce una referencia al tipo base \textbf{TypedBin}, esta llamada va a terminar llamando a un método diferente dependiendo del tipo de \textbf{TypedBin} que está actualmente seleccionado. Ese es el segundo despacho. \newline
 
 Aquí esta la clase base para \textbf{TypedBin}:         \newline
 
@@ -811,11 +804,11 @@ class TypedBin:
 # :~ 
 \end{lstlisting}
 
-Puede ver que todos los métodos sobrecargados \textbf{add( )} retornan  \textbf{false}. Si el método no está sobrecargado en una clase derivada, continuará retornando \textbf{false},  y el llamador (\textbf{addToBin( )}, en este caso)  asumirá que el objeto actual \textbf{Trash} no se ha añadido con éxito a un contenedor, y continuar buscando el contenedor correcto.         \newline
+Se puede ver que todos los métodos sobrecargados \textbf{add( )} retornan  \textbf{false}. Si el método no está sobrecargado en una clase derivada, continuará retornando \textbf{false},  y el llamado (\textbf{addToBin( )}, en este caso)  asumirá que el objeto actual \textbf{Trash} no se ha añadido con éxito a un contenedor, y continuar buscando el contenedor correcto.         \newline
 
-En cada una de las subclases de \textbf{TypedBin}, sólo un método sobrecargado es anulado, de acuerdo con el tipo de bin que está siendo creado. Por ejemplo, \textbf{CardboardBin} anula \textbf{add(DDCardboard)}. El método anulado agrega el objeto\textit{ trash : basura} a su contenedor y retorna \textbf{true}, mientras todo el resto de los métodos \textbf{add( )} en \textbf{CardboardBin} continua para devolver \textbf{false}, ya que no se han anulado. Este es otro caso en el que un mecanismo de tipo parametrizado en Java permitiría la generación automática de código. (Con C++ \textbf{template}s, usted no tendría que escribir explícitamente las subclases o colocar el método \textbf{addToBin( )} en \textbf{Trash}.)      \newline
+En cada una de las subclases de \textbf{TypedBin}, sólo un método sobrecargado es anulado, de acuerdo con el tipo de contenedor que está siendo creado. Por ejemplo, \textbf{CardboardBin} anula \textbf{add(DDCardboard)}. El método anulado agrega el objeto\textit{ trash : basura} a su contenedor y retorna \textbf{true}, mientras todo el resto de los métodos \textbf{add( )} en \textbf{CardboardBin} continua para devolver \textbf{false}, ya que no se han anulado. Este es otro caso en el que un mecanismo de tipo parametrizado en Java permitiría la generación automática de código. (Con C++ \textbf{template}s, no se tendría que escribir explícitamente las subclases o colocar el método \textbf{addToBin( )} en \textbf{Trash}.)      \newline
 
-Puesto que para este ejemplo los tipos de basura se han personalizado y colocado en un directorio diferente, usted necesitará un archivo de datos de basura diferente para hacer que funcione. Aquí está un posible \textbf{DDTrash.dat}:      \newline
+Puesto que para este ejemplo los tipos de basura se han personalizado y colocado en un directorio diferente, se necesitará un archivo de datos de basura diferente para hacer que funcione. Aquí está un posible \textbf{DDTrash.dat}:      \newline
 
 \begin{lstlisting} 
 # c12:doubledispatch:DDTrash.dat 
@@ -920,12 +913,11 @@ class TrashBinSet:
 # :~ 
 \end{lstlisting}
 
-\textbf{TrashBinSet} encapsula todos los diferentes tipos de \textbf{ TypedBin}s, junto con el método \textbf{sortIntoBins( )}, que es donde todo el doble
-despacho toma lugar. Usted puede ver que una vez que la estructura está configurada, la clasificación en los distintos \textbf{TypedBin}s es muy fácil. En adición, la eficiencia de dos llamadas al método dinámico es probablemente mejor que cualquier otra forma usted podría ordenar. \newline
+\textbf{TrashBinSet} encapsula todos los diferentes tipos de \textbf{ TypedBin}s, junto con el método \textbf{sortIntoBins( )}, que es donde todo el despacho doble toma lugar. Se puede ver que una vez que la estructura está configurada, la clasificación en los distintos \textbf{TypedBin}s es muy fácil. En adición, la eficiencia de dos llamadas al método dinámico es probablemente mejor que cualquier otra forma de ordenamiento. \newline
 
 Note la facilidad de uso de este sistema en \textbf{main( )}, así como la completa independencia de cualquier información de tipo específico dentro de \textbf{main( )}. Todos los otros métodos que hablan sólo a la interfaz de la clase base \textbf{Trash} serán igualmente invulnerable a los cambios en los tipos \textbf{Trash}.         \newline
 
-Los cambios necesarios  para agregar un nuevo tipo son relativamente aislados: modifica \textbf{TypedBin}, heredar el nuevo tipo de \textbf{Trash} con su método \textbf{addToBin( )}, luego heredar un nuevo \textbf{TypedBin} (esto es realmente sólo una copia y sencilla edición), y por último añadir un nuevo tipo en la inicialización agregada de \textbf{TrashBinSet}.  \newline
+Los cambios necesarios para agregar un nuevo tipo son relativamente aislados: modificar \textbf{TypedBin}, heredar el nuevo tipo de \textbf{Trash} con su método \textbf{addToBin( )}, luego heredar un nuevo \textbf{TypedBin} (esto es realmente sólo una copia y sencilla edición), y por último añadir un nuevo tipo en la inicialización agregada de \textbf{TrashBinSet}.  \newline
 
 \subsection*{El patrón \textit{Visitor} (Visitante)}
 \label{subsec:epV}
@@ -933,11 +925,11 @@ Los cambios necesarios  para agregar un nuevo tipo son relativamente aislados: m
 
 Ahora considerar la aplicación de un patrón de diseño que tiene un objetivo completamente diferente al problema de clasificación de basura. \newline
 
-Para este patrón, ya no estamos preocupados con la optimización de la adición de nuevos tipos de \textbf{Trash} para el sistema. Ciertamente, este patrón hace que la adición de un nuevo tipo de \textbf{Trash} \textit{más complicado}. El supuesto es que usted tiene una jerarquía de clases primaria que es fija; quizás es de otro proveedor y no puedes realizar cambios en esa jerarquía. Sin embargo, usted tenía como añadir nuevos métodos polimórficos a esa jerarquía, lo cual significa que normalmente tenía que añadir algo a la interfaz de la clase base. Así el dilema es que usted necesita añadir métodos a la clase base, pero no puede tocar la clase base. ¿Cómo se obtiene alrededor de esto?  \newline
+Para este patrón, ya no se debe estar preocupado con la optimización de la adición de nuevos tipos de \textbf{Trash} para el sistema. Ciertamente, este patrón hace que la adición de un nuevo tipo de \textbf{Trash} sea más complicado. El supuesto es que se tiene una jerarquía de clases primaria que es fija; quizás es de otro proveedor y no puedes realizar cambios en esa jerarquía. Sin embargo, se tenía como añadir nuevos métodos polimórficos a esa jerarquía, lo cual significa que normalmente tenía que añadir algo a la interfaz de la clase base. Así el dilema es que se necesita añadir métodos a la clase base, pero no se puede tocar la clase base. ¿Cómo se puede evitar esto?  \newline
 
-El patrón de diseño que resuelve este tipo de problema es llamado un "visitor : visitante” (la final en el libro \textit{Design Patterns : Patrones de Diseño}), y se basa en el esquema de despacho doble mostrado en la última sección. \newline
+El patrón de diseño que resuelve este tipo de problema es llamado un "visitor" (visitante) (al final en el libro \textit{Design Patterns}), y se basa en el esquema de despacho doble mostrado en la última sección. \newline
 
-El patrón \textit{visitor : visitante} le permite extender la interfaz del tipo primario mediante la creación de una jerarquía de clases por separado de tipo \textbf{Visitor} para virtualizar las operaciones realizadas en el tipo primario. Los objetos del tipo primario simplemente "aceptan" el visitante,  a continuación, llaman el visitante del método dinámicamente enlazado. Se ve así:       \newline
+El patrón \textit{visitor : visitante} le permite extender la interfaz del tipo primario mediante la creación de una jerarquía de clases por separado de tipo \textbf{Visitor} para virtualizar las operaciones realizadas en el tipo primario. Los objetos del tipo primario simplemente "aceptan" el visitante, a continuación, llaman al método del \textit{visitor}, enlazado dinámicamente. Se ve así:       \newline
 
 \includegraphics[width=\textwidth]{Pagna159}
 
@@ -948,17 +940,17 @@ PriceVisitor pv = PriceVisitor()
 v.accept(pv) 
 \end{lstlisting}
 
-utiliza despacho doble para causar dos llamadas a métodos polimórficos: el primero para seleccionar la versión de \textbf{Aluminum} de \textbf{accept( )}, y el segundo dentro de \textbf{accept( )} cuando la versión especifica de \textbf{visit( )} es llamada de forma dinamica usando la clase base \textbf{Visitor} referencia \textbf{v}.         \newline
+Utiliza despacho doble para causar dos llamadas a métodos polimórficos: el primero para seleccionar la versión de \textbf{Aluminum} de \textbf{accept( )}, y el segundo dentro de \textbf{accept( )} cuando la versión especifica de \textbf{visit( )} es llamada de forma dinamica usando la clase base \textbf{Visitor} con referencia \textbf{v}.         \newline
 
-Esta configuración significa que la nueva funcionalidad puede ser añadido al sistema en forma de nuevas subclases de \textbf{Visitor}. La jerarquía \textbf{Trash} no necesita ser tocada. Este es el principal beneficio del patrón visitante: usted puede agregar nueva funcionalidad polimórfica a una jerarquía de clases sin tocar esa jerarquía (una vez que los métodos \textbf{accept( )} se han instalado). Tenga en cuenta que el beneficio es útil aquí, pero no es exactamente lo que empezamos a lograr, así que a primera vista podría decidir que esta no es la solución deseada.      \newline
+Esta configuración significa que la nueva funcionalidad puede ser añadida al sistema en forma de nuevas subclases de \textbf{Visitor}. La jerarquía \textbf{Trash} no necesita ser tocada. Este es el principal beneficio del patrón \textit{visitor}, se puede agregar nueva funcionalidad polimórfica a una jerarquía de clases sin tocar esa jerarquía (una vez que los métodos \textbf{accept( )} se han instalado). Tenga en cuenta que el beneficio es útil aquí, pero no es exactamente lo que empezamos a lograr, así que a primera vista podría decidirse que esta no es la solución deseada.      \newline
 
-Pero mire una cosa que se ha logrado: la solución visitante Evita la clasificación de la secuencia \textbf{Trash} maestro en secuencias escritas individuales. Así, usted puede dejar todo en la única secuencia maestra y simplemente pasar a través de esa secuencia utilizando el visitante apropiado para lograr el objetivo. Aunque este comportamiento parece ser un efecto secundario del visitante, Esto nos da lo que queremos (evitando RTTI).       \newline
+Pero mire una cosa que se ha logrado: la solución visitante Evita la clasificación de la secuencia \textbf{Trash} maestro en secuencias escritas individuales. Así, usted puede dejar todo en la única secuencia maestra y simplemente pasar a través de esa secuencia utilizando el visitante apropiado para lograr el objetivo. Aunque este comportamiento parece ser un efecto secundario del visitante, Esto proporciona lo que se requiere (evitando RTTI).       \newline
 
-El despacho doble en el patrón visitante se ocupa de determinar tanto el tipo de \textbf{Trash} y el tipo de \textbf{Visitor}. En el siguiente ejemplo, hay dos implementaciones de \textbf{Visitor: PriceVisitor} tanto para determinar y resumir el precio, y \textbf{WeightVisitor} hacer un seguimiento de los pesos.      \newline
+El despacho doble en el patrón \textbf{Visitor} se ocupa de determinar tanto el tipo de \textbf{Trash} como el tipo de \textbf{Visitor}. En el siguiente ejemplo, hay dos implementaciones de \textbf{Visitor: PriceVisitor} tanto para determinar y resumir el precio, y \textbf{WeightVisitor} para hacer un seguimiento de los pesos.      \newline
 
-Usted puede ver todo esto implementado en la nueva y mejorada versión del programa de reciclaje.        \newline
+Se puede ver todo esto implementado en la nueva y mejorada versión del programa de reciclaje.        \newline
 
-Al igual que con \textbf{DoubleDispatch.py}, la clase \textbf{Trash} se deja solo y una nueva interfaz es creada para agregar el método \textbf{accept( )}: \newline
+Al igual que con \textbf{DoubleDispatch.py}, la clase \textbf{Trash} se deja sola y una nueva interfaz es creada para agregar el método \textbf{accept( )}: \newline
 
 \begin{lstlisting} 
 # c12:trashvisitor:Visitable.py 
@@ -992,8 +984,7 @@ class Visitor:
 \addcontentsline{toc}{subsection}{\nameref{subsec:udr}}
 
 
-
-En este punto, usted \textit{podría} seguir el mismo criterio que se utilizó para el despacho doble y crear nuevos subtipos de \textbf{Aluminum, Paper, Glass}, y \textbf{Cardboard} que implementan el método \textbf{accept( )}. Por ejemplo, el nuevo \textbf{Visitable Aluminum} se vería así: \newline
+En este punto, se podría seguir el mismo criterio que se utilizó para el despacho doble y crear nuevos subtipos de \textbf{Aluminum, Paper, Glass}, y \textbf{Cardboard} que implementan el método \textbf{accept( )}. Por ejemplo, el nuevo \textbf{Visitable Aluminum} se vería así: \newline
 
 \begin{lstlisting} 
 # c12:trashvisitor:VAluminum.py 
@@ -1009,9 +1000,9 @@ class VAluminum(Aluminum)
 # :~ 
 \end{lstlisting}
 
-Sin embargo, Parece que estamos encontrando una "explosión de interfaces:" \textbf{Trash} básico, versiones especiales para el despacho doble, y ahora las versiones más especiales para los visitantes. Claro, esta "explosión de interfaces" es arbitraria — uno podría simplemente poner los métodos adicionales de la clase \textbf{Trash}. Si ignoramos que en lugar podemos ver la oportunidad de utilizar el patrón \textit{Decorador}: Parece como que debería ser posible crear un \textit{Decorador} que puede ser envuelto alrededor de un objeto ordinario \textbf{Trash} y producirá la misma interfaz que \textbf{Trash} y agrega el método extra \textbf{accept( )}. De hecho, es un ejemplo perfecto del valor de \textit{Decorador}.         \newline
+Sin embargo, parece que se está enfrentando a una "explosión de interfaces:" \textbf{Trash} básico, versiones especiales para el despacho doble, y ahora las versiones más especiales para los visitantes. Claro, esta "explosión de interfaces" es arbitraria — uno podría simplemente poner los métodos adicionales de la clase \textbf{Trash}. Si se ignora que en su lugar se puede tener la oportunidad de utilizar el patrón \textit{Decorador}: parece que debería ser posible crear un \textit{Decorador} que puede ser envuelto alrededor de un objeto ordinario \textbf{Trash} y producirá la misma interfaz que \textbf{Trash} y agrega el método extra \textbf{accept( )}. De hecho, es un ejemplo perfecto del valor del \textit{Decorador}.         \newline
 
-El doble despacho crea un problema, no obstante. Como se basa en la sobrecarga de ambos \textbf{accept( )} y \textbf{visit( )}, esto parecería requerir código especializado para cada versión diferente del método \textbf{accept( )}. Con las plantillas de C ++, esto sería bastante fácil de lograr (ya que las plantillas generan automáticamente código de tipo especializado) pero Python no tiene tal mecanismo — al menos no parece. Sin embargo, reflexión le permite determinar la información de tipo en tiempo de ejecución, y llegar a resolver muchos problemas que parecerían requerir plantillas (aunque no tan simplemente). Aquí está el decorador que hace el truco\footnote{Esta fue una solución creada por Jaroslav Tulach en una clase de diseño de patrones que di en Praga}:       \\newpage
+El doble despacho crea un problema, no obstante. Como se basa en la sobrecarga de ambos \textbf{accept( )} y \textbf{visit( )}, esto parecería requerir código especializado para cada versión diferente del método \textbf{accept( )}. Con las plantillas de C ++, esto sería bastante fácil de lograr (ya que las plantillas generan automáticamente código de tipo especializado) pero Python no tiene tal mecanismo — al menos no parece. Sin embargo, la propiedad de reflexión de Python le permite determinar la información de tipo en tiempo de ejecución, y llegar a resolver muchos problemas que parecerían requerir plantillas (aunque no tan simplemente). Aquí está el decorador que hace el truco\footnote{Esta fue una solución creada por Jaroslav Tulach en una clase de diseño de patrones que di en Praga}:       \\newpage
 
 \begin{lstlisting} 
 # c12:trashvisitor:VisitableDecorator.py 
@@ -1059,7 +1050,7 @@ implements Fillable:
     f.addTrash(VisitableDecorator(t)) 
 # :~ 
 \end{lstlisting}
-Ahora usted puede envolver alrededor de cualquier tipo de \textbf{Fillable} existente,  o cualquier otros nuevos que aún no se han creado. \newline
+Ahora se puede envolver alrededor de cualquier tipo de \textbf{Fillable} existente,  o cualquier otros nuevos que aún no se han creado. \newline
 
 El resto del programa crea tipos \textbf{Visitor} específicos y los envía a través de una lista única de objetos \textbf{Trash}:   \newline
 
@@ -1163,30 +1154,30 @@ class TrashVisitor(UnitTest):
 # :~ 
 \end{lstlisting}
 
-En \textbf{Test( )}, observe cómo se añade la visitabilidad simplemente creando un tipo diferente de bin usando el decorador. Observe también que el adaptador \textbf{FillableCollection} tiene la apariencia de ser utilizado como decorador (para \textbf{ArrayList}) en esta situación.  Ahora bien, cambia completamente la interfaz del \textbf{ArrayList}, visto que la definición de \textit{Decorador} es que la interfaz de la clase decorada aún debe estar allí después de la decoración.      \newline
+En \textbf{Test( )}, se observa cómo se añade la visitabilidad simplemente creando un tipo diferente de contenedor usando el decorador. Se observa también que el adaptador \textbf{FillableCollection} tiene la apariencia de ser utilizado como decorador (para \textbf{ArrayList}) en esta situación.  Ahora bien, cambia completamente la interfaz del \textbf{ArrayList}, visto que la definición de \textit{Decorador} es que la interfaz de la clase decorada aún debe estar allí después de la decoración.      \newline
 
-Tenga en cuenta que la forma del código del cliente (que se muestra en la clase \textbf{Test}) ha cambiado de nuevo, a partir de los enfoques originales al problema. Ahora sólo hay un solo bin \textbf{Trash}. Los dos objetos \textbf{Visitor} son aceptados en cada elemento de la secuencia, y realizan sus operaciones. Los visitantes mantienen sus propios datos internos para concordar los pesos y precios totales.        \newline
+Tenga en cuenta que la forma del código del cliente (que se muestra en la clase \textbf{Test}) ha cambiado de nuevo, a partir de los enfoques originales al problema. Ahora sólo hay un solo contenedor \textbf{Trash}. Los dos objetos \textbf{Visitor} son aceptados en cada elemento de la secuencia, y realizan sus operaciones. Los visitantes mantienen sus propios datos internos para concordar los pesos y los precios totales.        \newline
 
-Finalmente, no hay identificación de tipo en tiempo de ejecución que no sea el molde inevitable a \textbf{Trash} al tirar cosas fuera de la secuencia. Esto, también, podría ser eliminado con la implementación de tipos parametrizados en Java.        \newline
+Finalmente, allí no hay identificación de tipo en tiempo de ejecución que no sea emitido a \textbf{Trash} cuando se sacan cosas fuera de la secuencia. Esto, también, podría ser eliminado con la implementación de tipos parametrizados en Java.        \newline
 
-Una manera en que usted puede distinguir esta solución de la solución de despacho doble descrita anteriormente es tener en cuenta que, en la solución del doble despacho, solamente uno de los métodos sobrecargados, \textbf{add( )},  fue anulado cuando se creó cada subclase, mientras que aquí cada uno de los métodos \textbf{visit( )} sobrecargados es anulado en cada subclase de \textbf{Visitor}.          \newline
+Una manera de distinguir esta solución de la solución de despacho doble descrita anteriormente, es tener en cuenta que, en la solución del doble despacho, solamente uno de los métodos sobrecargados, \textbf{add( )},  fue anulado cuando se creó cada subclase, mientras que aquí cada uno de los métodos \textbf{visit( )} sobrecargados es anulado en cada subclase de \textbf{Visitor}.          \newline
 
 \subsubsection*{¿Más acoplamiento?}
 \label{subsubsec:moreA}
 \addcontentsline{toc}{subsubsection}{\nameref{subsubsec:moreA}}
 
 
-Hay mucho más código aquí, y hay acoplamiento definitivo entre la jerarquía \textbf{Trash} y la jerarquía \textbf{Visitor}. Ahora bien, también hay alta cohesión dentro de los respectivos conjuntos de clases: cada uno de ellos hacen una sola cosa (\textbf{Trash} describe Basura, mientras que \textbf{Visitor} describe las acciones realizadas en \textbf{Trash}), que es un indicador de un buen diseño. Claro, en este caso funciona bien sólo si está agregando nuevos \textbf{Visitor}s, pero se pone en el camino al agregar nuevos tipos de \textbf{Trash}.          \newline
+Hay mucho más código aquí, y hay acoplamiento definitivo entre la jerarquía \textbf{Trash} y la jerarquía \textbf{Visitor}. Ahora bien, también hay alta cohesión dentro de los respectivos conjuntos de clases: cada uno de ellos hacen una sola cosa (\textbf{Trash} describe Basura, mientras que \textbf{Visitor} describe las acciones realizadas en \textbf{Trash}), que es un indicador de un buen diseño. Claro, en este caso funciona bien sólo si está agregando nuevos \textbf{Visitor}s, pero esto se obtiene en el camino cuando se agregan nuevos tipos de \textbf{Trash}.          \newline
 
-Bajo acoplamiento entre clases y alta cohesión dentro de una clase es sin duda un objetivo de diseño importante. Aplicado sin pensar, sin embargo, puede impedirle el logro de un diseño más elegante.Parece que algunas clases, inevitablemente, tienen una cierta intimidad con cada uno. Estos a menudo ocurren en parejas que quizás podrían ser llamados \textit{couplets : coplas}; por ejemplo, los contenedores y los iteradores. El par anterior \textbf{Trash-Visitor} parece ser otro como \textit{couplet}.    \newline
+Bajo acoplamiento entre clases y alta cohesión dentro de una clase es sin duda un objetivo de diseño importante. Aplicado sin pensar, sin embargo, puede impedirle el logro de un diseño más elegante. Parece que algunas clases, inevitablemente, tienen una cierta intimidad entre ellas. Estos a menudo ocurren en parejas que quizás podrían ser llamados \textit{couplets : coplas}; por ejemplo, los contenedores y los iteradores. El par anterior \textbf{Trash-Visitor} parece ser otro de tipo \textit{couplet}.    \newline
 
 \subsection*{¿RTTI considerado dañino?}
 \label{subsec:rtticd}
 \addcontentsline{toc}{subsection}{\nameref{subsec:rtticd}}
 
-Varios diseños en este capítulo intentan eliminar RTTI, lo cual podría darle la impresión de que se “considera perjudicial" (la condenación utilizado para pobres, malogrado \textbf{goto}, que por lo tanto nunca fue puesto en Java). Esto no es verdad; es el mal uso de RTTI, ese es el problema. La razón por la que nuestros diseños eliminan RTTI se debe a la mala aplicación de esa característica que impide extensibilidad, mientras que el objetivo declarado era capaz de añadir un nuevo tipo al sistema con el menor impacto en circundante código como sea posible. Dado que RTTI es a menudo mal usado por tener que buscar todo tipo único en su sistema, provoca código que no sea extensible: cuando se agrega un nuevo tipo, usted tiene que ir a buscar por todo el código en el que se usa RTTI, y si se olvida de alguno usted no conseguirá la ayuda del compilador.     \newline
+Varios diseños en este capítulo intentan eliminar RTTI, lo cual podría darle la impresión de que se “considera perjudicial" (la condena utilizado para pobres, el malogrado \textbf{goto}, que por lo tanto nunca fue puesto en Java). Esto no es verdad; es el mal uso de RTTI, ese es el problema. La razón por la que nuestros diseños eliminan RTTI se debe a la mala aplicación de esa característica que impide extensibilidad, mientras que el objetivo expresado era poder añadir un nuevo tipo al sistema con el menor impacto alrededor del código como sea posible. Dado que RTTI es a menudo mal usado por tener que buscar cada tipo en su sistema, provoca que el código que no sea extensible: cuando se agrega un nuevo tipo, se tiene que ir a buscar por todo el código en el que se usa RTTI, y si se pierde alguno, no se conseguirá ayuda del compilador.     \newline
 
-Sin embargo, RTTI no crea automáticamente el código no extensible. Vamos a revisar el reciclador de basura una vez más. Esta vez, una nueva herramienta será introducida, la cual yo llamo un \textbf{TypeMap}. Este contiene un \textbf{HashMap} que contiene \textbf{ArrayList}s, pero la interfaz es simple: usted puede \textbf{add( )} un nuevo objeto, y puede \textbf{get( )} un \textbf{ArrayList} que contiene todos los objetos de un tipo particular. Las claves para el contenido \textbf{HashMap} son los tipos en el \textbf{ArrayList} asociado. La belleza de este diseño (sugerido por Larry O'Brien) es que el \textbf{TypeMap} agrega dinámicamente un nuevo par cada vez que encuentra un nuevo tipo, por lo que cada vez que añade un nuevo tipo al sistema (incluso si se agrega el nuevo tipo en tiempo de ejecución), se adapta.  \newline
+Sin embargo, RTTI no crea automáticamente el código no extensible. Vamos a revisar el reciclador de basura una vez más. Esta vez, una nueva herramienta será introducida, la cual yo llamo un \textbf{TypeMap}. Este contiene un \textbf{HashMap} que contiene \textbf{ArrayList}s, pero la interfaz es simple: se puede agregar \textbf{add( )} como un nuevo objeto, y \textbf{get( )} como un \textbf{ArrayList} que contiene todos los objetos de un tipo particular. Las claves para el contenido \textbf{HashMap} son los tipos en el \textbf{ArrayList} asociado. La belleza de este diseño (sugerido por Larry O'Brien) es que el \textbf{TypeMap} agrega dinámicamente un nuevo par cada vez que encuentra un nuevo tipo, por lo que cada vez que añade un nuevo tipo al sistema (incluso si se agrega el nuevo tipo en tiempo de ejecución), se adapta.  \newline
 
 Nuestro ejemplo  nuevamente se basará en la estructura de los tipos \textbf{Trash} en \textbf{package c12.Trash} (y el archivo \textbf{Trash.dat} utilizado se pueden utilizar aquí sin modificar):        \newline
 
@@ -1240,39 +1231,39 @@ class DynaTrash(UnitTest):
 # :~ 
 \end{lstlisting}
 
-Aunque potente, la definición para \textbf{TypeMap} es simple. Contiene un \textbf{HashMap}, y el método \textbf{add( )} hace la mayoría del trabajo. Cuando usted \textbf{add( )} un nuevo objeto, se extrae la referencia para el objeto \textbf{Class} para ese tipo. Esto se utiliza como una clave para determinar si un \textbf{ArrayList} que sostiene objetos de ese tipo ya está presente en el \textbf{HashMap}. Si es así, ese \textbf{ArrayList} se extrae y el objeto se añade al \textbf{ArrayList}. Si no, el objeto \textbf{Class} y un nuevo \textbf{ArrayList} se añaden como un par clave-valor.       \newline
+Aunque potente, la definición para \textbf{TypeMap} es simple. Contiene un \textbf{HashMap}, y el método \textbf{add( )} hace la mayoría del trabajo. Cuando se agrega un nuevo objeto \textbf{add( )}, se extrae la referencia para el objeto \textbf{Class} para ese tipo. Esto se utiliza como una clave para determinar si un \textbf{ArrayList} que sostiene objetos de ese tipo ya está presente en el \textbf{HashMap}. Si es así, ese \textbf{ArrayList} se extrae y el objeto se añade al \textbf{ArrayList}. Si no, el objeto \textbf{Class} y un nuevo \textbf{ArrayList} se añaden como un par clave-valor.       \newline
 
-Usted puede obtener un \textbf{Iterator} de todos los objetos \textbf{Class} de   \textbf{keys( )}, y usar cada objeto \textbf{Class} para buscar el correspondiente \textbf{ArrayList} con \textbf{get( )}. Y eso es todo lo que hay que hacer.         \newline
+Se puede obtener un \textbf{Iterator} de todos los objetos \textbf{Class} de   \textbf{keys( )}, y usar cada objeto \textbf{Class} para buscar el correspondiente \textbf{ArrayList} con \textbf{get( )}. Y eso es todo lo que hay que hacer.         \newline
 
-El método \textbf{filler( )} es interesante porque Se aprovecha del diseño de \textbf{ParseTrash.fillBin( )},  que no sólo tratar de llenar un \textbf{ArrayList} sino cualquier cosa que implementa la interfaz \textbf{Fillable} con su método \textbf{addTrash( )}.  Todo \textbf{filler( )} necesita hacer es devolver una referencia a una \textbf{interface} que implementa \textbf{Fillable}, y luego esta referencia puede ser utilizado como un argumento a \textbf{fillBin( )} como esto:    \newline
+El método \textbf{filler( )} es interesante porque se aprovecha del diseño de \textbf{ParseTrash.fillBin( )},  que no sólo tratar de llenar un \textbf{ArrayList} sino cualquier cosa que implementa la interfaz \textbf{Fillable} con su método \textbf{addTrash( )}.  Todo \textbf{filler( )} necesita hacer es devolver una referencia a una \textbf{interface} que implementa \textbf{Fillable}, y luego esta referencia puede ser utilizado como un argumento a \textbf{fillBin( )} como esto:    \newline
 
 \begin{lstlisting} 
 ParseTrash.fillBin("Trash.dat", bin.filler()) 
 \end{lstlisting}
 
-Para producir esta referencia, una \textit{clase interna anónima} (descrito en el capítulo 8 de \textit{Thinking in Java}, segunda edición) es utilizada. Usted nunca necesita una clase llamada para implementar \textbf{Fillable}, sólo necesita una referencia a un objeto de esa clase, por lo que este es un uso apropiado de las clases internas anónimas. \newline
+Para producir esta referencia, una \textit{clase interna anónima} (descrito en el capítulo 8 de \textit{Thinking in Java}, segunda edición) es utilizada. Nunca se necesita un llamado a la clase para implementar \textbf{Fillable}, sólo necesita una referencia a un objeto de esa clase, por lo que este es un uso apropiado de las clases internas anónimas. \newline
 
-Una cosa interesante sobre este diseño es que a pesar de que no fue creado para manejar la clasificación, \textbf{fillBin( )} está realizando tipo cada vez que se inserta un objeto \textbf{Trash} dentro de \textbf{bin}.        \newline
+Una cosa interesante sobre este diseño es que a pesar de que no fue creado para manejar la clasificación, \textbf{fillBin( )} está realizando una clasificación cada vez que se inserta un objeto \textbf{Trash} dentro de \textbf{bin}.        \newline
 
-Gran parte de \textbf{class DynaTrash} debe estar familiarizado partir de los ejemplos anteriores. Esta vez, en lugar de colocar los nuevos objetos \textbf{Trash} en un \textbf{bin} de tipo \textbf{ArrayList}, \textbf{bin} es de tipo \textbf{TypeMap}, así que cuando la basura es arrojada en \textbf{bin} se ordena de inmediato por el \textbf{TypeMap} del mecanismo de clasificación interna. Dando un paso a través de \textbf{TypeMap} y operando en cada \textbf{ArrayList} individual se convierte en un asunto sencillo.  \newline
+Gran parte de \textbf{class DynaTrash} debería estar familiarizado a partir de los ejemplos anteriores. Esta vez, en lugar de colocar los nuevos objetos \textbf{Trash} en un \textbf{bin} de tipo \textbf{ArrayList}, \textbf{bin} es de tipo \textbf{TypeMap}, así que cuando la basura es arrojada en \textbf{bin} se ordena de inmediato por el \textbf{TypeMap} del mecanismo de clasificación interna. Dando un paso a través de \textbf{TypeMap} y operando en cada \textbf{ArrayList} individual se convierte en un asunto sencillo.  \newline
 
-Como puede ver, la adición de un nuevo tipo al sistema no afectará este código en absoluto, y el código en \textbf{TypeMap} es completamente independiente. Esta es ciertamente la solución más pequeña del problema, y podría decirse que el más elegante también. No depende mucho de de RTTI, pero observe que cada par clave-valor en el \textbf{HashMap} está en busca de un solo tipo. En adición, no hay manera que usted puede "olvidar" añadir el código adecuado a este sistema cuando se agrega un nuevo tipo, ya que no hay ningún código que necesite agregar.       \newline
+Como puede ver, la adición de un nuevo tipo al sistema no afectará este código en absoluto, y el código en \textbf{TypeMap} es completamente independiente. Esta es ciertamente la solución más pequeña del problema, y podría decirse que el más elegante también. No depende mucho de de RTTI, pero observe que cada par clave-valor en el \textbf{HashMap} está en busca de un solo tipo. En adición, no hay manera que se pueda "olvidar" añadir el código adecuado a este sistema cuando se agrega un nuevo tipo, ya que no hay ningún código que necesite agregar.       \newline
 
 \subsection*{Resumen}
 \label{subsec:Resumen}
 \addcontentsline{toc}{subsection}{\nameref{subsec:Resumen}}
 
 Surgir %aparecer, subir
-con un diseño como \textbf{TrashVisitor.py} que contiene una mayor cantidad de código que los diseños anteriores puede parecer en un principio ser contraproducente. Vale la pena notar lo que estás tratando de lograr con varios diseños. Los patrones de diseño en general se esfuerzan por \textit{separar las cosas que cambian de las cosas que permanecen igual}. Las "cosas que cambian" puede referirse a muchos tipos diferentes de cambios. Quizás el cambio ocurre porque el programa se coloca en un nuevo entorno o porque algo en el entorno actual cambia: (esto podría ser: "El usuario quiere añadir una nueva forma para el diagrama actualmente en la pantalla"). O, como en este caso, el cambio podría ser la evolución del cuerpo del código. Mientras que las versiones anteriores del ejemplo de clasificación de basura enfatizaron la adición de nuevos tipos de \textbf{Trash} al sistema, \textbf{TrashVisitor.py} le permite añadir fácilmente nuevas funcionalidades sin molestar a la jerarquía \textbf{Trash}. Hay más código en \textbf{TrashVisitor.py}, pero la adición de nueva funcionalidad para \textbf{Visitor} es de mal gusto. Si esto es algo que sucede mucho, entonces vale la pena el esfuerzo extra y el código para hacer que suceda con más facilidad.\newline
+con un diseño como \textbf{TrashVisitor.py} que contiene una gran cantidad de código que los diseños anteriores puede parecer en un principio ser contraproducente. Vale la pena notar lo que estás tratando de lograr con varios diseños. Los patrones de diseño en general se esfuerzan por \textit{separar las cosas que cambian de las cosas que permanecen igual}. Las "cosas que cambian" puede referirse a muchos tipos diferentes de cambios. Quizás el cambio ocurre porque el programa se coloca en un nuevo entorno o porque algo en el entorno actual cambia: (esto podría ser: "El usuario quiere añadir una nueva forma para el diagrama actualmente en la pantalla"). O, como en este caso, el cambio podría ser la evolución del cuerpo del código. Mientras que las versiones anteriores del ejemplo de clasificación de basura enfatizaron la adición de nuevos tipos de \textbf{Trash} al sistema, \textbf{TrashVisitor.py} le permite añadir fácilmente nuevas funcionalidades sin molestar a la jerarquía \textbf{Trash}. Hay más código en \textbf{TrashVisitor.py}, pero la adición de nueva funcionalidad para \textbf{Visitor} es de mal gusto. Si esto es algo que sucede a menudo, entonces vale la pena el esfuerzo extra y el código para hacer que suceda con más facilidad. \newline
 
-El descubrimiento del vector de cambio no es un asunto trivial; esto no es algo que un analista usualmente puede detectar antes de que el programa considera este su diseño inicial. La información necesaria probablemente no aparecerá hasta las últimas fases del proyecto: a veces sólo en las fases de diseño o de implementación se descubre una necesidad más profunda o más sutil en su sistema. En el caso de la adición de nuevos tipos (el cual fue el foco de la mayoría de los ejemplos "reciclar") usted puede darse cuenta de que necesita una jerarquía de herencia particular sólo cuando se está en la fase de mantenimiento y de comenzar la ampliación del sistema! \newline
+El descubrimiento del vector de cambio no es un asunto trivial; esto no es algo que un analista usualmente puede detectar cuando el programa esté en la etapa del diseño inicial. La información necesaria probablemente no aparecerá hasta las últimas fases del proyecto: a veces sólo en las fases de diseño o de implementación se descubre una necesidad más profunda o más sutil en su sistema. En el caso de la adición de nuevos tipos (el cual fue el foco de la mayoría de los ejemplos "reciclar") se puede dar cuenta de que se necesita una jerarquía de herencia particular sólo cuando se está en la fase de mantenimiento y de inicio en la ampliación del sistema! \newline
 
-Una de las cosas más importantes que aprenderá mediante el estudio de los patrones de diseño parece ser  un cambio de actitud de lo que se ha promovido hasta ahora en este libro. Es decir: "Programación Orientada a Objetos es todo acerca de polimorfismo." Esta declaración puede producir el sindrome "dos años de edad, con un martillo"  (todo se ve como un clavo). Dicho de otra manera, es bastante díficil "obtener" polimorfismo, y una vez que lo hace, trate de emitir  % ==moldear== cast
+Una de las cosas más importantes que aprenderá mediante el estudio de los patrones de diseño parece ser  un cambio de actitud de lo que se ha promovido hasta ahora en este libro. Es decir: "Programación Orientada a Objetos es todo acerca de polimorfismo." Esta declaración puede producir el síndrome "dos años meceando, con un martillo"  (todo se ve como un clavo). Dicho de otra manera, es bastante difícil "obtener" polimorfismo, y una vez que lo hace, trate de emitir  % ==moldear== cast
 todos sus diseños en un molde particular.\newline
 
-¿Qué patrones de diseño dicen que la Programación Orientada a Objetos no se trata sólo de polimorfismo?. Esto se trata de "la separación de cosas que cambian de los objetos que permanecen igual." Polimorfismo es una manera especialmente importante para hacer esto, y resulta ser útil si el lenguaje de programación apoya directamente el polimorfismo (por lo que no tiene que conectarlo usted mismo, lo que tendería a hacer que sea prohibitivamente caro). Pero los patrones de diseño en general muestran otras maneras de lograr el objetivo básico, y una vez que sus ojos se han abierto a esto usted comenzará a buscar más diseños creativos.\newline
+¿Qué patrones de diseño dicen que la Programación Orientada a Objetos no se trata sólo de polimorfismo?. Esto se trata de "la separación de cosas que cambian y de las cosas que permanecen igual." El Polimorfismo es una manera especialmente importante para hacer esto, y resulta ser útil si el lenguaje de programación apoya directamente el polimorfismo (por lo que no se tienen que conectar por el programador, lo que lo haría prohibitivamente caro). Pero los patrones de diseño en general muestran otras maneras de lograr el objetivo básico, y una vez que se ha entendido esto, comenzarán a surgir diseños más creativos.\newline
 
-Desde que el libro \textit{Design Patterns} salió e hizó tal impacto, la gente ha estado buscando otros patrones. Usted puede esperar ver más de estos aparecer con el tiempo. Estos son algunos sitios recomendados por by Jim Coplien, de fama C ++ (\textit{http://www.bell-labs.com/~cope}), que es uno de los principales promotores del movimiento de los patrones:      \newline
+Desde que el libro \textit{Design Patterns} salió e hizó tal impacto, la gente ha estado buscando otros patrones. Se puede ver más de ellos aparecer con el paso del tiempo. Estos son algunos sitios recomendados por by Jim Coplien, de fama C ++ (\textit{http://www.bell-labs.com/~cope}), que es uno de los principales promotores del movimiento de los patrones:      \newline
 
 \textit{http://st-www.cs.uiuc.edu/users/patterns \newline
 http://c2.com/cgi/wiki \newline
@@ -1290,9 +1281,10 @@ También tenga en cuenta que ha habido una conferencia anual sobre los patrones 
 \label{subsec:Ejercicios14}
 \addcontentsline{toc}{subsection}{\nameref{subsec:Ejercicios14}}
 
-
-1. Añade la clase \textbf{Plastic} a \textbf{TrashVisitor.py}   \newline
-
-2. Añade la clase \textbf{Plastic} a \textbf{DynaTrash.py}   \newline
-
-3. Crear un decorador como \textbf{VisitableDecorator}, pero para el ejemplo de despacho múltiple, junto con una clase "decorador adaptador " como la creada para \textbf{VisitableDecorator}. Construir el resto del ejemplo y demostrar que funciona. \newline
+\begin{enumerate}
+    
+    \item Añadir la clase \textbf{Plastic} a \textbf{TrashVisitor.py}
+    \item Agregar la clase \textbf{Plastic} a \textbf{DynaTrash.py}
+    \item Crear un decorador como \textbf{VisitableDecorator}, pero para el ejemplo de despacho múltiple, junto con una clase "decorador adaptador " como la creada para \textbf{VisitableDecorator}. Construir el resto del ejemplo y demostrar que funciona.
+    
+\end{enumerate}

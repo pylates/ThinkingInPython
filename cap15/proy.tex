@@ -2,9 +2,8 @@
 \label{sec:proy}
 \addcontentsline{toc}{section}{\nameref{sec:proy}}
 
-%\textcolor{red}{Este capítulo no ha tenido traducción significativa todavía.}    \newline% COLOCAR COLOR ROJO
-
 Una serie de proyectos más desafiantes para que usted pueda resolver. \newline
+
 [[Algunos de estos pueden convertirse en ejemplos en el libro, por lo que en algún momento podría desaparecer de aquí]]
 
 
@@ -16,7 +15,7 @@ Primero, crea un \textit{Blackboard }\newline(citar esta referencia) que es un o
 
 Ahora cree el propio laberinto. Como un laberinto real, este objeto revela muy poca información sobre si mismo \-dada una coordenada, que le dirá si hay paredes o espacios en las cuatro direcciones  inmediatamente que coordinan, pero no más.  Para empezar, lea el laberinto desde un archivo de texto pero considere la busqueda en internet para un algoritmo que genere un laberinto. En cualquier caso, el resultado debe ser un objeto que, dado una coordenada del laberinto, informará paredes y espacios alrededor de esa coordenada. Además, debe ser capaz de preguntar por un punto de entrada al laberinto.  \newline
 
-Finalmente, crear la clase \textbf{Rat} laberinto-buscar. Cada rata puede comunicarse tanto con el Blackboard para dar la información actual y el laberinto para solicitar neva información sobre la base de la posición actual de la rata. Sin embargo, cada vez que una rata llega a un punto de decisión donde se ramifica el laberinto, crea una nueva rata que baja por cada una de las ramas. Cada rata es conducida por su propio hilo.   Cuando una rata llega a un callejón sin salida, termina en sí después de informar los resultados de su búsqueda final al Blackboard.\newline
+Finalmente, crear la clase \textbf{Rat} laberinto-buscar. Cada rata puede comunicarse tanto con el Blackboard para dar la información actual y el laberinto para solicitar neva información sobre la base de la posición actual de la rata. Sin embargo, cada vez que una rata llega a un punto de decisión donde se ramifica el laberinto, crea una nueva rata que baja por cada una de las ramas. Cada rata es conducida por su propio hilo. Cuando una rata llega a un callejón sin salida, termina en sí después de informar los resultados de su búsqueda final al Blackboard.\newline
 
 El objetivo es trazar un mapa completo del laberinto, pero también usted debe determinar si la condición final será encontrada naturalmente o si el blackboard debe ser responsable de la decisión. \newline
 
@@ -119,6 +118,7 @@ class Maze(Canvas):
             break              
             
 # :~ 
+
 # c13:Rat.py 
 
 class Rat: 

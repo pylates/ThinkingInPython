@@ -2,7 +2,7 @@
 \label{sec:afdui}
 \addcontentsline{toc}{section}{\nameref{sec:afdui}}
 
-Tanto \textbf{Proxy} y \textbf{State} proporcionan una clase sustituta que se utiliza en el código; la clase real que hace el trabajo se esconde detrás de esta clase sustituta. Cuando se llama a un método en la clase \textit{surrogate} (sustituto), este simplemente gira y llama al método en la implementación de la clase. Estos dos patrones son tan similares que el \textit{Proxy} es simplemente un caso especial de \textit{State}. Uno está tentado a agrupar a los dos juntos en un patrón llamado \textit{Surrogate} (sustituto), pero el término "proxy" tiene un significado antiguo y  especializado, que probablemente explica la razón de los dos patrones diferentes.    \newline
+Tanto \textbf{Proxy} como \textbf{State} proporcionan una clase sustituta que se utiliza en el código; la clase real que hace el trabajo se esconde detrás de esta clase sustituta. Cuando se llama a un método en la clase \textit{surrogate} (sustituto), este simplemente gira y llama al método en la implementación de la clase. Estos dos patrones son tan similares que el \textit{Proxy} es simplemente un caso especial de \textit{State}. Uno está tentado a agrupar a los dos juntos en un patrón llamado \textit{Surrogate} (sustituto), pero el término "proxy" tiene un significado antiguo y  especializado, que probablemente explica la razón de los dos patrones diferentes.    \newline
 
 La idea básica es simple: de una clase base, el sustituto se deriva junto con la clase o clases que proporcionan la implementación real:
 
@@ -140,16 +140,14 @@ La diferencia entre \textit{Proxy} y \textit{State} está en los problemas que s
     
     \item \textbf{Proxy de Protección.} Se usa cuando no se desea que el programador cliente tenga acceso completo a los objetos proxy.
     
-    \item \textbf{Referencia inteligente.} Para agregar acciones adicionales cuando se accede al objeto proxy. Por ejemplo, o para llevar un registro del número de referencias que se realizan para un objeto en particular, con el fin de implementar el lenguaje \textit{copy-on-write} (copiar en escritura) y prevenir objeto aliasing.
-    %Objeto aliasing   {sugerencias: objetos espejos}
-    Un ejemplo sencillo es hacer el seguimiento del número de llamadas a un método en particular.
+    \item \textbf{Referencia inteligente.} Para agregar acciones adicionales cuando se accede al objeto proxy. Por ejemplo, o para llevar un registro del número de referencias que se realizan para un objeto en particular, con el fin de implementar el lenguaje \textit{copy-on-write} (copiar en escritura) y prevenir objetos aliasing (espejos). Un ejemplo sencillo es hacer el seguimiento del número de llamadas a un método en particular.
     
 \end{enumerate}
 
 Usted podría mirar una referencia de Python como un tipo de proxy de protección, ya que controla el acceso al objeto real de los demás (y asegura, por ejemplo, que no utilice una referencia nula). \newline
 
 [[\textit{Proxy} y \textit{State} no son vistos como relacionados entre sí porque los dos se les da (lo que considero arbitrario) diferentes estructuras.
-\textit{State}, en particular, utiliza una jerarquía de implementación separada pero esto me parece innecesario a menos que usted haya decidido que la implementación no está bajo su control (ciertamente una posibilidad, pero si usted es dueño de todo el código no parece haber ninguna razón para no beneficiarse de la elegancia y amabilidad de la clase base individual). En adición, \textit{Proxy} no necesita utilizar la misma clase base para su implementación, siempre y cuando el objeto proxy esté controlando el acceso al objetarlo "frente" a favor. %Corregir! 
+\textit{State}, en particular, utiliza una jerarquía de implementación separada pero esto me parece innecesario a menos que usted haya decidido que la implementación no está bajo su control (ciertamente una posibilidad, pero si usted es dueño de todo el código no parece haber ninguna razón para no beneficiarse de la elegancia y amabilidad de la clase base individual). En adición, \textit{Proxy} no necesita utilizar la misma clase base para su implementación, siempre y cuando el objeto proxy esté controlando el acceso al objetarlo "frente" a favor. %Corrección pendiente! 
 Independientemente de los detalles, en ambos \textit{Proxy} y \textit{State} un sustituto está pasando la llamada al método a través de un objeto de implementación.]]
 
 \newpage
@@ -159,7 +157,7 @@ Independientemente de los detalles, en ambos \textit{Proxy} y \textit{State} un 
 \addcontentsline{toc}{subsection}{\nameref{subsec:sm}}
 
 
-Mientras \textit{State} tiene una manera de permitir que el programador cliente cambie la implementación, \textit{StateMachine} impone una estructura para cambiar automáticamente la implementación de un objeto al siguiente. La implementación actual representa el estado en que un sistema está, y el sistema se comporta de manera diferente de un estado a otro (ya que utiliza \textit{State}). Basicamente, esta es una "state machine : máquina de estados" usando objetos.     \newline
+Mientras \textit{State} tiene una manera de permitir que el programador cliente cambie la implementación, \textit{StateMachine} impone una estructura para cambiar automáticamente la implementación de un objeto al siguiente. La implementación actual representa el estado en que un sistema está, y el sistema se comporta de manera diferente de un estado a otro (ya que utiliza \textit{State}). Básicamente, esta es una "state machine : máquina de estados" usando objetos.     \newline
 
 El código que mueve el sistema de un estado a otro es a menudo un \textit{Template Method} (Método Plantilla), como se ve en el siguiente framework para una máquina de estados básica.    \newline
 
@@ -510,12 +508,12 @@ class Condition:
 # :~ 
 \end{lstlisting}
 
+
 \subsubsection*{Acciones de transición}
 \label{subsubsec:adt}
 \addcontentsline{toc}{subsubsection}{\nameref{subsubsec:adt}}
 
-
-Si \textbf{Condition} devuelve \textbf{true}, entonces se hace la transición a un nuevo estado, y dado que esa transición se hace, algún tipo de acción ocurre (en el diseño anterior de \textit{state machine : máquina de estado}, éste era el método\textbf{run( )}).     \newline
+Si \textbf{Condition} devuelve \textbf{true}, entonces se hace la transición a un nuevo estado, y ya que esa transición se hace, algún tipo de acción ocurre (en el diseño anterior de \textit{state machine : máquina de estado}, éste era el método \textbf{run( )}).     \newline
 
 \begin{lstlisting}
 # c04:statemachine2:Transition.py 
@@ -531,7 +529,7 @@ class Transition:
 \label{subsubsec:lt}
 \addcontentsline{toc}{subsubsection}{\nameref{subsubsec:lt}}
 
-Con estas clases en el lugar, podemos establecer una tabla de 3 dimensiones, donde cada fila describe completamente un estado. El primer elemento en la fila es el estado actual, y el resto de los elementos de la fila, son los diferentes tipos de entradas posibles, la condición que se debe satisfacer para que este cambio de estado sea el correcto, la acción que ocurre durante la transición, y el nuevo estado al que se moverá dentro. Observe que el objeto \textbf{Input} no sólo se utiliza para su tipo, también es un objeto \textit{Messenger} que lleva la información a los objetos \textbf{Condition} y \textbf{ Transition} :     \newline
+Con estas clases en el lugar, podemos establecer una tabla de 3 dimensiones, donde cada fila describe completamente un estado. El primer elemento en la fila es el estado actual, y el resto de los elementos de la fila, son los diferentes tipos de entradas posibles, la condición se debe satisfacer para que este cambio de estado sea el correcto, la acción que ocurre durante la transición, y el nuevo estado al que se moverá dentro. Observe que el objeto \textbf{Input} no sólo se utiliza para su tipo, también es un objeto \textit{Messenger} que lleva la información a los objetos \textbf{Condition} y \textbf{ Transition} :     \newline
 
 \begin{lstlisting}
 {(CurrentState, InputA) : (ConditionA, TransitionA, NextA), 
@@ -807,26 +805,30 @@ Otro enfoque, ya que su \textit{state machine} (máquina de estado) se hace más
 \label{subsec:Ejercicios}
 \addcontentsline{toc}{subsection}{\nameref{subsec:Ejercicios}}
 
-1. Crear un ejemplo del "proxy virtual". \newline
-
-2. Crear un ejemplo del proxy "Referencia Inteligente" donde se guarda la cuenta del número de llamadas a los métodos y a un objeto en particular. \newline
-
-3. Crear un programa similar a ciertos sistemas DBMS (Sistema Manejador de Bases de Datos) que sólo permiten un cierto número de conexiones en cualquier momento. Para implementar esto, utilizar 'Singleton' como un sistema que controla el número de objetos "connections" que se crean. Cuando un usuario ha terminado con una conexión, el sistema debe ser informado de manera que pueda comprobar que la conexión volverá a ser reutilizada. Para garantizar esto, proporcionar un objeto proxy en lugar de una referencia a la conexión actual, y diseñar el proxy de manera que haga que la conexión a ser liberada regrese al sistema.   \newline
-
-4. Usando \textit{State}, hacer una clase llamada \textbf{UnpredictablePerson} que cambia el tipo de respuesta a su método \textbf{hello( )} dependiendo de qué tipo de \textbf{Mood} está adentro. Añada un tipo de clase adicional \textbf{Mood} llamada \textbf{Prozac}.  \newline
-
-5. Cree una copia simple en la implementación de escritura.   \newline
-
-6. Aplicar \textbf{TransitionTable.py} al problema "Washer : Lavadora"  \newline
-
-7. Crear un sistema \textit{StateMachine} mediante el cual el estado actual junto con la información de entrada determina el siguiente estado en que el sistema estará. Para hacer esto, cada estado debe almacenar una referencia de nuevo al objeto proxy (el controlador de estado) de modo que pueda solicitar el cambio de estado. Use un \textbf{HashMap} para crear una tabla de estados, donde la clave es un \textbf{String} que nombre el nuevo estado y el valor es el nuevo estado del objeto. Dentro de cada subclase \textbf{state} reemplazar un método \textbf{nextState( )} que tiene su propia tabla de transición de estados. La entrada a \textbf{nextState( )} debe ser una sola palabra que sale de un archivo de texto que contiene una palabra por línea.  \newline
-
-8. Modificar el ejercicio anterior para que la \textbf{state machine} pueda ser configurada mediante la creación / modificación de una sola matriz multidimensional. \newline
-
-9- Modificar el ejercicio  "mood” de la sesión anterior para que se convierta en una  \textbf{state machine} (máquina de estado) usando StateMachine.java     \newline
-
-10. Crear un sistema elevador de \textbf{state machine} utilizando StateMachine.java     \newline
-
-11. Crear un sistema de calefacción / aire acondicionado usando StateMachine.java   \newline
-
-12. Un \textit{generator}(generador) es un objeto que produce otros objetos, al igual que una fábrica, excepto que la función generador no requiere ningún argumento. Cree un \textbf{MouseMoveGenerator} que produce acciones correctas \textbf{MouseMove} como salidas cada vez que la función generador es llamada (es decir, el mouse debe moverse en la secuencia apropiada, por lo que los movimientos posibles se basan en el movimiento anterior – esto es otra state machine). Agregue un método \textbf{iterator( )} para producir un iterador, pero este método debe tomar un argumento  \textbf{int} que especifica el número de movimientos a producir antes de \textbf{hasNext( )} que retorna \textbf{false}.
+\begin{enumerate}
+    
+    \item Crear un ejemplo del "proxy virtual".
+    
+    \item Crear un ejemplo del proxy "Referencia Inteligente" donde se guarda la cuenta del número de llamadas a los métodos y a un objeto en particular.
+    
+    \item Crear un programa similar a ciertos sistemas DBMS (Data Base Management System) (Sistema Manejador de Bases de Datos) que sólo permiten un cierto número de conexiones en cualquier momento. Para implementar esto, utilizar 'Singleton' como un sistema que controla el número de objetos "connections" que se crean. Cuando un usuario ha terminado con una conexión, el sistema debe ser informado de manera que pueda comprobar que la conexión volverá a ser reutilizada. Para garantizar esto, proporcionar un objeto proxy en lugar de una referencia a la conexión actual, y diseñar el proxy de manera que haga que la conexión a ser liberada regrese al sistema.
+    
+    \item Usando \textit{State}, hacer una clase llamada \textbf{UnpredictablePerson} que cambia el tipo de respuesta a su método \textbf{hello( )} dependiendo de qué tipo de \textbf{Mood} está adentro. Añada un tipo de clase adicional \textbf{Mood} llamada \textbf{Prozac}. 
+    
+    \item Cree una copia simple en la implementación de escritura.
+    
+    \item Aplicar \textbf{TransitionTable.py} al problema "Washer" (Lavadora)
+    
+    \item Crear un sistema \textit{StateMachine} mediante el cual el estado actual junto con la información de entrada determina el siguiente estado en que el sistema estará. Para hacer esto, cada estado debe almacenar una referencia de nuevo al objeto proxy (el controlador de estado) de modo que pueda solicitar el cambio de estado. Use un \textbf{HashMap} para crear una tabla de estados, donde la clave es un \textbf{String} que nombre el nuevo estado y el valor es el nuevo estado del objeto. Dentro de cada subclase \textbf{state} reemplazar un método \textbf{nextState( )} que tiene su propia tabla de transición de estados. La entrada a \textbf{nextState( )} debe ser una sola palabra que sale de un archivo de texto que contiene una palabra por línea.
+    
+    \item Modificar el ejercicio anterior para que la \textbf{state machine} pueda ser configurada mediante la creación / modificación de una sola matriz multidimensional.
+    
+    \item Modificar el ejercicio  "mood” de la sesión anterior para que se convierta en una  \textbf{state machine} (máquina de estado) usando StateMachine.java
+    
+    \item Crear un sistema elevador de \textbf{state machine} utilizando StateMachine.java
+    
+    \item Crear un sistema de calefacción / aire acondicionado usando StateMachine.java
+    
+    \item Un \textit{generator}(generador) es un objeto que produce otros objetos, al igual que una fábrica, excepto que la función generador no requiere ningún argumento. Cree un \textbf{MouseMoveGenerator} que produce acciones correctas \textbf{MouseMove} como salidas cada vez que la función generadora es llamada (es decir, el mouse debe moverse en la secuencia apropiada, por lo que los movimientos posibles se basan en el movimiento anterior – esto es otra state machine). Agregue un método \textbf{iterator( )} para producir un iterador, pero este método debe tomar un argumento  \textbf{int} que especifica el número de movimientos a producir antes de \textbf{hasNext( )} que retorna \textbf{false}.
+    
+\end{enumerate}

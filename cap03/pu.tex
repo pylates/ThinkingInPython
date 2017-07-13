@@ -101,7 +101,7 @@ En algún sentido, este framework proporciona un lugar alternativo para todas aq
 
 Para crear un conjunto de pruebas, usted comienza haciendo una clase interna \textbf{static} dentro de la clase que desea probar (su código de prueba también puede probar otras clases; usted decide). Este código de prueba se distingue heredando de \textbf{UnitTest:}   \newline
 
-%Ejemplos
+%Este Ejemplo no funciona con Python 2.7 ni Python3! >o<
  \begin{lstlisting}
 #  test:UnitTest.py 
 # The basic unit testing class 
@@ -171,9 +171,7 @@ El método \textbf{test3()} está comentado, porque, como verá, hace que la acu
 
 Usted puede nombrar su clase interna cualquier cosa que tenga; el único factor importante es \textbf{extends UnitTest}. También puede incluir cualquier código de apoyo necesario en otros métodos. Sólo los métodos \textbf{public} que no toman argumentos y el retorno \textbf{void} serán tratados como pruebas (los nombres de estos métodos son ilimitados).  \newline
 
-La clase de prueba superior crea dos instancias de \textbf{TestDemo}. El constructor \textbf{TestDemo}  imprime algo, para que podamos ver que está siendo llamado. Usted podría también definir un constructor por defecto (el único tipo que es utilizado por el framework de prueba), aunque ninguno es necesario aquí. La clase \textbf{TestDemo} tiene un método \textbf{close()} que sugiere que se utiliza como parte de la limpieza del objeto, así este es llamado en el método reemplazado
-% ------------ Preguntar! 02 de Noviembre ------------ ¿revisar?
-\textbf{cleanup()} en \textbf{Test}.   \newline
+La clase de prueba superior crea dos instancias de \textbf{TestDemo}. El constructor \textbf{TestDemo}  imprime algo, para que podamos ver que está siendo llamado. Usted podría también definir un constructor por defecto (el único tipo que es utilizado por el framework de prueba), aunque ninguno es necesario aquí. La clase \textbf{TestDemo} tiene un método \textbf{close()} que sugiere que se utiliza como parte de la limpieza del objeto, así este es llamado en el método reemplazado \textbf{cleanup()} en \textbf{Test}.   \newline
 
 Los métodos de prueba utilizan el método \textbf{affirm( )} para validar expresiones, si hay un fallo de la información se almacena y se imprime; después se ejecutan todas las pruebas. Por supuesto, los argumentos \textbf{affirm()} son usualmente más complicados que este; usted verá más ejemplos a lo largo de este libro.    \newline
 
