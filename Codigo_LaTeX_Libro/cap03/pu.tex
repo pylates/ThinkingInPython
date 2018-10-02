@@ -4,54 +4,54 @@
 
 \large Una de las  importantes realizaciones recientes es el valor impresionante de las pruebas unitarias.   \newline
 
-Este es el proceso de construcción de pruebas integradas en todo el código que usted crea, y ejecuta esas pruebas cada vez que hace una construcción.
-Es como si usted estuviera ampliando el compilador, diciéndole más acerca de lo que se supone que su programa hace. De esa manera, el proceso de construcción puede comprobar sobre él para algo más que errores de sintaxis, ya que usted también le puede enseñar a corregir errores semánticos. \newline
+Este es el proceso de construcción de pruebas integradas, en todo el código que se crea y se ejecuta, cada vez que hace una construcción.
+Es como si se estuviera ampliando el compilador, diciéndole más acerca de lo que se supone que el programa hace. De esa manera, el proceso de construcción puede comprobar sobre él algo más que errores de sintaxis, ya que también se le puede enseñar a corregir errores semánticos. \newline
 
-Los Lenguajes de programación estilo C y C++ en particular, han valorado típicamente el rendimiento sobre la seguridad de programación. La razón de que el desarrollo de programas en Java sea mucho más rápido que en C ++, es debido a la red de seguridad de Java: características como el mejor tipo de verificación, excepciones forzadas y recolección de basura. 
-Mediante la integración de la unidad de pruebas en su proceso de construcción, usted está ampliando esta red de seguridad, y el resultado es que usted puede acelerar su desarrollo. También puede ser más audaz en los cambios que realice, y editar más fácilmente su código cuando usted descubra defectos de diseño o de implementación, y en general, hacer un producto mejor y más rápido. \newline
+Los Lenguajes de programación, estilo C y C++ en particular, han valorado típicamente el rendimiento sobre la seguridad de programación. La razón de que el desarrollo de programas en Java sea mucho más rápido que en C ++, es debido a la red de seguridad de Java: características como el mejor tipo de verificación, las excepciones forzadas y la recolección de basura. 
+Mediante la integración de la unidad de pruebas en su proceso de construcción se está ampliando esta red de seguridad, y el resultado es que se puede acelerar su desarrollo. También puede ser más audaz en los cambios que realice, y editar más fácilmente el código cuando se descubra defectos de diseño o de implementación, y en general, hacer un producto mejor y más rápido. \newline
 
 Las pruebas unitarias no se consideran generalmente un patrón de diseño; de hecho, podrían ser consideradas un "patrón de desarrollo", pero tal vez ya hay suficientes frases "patrón" en el mundo. 
 Su efecto sobre el desarrollo es tan significativo que se va a utilizar en todo este libro.   \newline
 
-Mi propia experiencia con las pruebas unitarias empezó cuando me di cuenta que todos los programas en un libro debe ser extraído de forma automática y organizado en un árbol de código fuente, junto con \textit{makefiles}\footnote{ \url{https://en.wikipedia.org/wiki/Makefile} } apropiados (o alguna tecnología equivalente) así que usted solo podría escribir \textbf{make} para construir todo el árbol.
-El efecto de este proceso sobre la calidad del código de este libro era tan inmediato e importante que pronto se convirtió (en mi mente) en un requisito para cualquier libro de programación — ¿cómo puede confiar en el código que usted no compila?. También descubrí que si quería hacer cambios radicales, podría hacerlo así mediante el proceso de buscar y reemplazar en todo el libro, y también modificar el código a voluntad. Yo sabía que si se introdujese una falla, el extractor de código y los makefiles podrían eliminarla.     \newline
+Mi propia experiencia con las pruebas unitarias empezó cuando me di cuenta que todos los programas de un libro deben ser extraídos de forma automática y organizada en un árbol de código fuente, junto con \textit{makefiles}\footnote{ \url{https://en.wikipedia.org/wiki/Makefile} } apropiados (o alguna tecnología equivalente) así que solo se podría escribir \textbf{make} para construir todo el árbol.
+El efecto de este proceso sobre la calidad del código de este libro fue tan inmediato e importante que pronto se convirtió (en mi mente) en un requisito para cualquier libro de programación — ¿cómo puede confiar en el código que el usuario no compila?. También descubrí que si quería hacer cambios radicales, podría hacerlo así mediante el proceso de buscar y reemplazar en todo el libro, y también modificar el código a voluntad. Yo sabía que si se introdujese una falla, el extractor de código y los makefiles podrían eliminarla.     \newline
 
-Así los programas llegaron a ser más complejos, sin embargo, también me di cuenta de que habían serios vacios en mi sistema. Siendo capaz de compilar con éxito programas es claramente un primer paso importante, y para un libro publicado parecería bastante revolucionario — por lo general debido a las presiones de la publicación, es bastante típico abrir al azar un libro de programación y descubrir un defecto de codificación. Ahora bien, Seguí recibiendo mensajes de los lectores reportando problemas semánticos en mi código (en \textit{Thinking in Java}). Estos problemas sólo podían ser descubiertos mediante la ejecución del código. Naturalmente, Entendí esto y había tomado algunos pasos vacilantes tempranos hacia la implementación de un sistema que realizaría pruebas de ejecución automática, pero yo había sucumbido a las presiones de la publicación, todo el tiempo sabiendo que definitivamente había algo equivocado con mi proceso y que esto se me devolvería a través de informes de errores vergonzosos (en el mundo del código abierto, la vergüenza es uno de los principales factores de motivación hacia el aumento de la calidad de su código!).         \newline
+Así los programas llegaron a ser más complejos, sin embargo, también me di cuenta de que habían serios vacios en mi sistema. Siendo capaz de compilar con éxito lso programas, es claramente un primer paso importante, y para un libro publicado parecería bastante revolucionario — por lo general debido a las presiones de la publicación, es bastante típico abrir al azar un libro de programación y descubrir un defecto de codificación. Ahora bien, Seguí recibiendo mensajes de los lectores reportando problemas semánticos en mi código (en \textit{Thinking in Java}). Estos problemas sólo podían ser descubiertos mediante la ejecución del código. Naturalmente, Entendí esto y había realizado algunos pasos vacilantes tempranos hacia la implementación de un sistema que realizaría pruebas de ejecución automática, pero yo había sucumbido a las presiones de la publicación, todo el tiempo sabiendo que definitivamente había algo equivocado con mi proceso y que esto se me devolvería a través de informes de errores vergonzosos (en el mundo del código abierto, la vergüenza es uno de los principales factores de motivación hacia el aumento de la calidad de su código!).         \newline
 
-El otro problema fue que me faltaba una estructura para el sistema de pruebas. Eventualmente, empecé escuchando acerca de las pruebas unitarias y JUnit\footnote{\url{http://www.junit.org}}, lo cual proporcionó una base para una estructura de prueba. No obstante, aunque JUnit está destinado a hacer fácil la creación de código de prueba, quería ver si podía hacerlo aún más fácil, aplicando el principio de Programación Extrema de "Hacer la cosa más simple que podría posiblemente funcionar" como punto de partida, y luego la evolución del sistema como demandas de uso (Además, quería tratar de reducir la cantidad de código de prueba, en un intento de ajustarse a una mayor funcionalidad en menos código para presentaciones en pantalla). Este capítulo es el resultado.
+El otro problema era que me faltaba una estructura para el sistema de pruebas. Eventualmente, empecé ha oir acerca de las pruebas unitarias y JUnit\footnote{\url{http://www.junit.org}}, lo cual proporcionó una base para una estructura de prueba. No obstante, aunque JUnit está destinado a hacer fácil la creación de código de prueba, quería ver si podía hacerlo aún más fácil, aplicando el principio de Programación Extrema de "Hacer la cosa más simple que podría posiblemente funcionar" como punto de partida, y luego la evolución del sistema como demandas de uso (Además, quería tratar de reducir la cantidad de código de prueba, en un intento de ajustarse a una mayor funcionalidad en menos código para presentaciones en pantalla). Este capítulo es el resultado.
 
 \subsection*{Escribir las pruebas primero}
 \label{subsec:elpp}
 \addcontentsline{toc}{subsection}{\nameref{subsec:elpp}}
 
-Como ya mencioné, uno de los problemas que encontré — que la mayoría de la gente encuentra, a resolver —  fue someterse a las presiones de la editorial y como resultado eliminando algunas pruebas en el transcurso de la edición. Esto es fácil de hacer si usted sigue adelante y escribe el código de su programa porque hay una pequeña voz que te dice que, después de todo, lo has conseguido, ahora lo tienes funcionando, y no sería más interesante, útil y oportuno que seguir adelante y escribir la otra parte (siempre podemos volver atrás y escribir las pruebas posteriormente). Como resultado, las pruebas asumen menos importancia, como hacen a menudo en un proyecto de desarrollo.  \newline
+Como ya mencioné, uno de los problemas que encontré — que la mayoría de la gente encuentra, a resolver —  fue someterse a las presiones de la editorial y como resultado eliminando algunas pruebas en el transcurso de la edición. Esto es fácil de hacer si se sigue adelante y se escribe el código del programa porque hay una pequeña voz que te dice que, después de todo, lo has conseguido, ahora lo tienes funcionando, y no sería más interesante, útil y oportuno que seguir adelante y escribir la otra parte (siempre se puede volver atrás y escribir las pruebas posteriormente). Como resultado, las pruebas asumen menos importancia, como se hace a menudo en un proyecto de desarrollo.  \newline
 
 % forge ahead = seguir adelante.
 
-La respuesta a este problema, que encontré la primera vez descrito en \textit{Extreme Programming Explained}, es escribir las pruebas \textit{antes de} escribir el codigo. Puede parecer que esto fuerza artificialmente las pruebas a la vanguardia del proceso de desarrollo, pero lo que hace es dar pruebas de valor adicional, suficientes para que sea esencial. Si escribe las pruebas primero, usted:    \newline
+La respuesta a este problema, que encontré la primera vez descrito en \textit{Extreme Programming Explained}, es escribir las pruebas \textit{antes de} escribir el código. Puede parecer que esto fuerza artificialmente las pruebas a la vanguardia del proceso de desarrollo, pero lo que hace es dar pruebas de valor adicional, suficientes para que sea esencial. Si se escriben las pruebas primero, se:    \newline
 
 \begin{enumerate}[1.]
 
     \item Describe lo que se supone que el código hace, no con alguna herramienta gráfica externa pero con el código que realmente establece la especificación en concreto, en términos verificables.
     
-    \item Proporciona un ejemplo de cómo se debe utilizar el código; de nuevo, esto es un funcionamiento, ejemplo probado, mostrando normalmente todas las llamadas a métodos importantes, en lugar de sólo una descripción académica de una librería.
+    \item Proporciona un ejemplo de cómo se debe utilizar el código; de nuevo, esto es un funcionamiento, un ejemplo probado, mostrando normalmente todas las llamadas a métodos importantes, en lugar de sólo una descripción académica de una librería.
     
     \item Provee una forma de verificación cuando se termina el código (cuando todas las pruebas se ejecutan correctamente).
     
 \end{enumerate}
 
-Así, si usted escribe las pruebas primero entonces la prueba se convierte en una herramienta de desarrollo, no sólo un paso de verificación que se puede omitir si se siente seguro con el código que ha escrito. (un consuelo, he encontrado, que es usualmente equivocado).    \newline
+Así, si se escribe las pruebas primero entonces la prueba se convierte en una herramienta de desarrollo, no sólo es un paso de verificación que se puede omitir si se siente seguro con el código que ha escrito. (un consuelo, he encontrado, que es usualmente equivocado).    \newline
 
-Usted puede encontrar argumentos convincentes en \textit{Extreme Programming Explained}, como "escribir pruebas primero" es un principio fundamental de XP\footnote{Programación extrema,\url{https://es.wikipedia.org/wiki/Programación_extrema}}.
-Si usted no está convencido que necesita adoptar cualquiera de los cambios sugeridos por XP, tenga en cuenta que conforme a los estudios del Instituto de Ingeniería de Software (SEI), 
-casi el 70\% de las organizaciones de software se ha quedado atascado en los dos primeros niveles de escala de sofisticación del SEI: caos, y un poco mejor que el caos. Si no cambia nada más, realice pruebas automatizadas.
+Se puede encontrar argumentos convincentes en \textit{Extreme Programming Explained}, como "escribir pruebas primero", lo cual es un principio fundamental de XP\footnote{Programación extrema,\url{https://es.wikipedia.org/wiki/Programación_extrema}}.
+Si  no se está convencido que necesita adoptar cualquiera de los cambios sugeridos por XP, tenga en cuenta que conforme a los estudios del Instituto de Ingeniería de Software (SEI), 
+casi el 70\% de las organizaciones de software se han quedado atascadas en los dos primeros niveles de la escala de sofisticación del SEI: caos, y un poco mejor que el caos. Si no se cambia nada más, se deben hacer pruebas automatizadas.
 
-\subsection*{Simples pruebas de Python}
+\subsection*{ Pruebas simples de Python}
 \label{subsec:spdp}
 \addcontentsline{toc}{subsection}{\nameref{subsec:spdp}}
 
 
-Comprobación de validez de una prueba rápida de los programas en este libro, y anexar la salida de cada programa (como un string : una cadena) a su listado:     \newline
+Comprobación de validez para una prueba rápida de los programas en este libro, y anexar la salida de cada programa (como un string : una cadena) a su listado:     \newline
 
  \begin{lstlisting} 
 #: SanityCheck.py 
@@ -89,17 +89,17 @@ if __name__ == "__main__":
 #:~     
  \end{lstlisting}
 
-Sólo tiene que ejecutar esto desde el directorio raíz de los listados de código para el libro; ello descenderá en cada subdirectorio y ejecutar el programa allí. Una forma sencilla de comprobar las cosas es redirigir la salida estándar a un archivo, entonces, si hay cualquier error serán la única cosa que aparece en la consola durante la ejecución del programa. 
+Sólo se tiene que ejecutar esto desde el directorio raíz de los listados de código para el libro; ello descenderá en cada subdirectorio y ejecutar el programa desde allí. Una forma sencilla de comprobar las cosas es redirigir la salida estándar a un archivo, entonces, si hay cualquier error, esto será lo único que aparecerá  en la consola durante la ejecución del programa. 
 
 \subsection*{Un framework muy simple}
 \label{subsec:ufms}
 \addcontentsline{toc}{subsection}{\nameref{subsec:ufms}}
 
-Como mencioné, un objetivo primario de este código es hacer la escritura de código de pruebas unitarias muy simple, incluso más simple que con JUnit. Como otras necesidades se descubren \textit{durante} el uso de este sistema, entonces la funcionalidad puede ser añadida, pero para empezar con el framework sólo podría proporcionar una manera de ejecutar y crear pruebas, e reportar fallos si hay algún rompimiento (el éxito no producirá resultados distintos de la salida normal que puede ocurrir durante la ejecución de la prueba). Mi uso previsto de este framework es en makefiles, y \textbf{make} aborta si hay un valor de retorno distinto de cero de la ejecución de un comando. El proceso de construcción consistirá en la compilación de los programas y la ejecución de pruebas unitarias, y si \textbf{make} es positivo durante el recorrido, entonces el sistema será validado, de lo contrario, se anulará en el lugar de la falla, El mensaje de error reportará la prueba que falló, pero nada más, así que usted puede proveer granularidad, escribiendo tantas pruebas como quiera, cada una cubriendo tanto o tan poco como usted lo crea necesario.     \newline
+Como mencioné, un objetivo primario de este código es hacer la escritura de código de pruebas unitarias muy simple, incluso más simple que con JUnit. Como otras necesidades se descubrirán \textit{durante} el uso de este sistema, entonces la funcionalidad puede ser añadida, pero para empezar con el framework sólo podría proporcionar una manera de ejecutar y crear pruebas, de reportar fallos si hay algún rompimiento (el éxito no producirá resultados distintos de la salida normal que puede ocurrir durante la ejecución de la prueba). Mi uso previsto de este framework es en makefiles, y \textbf{make} aborta si hay un valor de retorno distinto de cero en la ejecución de un comando. El proceso de construcción consistirá en la compilación de los programas y la ejecución de pruebas unitarias, y si \textbf{make} es positivo durante el recorrido, entonces el sistema será validado, de lo contrario, se anulará en el lugar de la falla. El mensaje de error reportará la prueba que falló, pero nada más, así que se puede proveer granularidad, escribiendo tantas pruebas como se quiera, cada una cubriendo tanto o tan poco como se considere necesario.     \newline
 
 En algún sentido, este framework proporciona un lugar alternativo para todas aquellas declaraciones de "print" que he escrito y posteriormente borrados a través de los años.     \newline
 
-Para crear un conjunto de pruebas, usted comienza haciendo una clase interna \textbf{static} dentro de la clase que desea probar (su código de prueba también puede probar otras clases; usted decide). Este código de prueba se distingue heredando de \textbf{UnitTest:}   \newline
+Para crear un conjunto de pruebas, se comienza haciendo una clase interna \textbf{static} dentro de la clase que se desea probar (el código de prueba también puede probar otras clases; decisión del programador). Este código de prueba se distingue por ser heredado de \textbf{UnitTest:}   \newline
 
 %Este Ejemplo no funciona con Python 2.7 ni Python3! >o<
  \begin{lstlisting}
@@ -123,7 +123,7 @@ class UnitTest:
 
 El único método de prueba [[Hasta ahora]] es \textbf{affirm( )}\footnote{Yo había llamado originalmente esta \textbf{assert()}, pero esa palabra llegó a ser reservada en el JDK 1.4 cuando se añadieron las afirmaciones al lenguaje.}, el cual es \textbf{protected} de modo que pueda ser utilizado de la clase que hereda. Todo lo que este método hace es verificar que algo es \textbf{true}. Si no, añade un error a la lista, informando que la prueba actual (establecida por la \textbf{static testID}, que es fijado por el programa de pruebas de funcionamiento que se verá más adelante) ha fracasado. Aunque no se trata de una gran cantidad de información — es posible que también desee tener el número de línea, lo que podría ser extraído de una excepción — puede ser suficiente para la mayoría de las situaciones.    \newline
 
-A diferencia de JUnit, (que usa los métodos \textbf{setUp( )} y \textbf{tearDown()}), los objetos de prueba se elaborarán usando la construcción ordinaria de Python. Usted define los objetos de prueba mediante la creación de ellos como miembros de la clase ordinaria de la clase de prueba, y un nuevo objeto de clase de prueba se creará para cada método de prueba (evitando así cualquier problema que pueda ocurrir debido a efectos secundarios entre las pruebas). Ocasionalmente, la creación de un objeto de prueba asignará recursos sin memoria, en cuyo caso debe anular \textbf{cleanup( )} para liberar esos recursos.     \newline
+A diferencia de JUnit, (que usa los métodos \textbf{setUp( )} y \textbf{tearDown()}), los objetos de prueba se elaborarán usando la construcción ordinaria de Python. Se definen los objetos de prueba mediante la creación de ellos como miembros de la clase ordinaria de la clase de prueba, y un nuevo objeto de clase de prueba se creará para cada método de prueba (evitando así cualquier problema que pueda ocurrir debido a efectos secundarios entre las pruebas). Ocasionalmente, la creación de un objeto de prueba asignará recursos sin memoria, en cuyo caso debe anular \textbf{cleanup( )} para liberar esos recursos.     \newline
 
 \subsection*{Escribiendo pruebas}  
 \label{subsec:ep}
@@ -167,19 +167,19 @@ class TestDemo:
 # :~ 
 \end{lstlisting}
 
-El método \textbf{test3()} está comentado, porque, como verá, hace que la acumulación automática de código fuente de árbol de este libro se detenga.  \newline
+El método \textbf{test3()} está comentado, porque, como se vé, hace que la acumulación automática de código fuente de árbol de este libro se detenga.  \newline
 
-Usted puede nombrar su clase interna cualquier cosa que tenga; el único factor importante es \textbf{extends UnitTest}. También puede incluir cualquier código de apoyo necesario en otros métodos. Sólo los métodos \textbf{public} que no toman argumentos y el retorno \textbf{void} serán tratados como pruebas (los nombres de estos métodos son ilimitados).  \newline
+Se puede nombrar la clase interna como se quiera; el único factor importante es \textbf{extends UnitTest}. También puede incluir cualquier código de apoyo necesario en otros métodos. Sólo los métodos \textbf{public} que no toman argumentos y el retorno \textbf{void} serán tratados como pruebas (los nombres de estos métodos son ilimitados).  \newline
 
-La clase de prueba superior crea dos instancias de \textbf{TestDemo}. El constructor \textbf{TestDemo}  imprime algo, para que podamos ver que está siendo llamado. Usted podría también definir un constructor por defecto (el único tipo que es utilizado por el framework de prueba), aunque ninguno es necesario aquí. La clase \textbf{TestDemo} tiene un método \textbf{close()} que sugiere que se utiliza como parte de la limpieza del objeto, así este es llamado en el método reemplazado \textbf{cleanup()} en \textbf{Test}.   \newline
+La clase de prueba superior crea dos instancias de \textbf{TestDemo}. El constructor \textbf{TestDemo}  imprime algo, para que podamos ver que está siendo llamado. Se podría también definir un constructor por defecto (el único tipo que es utilizado por el framework de prueba), aunque ninguno es necesario aquí. La clase \textbf{TestDemo} tiene un método \textbf{close()} que sugiere que se utilice como parte de la limpieza del objeto. Así, este es llamado en el método reemplazado \textbf{cleanup()} en \textbf{Test}.   \newline
 
-Los métodos de prueba utilizan el método \textbf{affirm( )} para validar expresiones, si hay un fallo de la información se almacena y se imprime; después se ejecutan todas las pruebas. Por supuesto, los argumentos \textbf{affirm()} son usualmente más complicados que este; usted verá más ejemplos a lo largo de este libro.    \newline
+Los métodos de prueba utilizan el método \textbf{affirm( )} para validar expresiones, si hay un fallo de la información se almacena y se imprime; después se ejecutan todas las pruebas. Por supuesto, los argumentos \textbf{affirm()} son usualmente más complicados que este; se verán más ejemplos a lo largo de este libro.    \newline
 
-Observe que en \textbf{testB()}, el campo \textbf{private } \textbf{objCounter} es accesible para el código de prueba — esto es proque \textbf{Test} tiene los permisos de una clase interna.  \newline
+Se observa que en \textbf{testB()}, el campo \textbf{private } \textbf{objCounter} es accesible para el código de prueba — esto es proque \textbf{Test} tiene los permisos de una clase interna.  \newline
 
 Se puede ver que escribir código de prueba requiere muy poco esfuerzo adicional, y ningún conocimiento distinto del utilizado para escribir las clases ordinarias.  \newline
 
-Para ejecutar las pruebas, utilice \textbf{RunUnitTests.py} (que será presentado más adelante). El comando para el código anterior se ve así:   \newline
+Para ejecutar las pruebas, se utiliza \textbf{RunUnitTests.py} (que será presentado más adelante). El comando para el código anterior se ve así:   \newline
 
 \textbf{java com.bruceeckel.test.RunUnitTests TestDemo} \newline
 
@@ -198,7 +198,7 @@ Cleaning up: 4
 Cleaning up: 3 
 \end{lstlisting}
 
-Todo el ruido de salida está tan lejos como el éxito o el fracaso de la unidad de pruebas en referencia. Solamente uno o más fallos de la unidad de prueba hace que el programa tenga un valor de retorno distinto de cero y termine el proceso \textbf{make}. Por lo tanto, se puede optar por producir una salida o no, como se adapte a sus necesidades, y la clase de prueba llega a ser un buen lugar para poner cualquier código de impresión que pueda necesitar — si usted hace esto, se tiende a mantener dicho código alrededor en lugar de ponerlo dentro y luego ser despojado, como se hace normalmente con el código de seguimiento.   \newline
+Todo el ruido de salida está tan lejos como el éxito o el fracaso de la unidad de pruebas en referencia. Solamente uno o más fallos de la unidad de prueba hace que el programa tenga un valor de retorno distinto de cero y termine el proceso \textbf{make}. Por lo tanto, se puede optar por producir una salida o no, como se adapte a sus necesidades, y la clase de prueba llega a ser un buen lugar para poner cualquier código de impresión que pueda necesitar — si se hace esto, se tiende a mantener dicho código alrededor en lugar de ponerlo dentro y luego ser despojado, como se hace normalmente con el código de seguimiento.   \newline
 
 Si es necesario agregar una prueba para una clase derivada de uno que ya tiene una clase de prueba, no hay problema, como se puede ver aquí:     \newline
 
@@ -230,13 +230,13 @@ Incluso el nombre de la clase interna puede ser el mismo. En el código anterior
 \addcontentsline{toc}{subsection}{\nameref{subsec:pdcbycn}}
 
 Los ejemplos de prueba de unidad hasta el momento son los que tradicionalmente se llaman \textit{white-box tests} (pruebas de caja blanca). Esto significa que el código de prueba tiene un acceso completo a la parte interna de la clase que está siendo probada 
-(por lo que podría ser llamado más apropiadamente las pruebas "caja transparente"). Las pruebas de caja blanca suceden automáticamente cuando usted hace la clase de prueba de unidad como una clase interna de la clase que está probando, ya que las clases internas tienen automáticamente acceso a todos sus elementos de clase exteriores, incluso las que son \textbf{private}.   \newline
+(por lo que podría ser llamado más apropiadamente las pruebas "caja transparente"). Las pruebas de caja blanca suceden automáticamente cuando se hace la clase de prueba de unidad como una clase interna de la clase que se está probando, ya que las clases internas tienen automáticamente acceso a todos los elementos de las clases exteriores, incluso las que son \textbf{private}.   \newline
 
 Una forma posiblemente más común de la prueba es la \textbf{black-box testing :  prueba de caja negra}, que se refiere al tratamiento de la clase que se está probando como una caja impenetrable. No se puede ver el funcionamiento interno; sólo se puede acceder a las partes \textbf{public}  de la clase. Así, las pruebas de caja negra corresponden más estrechamente a las pruebas funcionales, para verificar los métodos que el programador-cliente va a utilizar. En adición, las pruebas de caja negra proporcionan una hoja de instrucciones mínimas para el programador-cliente  – en ausencia de toda otra documentación, las pruebas de caja negra al menos demuestran cómo hacer llamadas básicas a los métodos de la clase \textbf{public}.    \newline
 
-Para realizar las pruebas de caja negra utilizando el framework de la unidad de pruebas presentado en este libro, todo lo que necesita hacer es crear su clase de prueba como una clase global en lugar de una clase interna. Todas las demás reglas son las mismas (por ejemplo, la clase de prueba de unidad debe ser \textbf{public}, y derivado de \textbf{UnitTest}).     \newline
+Para realizar las pruebas de caja negra utilizando el framework de la unidad de pruebas presentado en este libro, todo lo que se necesita hacer es crear la clase de prueba como una clase global en lugar de una clase interna. Todas las demás reglas son las mismas (por ejemplo, la clase de prueba de unidad debe ser \textbf{public}, y derivado de \textbf{UnitTest}).     \newline
 
-Hay otra advertencia, que también proporcionará un pequeño repaso de los paquetes Java. Si usted quiere ser completamente riguroso, debe poner su clase de prueba de caja negra en un directorio independiente de la clase puesta a prueba; de lo contrario, tendrá acceso al paquete y a los elementos de la clase en prueba. Es decir, usted será capaz de acceder a los elementos \textbf{protected} y \textbf{friendly} de la clase en prueba. Aquí está un ejemplo: \newline
+Hay otra advertencia, que también proporcionará un pequeño repaso de los paquetes Java. Si se quiere ser completamente riguroso, se debe poner la clase de prueba de caja negra en un directorio independiente de la clase puesta a prueba; de lo contrario, tendrá acceso al paquete y a los elementos de la clase en prueba. Es decir, se prodrá acceder a los elementos \textbf{protected} y \textbf{friendly} de la clase en prueba. Aquí está un ejemplo: \newline
 
 \begin{lstlisting}
 #  c02:Testable.py 
@@ -249,7 +249,7 @@ class Testable:
 # :~ 
 \end{lstlisting}
 
-Normalmente, el único método que podría ser accesible directamente para el programador-cliente es \textbf{f4()}. Sin embargo, si usted pone su prueba de caja negra en el mismo directorio, automáticamente se convierte en parte de un mismo paquete (en este caso, el paquete por defecto ya que no se especifica ninguno) y entonces tiene un acceso inapropiado:  \newline 
+Normalmente, el único método que podría ser accesible directamente para el programador-cliente es \textbf{f4()}. Sin embargo, si se pone a prueba la caja negra en el mismo directorio, automáticamente se convierte en parte de un mismo paquete (en este caso, el paquete por defecto ya que no se especifica ninguno) y entonces se tiene un acceso inapropiado:  \newline 
 
 \begin{lstlisting}
 #  c02:TooMuchAccess.py 
@@ -264,7 +264,7 @@ class TooMuchAccess(UnitTest):
 # :~ 
 \end{lstlisting}
 
-Puede resolver el problema moviendo \textbf{TooMuchAcces.py} a su propio subdirectorio, de este modo poniendo esto en su propio paquete por defecto (por lo tanto un paquete diferente de \textbf{Testable.py}). Por supuesto, cuando usted hace esto, entonces \textbf{Testable} debe estar en su propio paquete, de modo que pueda ser importado (tenga en cuenta que también es posible importar una clase "paquete-menos", dando el nombre de clase en la declaración \textbf{import} y asegurando que la clase está en su CLASSPATH):     \newline
+Se puede resolver el problema moviendo \textbf{TooMuchAcces.py} a su propio subdirectorio, de este modo poniendo esto en su propio paquete por defecto (por lo tanto un paquete diferente de \textbf{Testable.py}). Por supuesto, cuando se hace esto, entonces \textbf{Testable} debe estar en su propio paquete, de modo que pueda ser importado (tenga en cuenta que también es posible importar una clase "paquete-menos", dando el nombre de clase en la declaración \textbf{import} y asegurando que la clase está en su CLASSPATH):     \newline
 
 \begin{lstlisting}
 #  c02:testable:Testable.py 
@@ -293,7 +293,7 @@ class BlackBoxTest(UnitTest):
 # :~ 
 \end{lstlisting}
 
-Tenga en cuenta que el programa anterior es de hecho muy similar al que el programador-cliente escribiría para utilizar su clase, incluyendo las importaciones y los métodos disponibles. De modo que lo hace un buen ejemplo de programación. Claro, es más fácil desde el punto de vista de codificación para simplemente hacer una clase interna, y a menos que vea la necesidad para pruebas especificas de Black Box es posible que sólo quiera seguir adelante y utilizar las clases internas (a sabiendas que si usted lo requiere más adelante puede extraer las clases internas en clases de prueba de caja negra separadas, sin demasiado esfuerzo).
+Tenga en cuenta que el programa anterior es de hecho muy similar al que el programador-cliente escribiría para utilizar su clase, incluyendo las importaciones y los métodos disponibles. De modo que lo hace un buen ejemplo de programación. Claro, es más fácil desde el punto de vista de codificación para simplemente hacer una clase interna, y a menos que se vea la necesidad para pruebas especificas de Black Box es posible que sólo se quiera seguir adelante y utilizar las clases internas (a sabiendas de que si se requiere más adelante se puede extraer las clases internas en clases de prueba de caja negra separadas, sin demasiado esfuerzo).
 
 \subsection*{Ejecución de Pruebas}
 \label{subsec:edp}
@@ -405,11 +405,11 @@ class RunUnitTests:
 
 \begin{enumerate}
     
-    \item Instalar el árbol del código fuente este libro y asegurar que usted tenga una utilidad \textbf{make} instalada en su sistema. (GNU \textbf{make} está disponible libremente en varios sitios de internet). En \textbf{TestDemo.py}, no comente \textbf{test3( )}, entonces escriba \textbf{make} y observe los resultados.
+    \item Instalar el árbol del código fuente este libro y asegurar que se tenga una utilidad \textbf{make} instalada en el sistema. (GNU \textbf{make} está disponible libremente en varios sitios de internet). En \textbf{TestDemo.py}, no comentar \textbf{test3( )}, Luego  escribir \textbf{make} y observar los resultados.
     
-    \item Modificar TestDemo.java mediante la adición de una nueva prueba que produzca una excepción. Escriba \textbf{make} y observar los resultados.
+    \item Modificar TestDemo.java mediante la adición de una nueva prueba que produzca una excepción. Escribir \textbf{make} y observar los resultados.
     
-    \item Modifique sus soluciones a los ejercicios en el capítulo 1, añadiendo las pruebas unitarias. Escribe makefiles que incorporen las pruebas unitarias.
+    \item Modificar las soluciones a los ejercicios en el capítulo 1, añadiendo las pruebas unitarias. Escribir makefiles que incorporen las pruebas unitarias.
     
 \end{enumerate}
 
